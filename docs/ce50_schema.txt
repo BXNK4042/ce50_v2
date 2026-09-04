@@ -1,0 +1,120 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE rooms (
+    room_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_name TEXT NOT NULL,
+    room_description TEXT NOT NULL,
+    room_image TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE teachers (
+    teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_firstname TEXT NOT NULL,
+    teacher_lastname TEXT NOT NULL,
+    teacher_image TEXT,
+    teacher_advise_year TEXT, -- Store array as JSON, e.g. '["2024","2025"]'
+    teacher_contact TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_firstname TEXT NOT NULL,
+    student_lastname TEXT NOT NULL,
+    student_image TEXT,
+    student_role TEXT,
+    student_lineage TEXT NOT NULL,
+    student_contact TEXT NOT NULL,
+    student_instagram TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_name TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    user_email TEXT NOT NULL UNIQUE,
+    user_role TEXT NOT NULL CHECK (
+        user_role IN ('superadmin', 'admin', 'writer')
+    ),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE projects (
+    project_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_name TEXT NOT NULL,
+    project_description TEXT NOT NULL,
+    project_image TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE student_projects (
+    student_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    student_duty TEXT,
+
+    PRIMARY KEY (student_id, project_id),
+
+    FOREIGN KEY (student_id)
+        REFERENCES students(student_id),
+
+    FOREIGN KEY (project_id)
+        REFERENCES projects(project_id)
+);
+
+CREATE TABLE internships (
+    internship_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    internship_title TEXT NOT NULL,
+    internship_company TEXT NOT NULL,
+    internship_description TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (student_id)
+        REFERENCES students(student_id)
+);
+
+CREATE TABLE class_schedules (
+    class_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id INTEGER,
+    class_name TEXT NOT NULL,
+    room_id INTEGER NOT NULL,
+    class_description TEXT NOT NULL,
+    class_day TEXT NOT NULL,
+    class_start TEXT NOT NULL,
+    class_end TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (teacher_id)
+        REFERENCES teachers(teacher_id),
+
+    FOREIGN KEY (room_id)
+        REFERENCES rooms(room_id)
+);
+
+CREATE TABLE exam_schedules (
+    exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    exam_name TEXT NOT NULL,
+    exam_final INTEGER NOT NULL CHECK (exam_final IN (0, 1)),
+    exam_start TEXT NOT NULL,
+    exam_end TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE news_item (
+    news_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    news_title TEXT NOT NULL,
+    news_description TEXT,
+    news_category TEXT NOT NULL,
+    news_image TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE videos (
+    video_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_title TEXT NOT NULL,
+    video_description TEXT NOT NULL,
+    video_path TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

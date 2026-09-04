@@ -20,11 +20,15 @@ export default function Home() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Role</th><th>Lineage</th><th>Contact</th><th>Instagram</th>
+          </tr>
+        </thead>
         <tbody>
           {students.map((student) => (
             <tr key={student.student_id}>
-              <td>{student.student_id}</td><td>{student.student_firstname}</td><td>{student.student_lastname}</td>
+              <td>{student.student_id}</td><td>{student.student_firstname}</td><td>{student.student_lastname}</td><td>{student.student_image}</td><td>{student.student_role}</td><td>{student.student_lineage}</td><td>{student.student_contact}</td><td>{student.student_instagram}</td>
             </tr>
           ))}
         </tbody>
