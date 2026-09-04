@@ -6,4 +6,5 @@ export type Teachers = {
   teacher_advise_year: string;
   teacher_contact: string;
   created_at: string;
+  teacher_name_en: string;
 }

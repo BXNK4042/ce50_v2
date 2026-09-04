@@ -3,6 +3,7 @@ import sqlite3
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -18,6 +19,8 @@ app.add_middleware(
   allow_methods=["*"],
   allow_headers=["*"]
 )
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.get("/", response_class=HTMLResponse)
 def home():
