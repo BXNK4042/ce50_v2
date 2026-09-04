@@ -1,15 +1,28 @@
-import Link from "next/link"
+"use client"
+
+import Image from "next/image"
 
 export default function Home() {
-  return (<div>
-    <h1>CE50</h1>
-    <Link href="/class" className="btn btn-primary">Class</Link>
-    <Link href="/exam" className="btn btn-primary">Exam</Link>
-    <Link href="/internship" className="btn btn-primary">Internship</Link>
-    <Link href="/news" className="btn btn-primary">News</Link>
-    <Link href="/projects" className="btn btn-primary">Projects</Link>
-    <Link href="/rooms" className="btn btn-primary">Rooms</Link>
-    <Link href="/students" className="btn btn-primary">Students</Link>
-    <Link href="/teachers" className="btn btn-primary">Teachers</Link>
-  </div>)
+  return (
+    <div>
+      <div className="bg-black flex justify-center items-center">
+        <Image
+          src="/ce_logo.webp"
+          alt="CE_LOGO"
+          width="500"
+          height="500"
+          className="absolute z-1 transition-transform duration-300 ease-in-out hover:scale-110"
+          draggable="false"
+        />
+        <video
+          className="w-100 opacity-50 z-0"
+          muted
+          autoPlay
+          loop
+        >
+          <source src="/ce_hero_footage_zoomed.mp4" type="video/mp4"/>
+        </video>
+      </div>
+    </div>
+  )
 }
