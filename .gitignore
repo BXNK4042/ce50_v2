@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*.db
 
 # Frontend dependencies
 frontend/node_modules/
