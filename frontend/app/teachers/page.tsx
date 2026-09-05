@@ -35,8 +35,8 @@ export default function TeachersPage() {
                 <Image
                   src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}.webp`}
                   alt={teacher.teacher_firstname}
-                  width={300}
-                  height={300}
+                  width={200}
+                  height={200}
                 />
                 <div className="card-body text-center">
                   <h5 className="card-title">{teacher.teacher_firstname} {teacher.teacher_lastname}</h5>
