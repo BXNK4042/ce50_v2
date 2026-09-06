@@ -33,10 +33,11 @@ export default function TeachersPage() {
             <div className="col" key={teacher.teacher_id}>
               <div className="card justify-content-center align-items-center">
                 <Image
-                  src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}.webp`}
+                  src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                   alt={teacher.teacher_firstname}
-                  width={200}
+                  width={500}
                   height={200}
+                  draggable="false"
                 />
                 <div className="card-body text-center">
                   <h5 className="card-title">{teacher.teacher_firstname} {teacher.teacher_lastname}</h5>
