@@ -17,7 +17,7 @@ export default function TeachersPage() {
   }, []);
 
   return (
-    <div className="container py-4">
+    <div className="container-fluid px-5 py-4 bg-black">
       <table className="table table-striped">
         <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Contact</th><th>Name_En</th></tr></thead>
         <tbody>
@@ -28,10 +28,13 @@ export default function TeachersPage() {
           ))}
         </tbody>
       </table>
+      <h1 className="text-white">วิศวกรรมคอมพิวเตร์</h1>
+     <h1 className="text-primary">คณาจารย์</h1>
+      <div className="bg-blue-500 w-20 h-1 mb-5"></div>
       <div className="row rows-cols-1 row-cols-md-4 g-4">
           {teachers.map((teacher) => (
             <div className="col" key={teacher.teacher_id}>
-              <div className="card justify-content-center align-items-center">
+              <div className="card text-bg-light justify-content-center align-items-center">
                 <Image
                   src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                   alt={teacher.teacher_firstname}

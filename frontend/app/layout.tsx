@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useEffect } from "react";
 import Image from "next/image";
 import ce_logo from "../public/ce_logo.webp"
+import { Outfit } from "next/font/google";
+
+const outfit = Outfit({ subsets: ["latin"] });
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   useEffect(() => {
@@ -15,7 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
   return (
     <html lang="en">
-      <body>
+      <body className={outfit.className}>
         <ul className="nav justify-content-center bg-black align-items-center">
           <li className="nav-item dropdown">
             <a className="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
