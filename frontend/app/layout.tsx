@@ -111,17 +111,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </li>
         </ul>
         {children}
-        <footer className="py-5 px-5">
+        <footer className="py-5 px-5 bg-black text-white">
           <div className="row">
             <div className="col-2 col-md-6 mb-3">
               <h5 className="p-2">Section</h5>
               <ul className="nav flex-row">
                 {footerRoutes.map((route) => (
                   <li key={route.href} className="nav-item mb-2">
-                    <Link
-                      href={route.href}
-                      className="nav-link p-2 text-body-secondary"
-                    >
+                    <Link href={route.href} className="nav-link p-2 text-white">
                       {route.label}
                     </Link>
                   </li>
@@ -155,22 +152,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <p>© 2026 KMITL PCC All rights reserved.</p>
             <ul className="list-unstyled d-flex">
               <li className="ms-3">
-                <a
-                  className="link-body-emphasis"
-                  href="#"
-                  aria-label="Instagram"
-                >
+                <a className="text-white" href="#" aria-label="Instagram">
                   <svg className="bi" width="24" height="24">
                     <use xlinkHref="#instagram" />
                   </svg>
                 </a>
               </li>
               <li className="ms-3">
-                <a
-                  className="link-body-emphasis"
-                  href="#"
-                  aria-label="Facebook"
-                >
+                <a className="text-white" href="#" aria-label="Facebook">
                   <svg className="bi" width="24" height="24" aria-hidden="true">
                     <use xlinkHref="#facebook" />
                   </svg>
