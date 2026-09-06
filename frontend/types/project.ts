@@ -4,4 +4,4 @@ export type Projects = {
   project_description: string;
   project_image: string;
   created_at: string;
-}
+};

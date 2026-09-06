@@ -5,4 +5,4 @@ export type NewsItem = {
   news_category: string;
   news_image: string;
   created_at: string;
-}
+};

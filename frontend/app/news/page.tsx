@@ -18,11 +18,19 @@ export default function NewsPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Title</th><th>Category</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+          </tr>
+        </thead>
         <tbody>
           {news.map((item) => (
             <tr key={item.news_id}>
-              <td>{item.news_id}</td><td>{item.news_title}</td><td>{item.news_category}</td>
+              <td>{item.news_id}</td>
+              <td>{item.news_title}</td>
+              <td>{item.news_category}</td>
             </tr>
           ))}
         </tbody>

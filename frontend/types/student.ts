@@ -8,4 +8,4 @@ export type Students = {
   student_contact: string;
   student_instagram: string;
   created_at: string;
-}
+};

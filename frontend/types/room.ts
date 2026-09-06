@@ -4,4 +4,4 @@ export type Rooms = {
   room_description: string;
   room_image: string;
   created_at: string;
-}
+};

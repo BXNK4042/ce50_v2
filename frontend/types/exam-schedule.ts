@@ -5,4 +5,4 @@ export type ExamSchedules = {
   exam_start: string;
   exam_end: string;
   created_at: string;
-}
+};

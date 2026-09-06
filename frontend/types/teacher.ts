@@ -7,4 +7,4 @@ export type Teachers = {
   teacher_contact: string;
   created_at: string;
   teacher_name_en: string;
-}
+};

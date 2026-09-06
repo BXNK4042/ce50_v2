@@ -18,11 +18,19 @@ export default function RoomsPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Name</th><th>Description</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
         <tbody>
           {rooms.map((room) => (
             <tr key={room.room_id}>
-              <td>{room.room_id}</td><td>{room.room_name}</td><td>{room.room_description}</td>
+              <td>{room.room_id}</td>
+              <td>{room.room_name}</td>
+              <td>{room.room_description}</td>
             </tr>
           ))}
         </tbody>

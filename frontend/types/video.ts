@@ -4,4 +4,4 @@ export type Videos = {
   video_description: string;
   video_path: string;
   created_at: string;
-}
+};

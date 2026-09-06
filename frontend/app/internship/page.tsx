@@ -18,11 +18,19 @@ export default function InternshipPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Title</th><th>Company</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Company</th>
+          </tr>
+        </thead>
         <tbody>
           {internships.map((internship) => (
             <tr key={internship.internship_id}>
-              <td>{internship.internship_id}</td><td>{internship.internship_title}</td><td>{internship.internship_company}</td>
+              <td>{internship.internship_id}</td>
+              <td>{internship.internship_title}</td>
+              <td>{internship.internship_company}</td>
             </tr>
           ))}
         </tbody>

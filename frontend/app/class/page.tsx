@@ -18,11 +18,23 @@ export default function ClassPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Name</th><th>Day</th><th>Start</th><th>End</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Day</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+        </thead>
         <tbody>
           {classes.map((classSchedule) => (
             <tr key={classSchedule.class_id}>
-              <td>{classSchedule.class_id}</td><td>{classSchedule.class_name}</td><td>{classSchedule.class_day}</td><td>{classSchedule.class_start}</td><td>{classSchedule.class_end}</td>
+              <td>{classSchedule.class_id}</td>
+              <td>{classSchedule.class_name}</td>
+              <td>{classSchedule.class_day}</td>
+              <td>{classSchedule.class_start}</td>
+              <td>{classSchedule.class_end}</td>
             </tr>
           ))}
         </tbody>

@@ -18,11 +18,19 @@ export default function ProjectsPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Name</th><th>Description</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
         <tbody>
           {projects.map((project) => (
             <tr key={project.project_id}>
-              <td>{project.project_id}</td><td>{project.project_name}</td><td>{project.project_description}</td>
+              <td>{project.project_id}</td>
+              <td>{project.project_name}</td>
+              <td>{project.project_description}</td>
             </tr>
           ))}
         </tbody>

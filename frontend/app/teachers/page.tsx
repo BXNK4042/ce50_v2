@@ -17,39 +17,44 @@ export default function TeachersPage() {
   }, []);
 
   return (
-    <div className="container-fluid px-5 py-4 bg-black">
-      <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Contact</th><th>Name_En</th></tr></thead>
-        <tbody>
-          {teachers.map((teacher) => (
-            <tr key={teacher.teacher_id}>
-              <td>{teacher.teacher_id}</td><td>{teacher.teacher_firstname}</td><td>{teacher.teacher_lastname}</td><td>{teacher.teacher_image}</td><td>{teacher.teacher_contact}</td><td>{teacher.teacher_name_en}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <h1 className="text-white">วิศวกรรมคอมพิวเตร์</h1>
-     <h1 className="text-primary">คณาจารย์</h1>
-      <div className="bg-blue-500 w-20 h-1 mb-5"></div>
-      <div className="row rows-cols-1 row-cols-md-4 g-4">
-          {teachers.map((teacher) => (
-            <div className="col" key={teacher.teacher_id}>
-              <div className="card text-bg-light justify-content-center align-items-center">
-                <Image
-                  src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
-                  alt={teacher.teacher_firstname}
-                  width={500}
-                  height={200}
-                  draggable="false"
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{teacher.teacher_firstname} {teacher.teacher_lastname}</h5>
-                </div>
+    <div className="container-fluid px-5 py-5 bg-black">
+      {/*
+        <table className="table table-striped">
+          <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Contact</th><th>Name_En</th></tr></thead>
+          <tbody>
+            {teachers.map((teacher) => (
+              <tr key={teacher.teacher_id}>
+                <td>{teacher.teacher_id}</td><td>{teacher.teacher_firstname}</td><td>{teacher.teacher_lastname}</td><td>{teacher.teacher_image}</td><td>{teacher.teacher_contact}</td><td>{teacher.teacher_name_en}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      */}
+      <div className="mt-5 mb-5">
+        <h1 className="text-white">วิศวกรรมคอมพิวเตร์</h1>
+        <h1 className="text-primary">คณาจารย์</h1>
+        <div className="bg-blue-500 w-20 h-1"></div>
+      </div>
+      <div className="row row-cols-1 row-cols-md-4 g-4">
+        {teachers.map((teacher) => (
+          <div className="col" key={teacher.teacher_id}>
+            <div className="card text-bg-dark justify-content-center align-items-center">
+              <Image
+                src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
+                alt={teacher.teacher_firstname}
+                width={500}
+                height={200}
+                draggable="false"
+              />
+              <div className="card-body text-center">
+                <h5 className="card-title">
+                  {teacher.teacher_firstname} {teacher.teacher_lastname}
+                </h5>
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
-
   );
 }

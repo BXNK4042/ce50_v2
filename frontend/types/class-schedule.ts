@@ -8,4 +8,4 @@ export type ClassSchedules = {
   class_start: string;
   class_end: string;
   created_at: string;
-}
+};

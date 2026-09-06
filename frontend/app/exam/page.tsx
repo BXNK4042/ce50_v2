@@ -18,11 +18,23 @@ export default function ExamPage() {
   return (
     <div className="container py-4">
       <table className="table table-striped">
-        <thead><tr><th>ID</th><th>Name</th><th>Final</th><th>Start</th><th>End</th></tr></thead>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Final</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+        </thead>
         <tbody>
           {exams.map((exam) => (
             <tr key={exam.exam_id}>
-              <td>{exam.exam_id}</td><td>{exam.exam_name}</td><td>{exam.exam_final}</td><td>{exam.exam_start}</td><td>{exam.exam_end}</td>
+              <td>{exam.exam_id}</td>
+              <td>{exam.exam_name}</td>
+              <td>{exam.exam_final}</td>
+              <td>{exam.exam_start}</td>
+              <td>{exam.exam_end}</td>
             </tr>
           ))}
         </tbody>
