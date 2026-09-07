@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import ce_logo from "../public/ce_logo.webp";
 import { Outfit } from "next/font/google";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const outfit = Outfit({ subsets: ["latin"] });
 

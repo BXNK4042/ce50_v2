@@ -38,7 +38,7 @@ export default function TeachersPage() {
       <div className="row row-cols-1 row-cols-md-4 g-4">
         {teachers.map((teacher) => (
           <div className="col" key={teacher.teacher_id}>
-            <div className="card text-bg-dark justify-content-center align-items-center">
+            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
               <Image
                 src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                 alt={teacher.teacher_firstname}
@@ -57,4 +57,24 @@ export default function TeachersPage() {
       </div>
     </div>
   );
+}
+
+{
+  /*
+  "use client";
+
+  import { useState } from "react";
+  import OtherComponent from "./OtherComponent";
+
+  export default function Page() {
+    const [show, setShow] = useState(false);
+
+    return (
+      <>
+        <button onClick={() => setShow(true)}>Show component</button>
+        {show && <OtherComponent />}
+      </>
+    );
+  }
+*/
 }

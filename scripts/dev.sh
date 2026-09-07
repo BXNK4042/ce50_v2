@@ -10,7 +10,7 @@ if tmux has-session -t "$SESSION" 2>/dev/null; then
 fi
 
 tmux new-session -d -s "$SESSION" -n dev -c "$ROOT/backend" \
-  "source '$ROOT/.venv/bin/activate' && exec uvicorn main:app --reload --port 8000"
+  "exec '$ROOT/.venv/bin/python' -m uvicorn main:app --reload --port 8000"
 tmux split-window -h -t "$SESSION:dev" -c "$ROOT/frontend" "npm run dev"
 tmux select-pane -t "$SESSION:dev.0"
 tmux new-window -t "$SESSION" -n terminal -c "$ROOT"
