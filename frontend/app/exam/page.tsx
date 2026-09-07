@@ -17,7 +17,7 @@ export default function ExamPage() {
 
   return (
     <div className="template-container">
-      <table className="table table-striped">
+      <table className="table table-light table-striped">
         <thead>
           <tr>
             <th>ID</th>
