@@ -47,6 +47,8 @@ cd frontend
 npm run dev
 ```
 
+Set `API_URL` to the backend's public URL before building for deployment. It defaults to `http://localhost:8000` for local development.
+
 - App: <http://localhost:3000>
 - API: <http://localhost:8000>
 - API docs: <http://localhost:8000/docs>

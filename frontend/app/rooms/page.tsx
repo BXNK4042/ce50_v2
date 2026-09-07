@@ -8,7 +8,7 @@ export default function RoomsPage() {
 
   useEffect(() => {
     async function getRooms() {
-      const response = await fetch("http://localhost:8000/rooms");
+      const response = await fetch("/api/rooms");
       setRooms(await response.json());
     }
 

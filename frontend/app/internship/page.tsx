@@ -8,7 +8,7 @@ export default function InternshipPage() {
 
   useEffect(() => {
     async function getInternships() {
-      const response = await fetch("http://localhost:8000/internship");
+      const response = await fetch("/api/internship");
       setInternships(await response.json());
     }
 

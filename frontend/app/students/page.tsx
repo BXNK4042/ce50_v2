@@ -9,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     async function getStudent() {
-      const response = await fetch("http://localhost:8000/students");
+      const response = await fetch("/api/students");
       const result = await response.json();
       setStudents(result);
     }
@@ -73,7 +73,7 @@ export default function Home() {
             <div className="col" key={student.student_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`http://localhost:8000/uploads/students/ce_04/${student.student_id}.png`}
+                  src={`/uploads/students/ce_04/${student.student_id}.png`}
                   alt={student.student_firstname}
                   width={500}
                   height={500}
@@ -102,17 +102,6 @@ export default function Home() {
                         <br />
                         สายรหัส: T{student.student_lineage}
                         <br />
-                        <i className="bi bi-telephone">
-                          : {student.student_contact}
-                        </i>
-                        <br />
-                        <a
-                          className="bi bi-instagram link-offset-2 link-underline link-underline-opacity-0"
-                          href={`https://instagram.com/${student.student_instagram}`}
-                          target="_blank"
-                        >
-                          : {student.student_instagram}
-                        </a>
                       </p>
                     </div>
                     <div className="modal-footer">

@@ -1,16 +1,19 @@
 import type { NextConfig } from "next";
 
+const apiUrl = process.env.API_URL ?? "http://localhost:8000";
+
 const nextConfig: NextConfig = {
-  images: {
-    dangerouslyAllowLocalIP: true,
-    remotePatterns: [
+  async rewrites() {
+    return [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8000",
-        pathname: "/uploads/**",
+        source: "/api/:path*",
+        destination: `${apiUrl}/:path*`,
       },
-    ],
+      {
+        source: "/uploads/:path*",
+        destination: `${apiUrl}/uploads/:path*`,
+      },
+    ];
   },
 };
 

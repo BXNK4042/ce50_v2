@@ -8,7 +8,7 @@ export default function ExamPage() {
 
   useEffect(() => {
     async function getExams() {
-      const response = await fetch("http://localhost:8000/exam");
+      const response = await fetch("/api/exam");
       setExams(await response.json());
     }
 

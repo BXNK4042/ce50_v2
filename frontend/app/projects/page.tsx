@@ -9,7 +9,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     async function getProjects() {
-      const response = await fetch("http://localhost:8000/projects");
+      const response = await fetch("/api/projects");
       setProjects(await response.json());
     }
 
@@ -51,7 +51,7 @@ export default function ProjectsPage() {
             <div className="col" key={project.project_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`http://localhost:8000/uploads/projects/${project.project_image}`}
+                  src={`/uploads/projects/${project.project_image}`}
                   alt={project.project_name}
                   width={1000}
                   height={1000}

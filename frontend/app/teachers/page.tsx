@@ -9,7 +9,7 @@ export default function TeachersPage() {
 
   useEffect(() => {
     async function getTeachers() {
-      const response = await fetch("http://localhost:8000/teachers");
+      const response = await fetch("/api/teachers");
       setTeachers(await response.json());
     }
 
@@ -40,7 +40,7 @@ export default function TeachersPage() {
           <div className="col" key={teacher.teacher_id}>
             <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
               <Image
-                src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
+                src={`/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                 alt={teacher.teacher_firstname}
                 width={1000}
                 height={1000}

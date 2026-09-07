@@ -4,12 +4,11 @@ from pathlib import Path
 DB_PATH = Path(__file__).with_name("ce50.db")
 
 
-def insertMany(query, data):
-  with sqlite3.connect(DB_PATH) as connection:
-    connection.executemany(query, data)
+def insertMany(connection, query, data):
+  connection.executemany(query, data)
 
 
-def seedRooms():
+def seedRooms(connection):
   rooms_data = [
     ("E111", "ห้องเรียนปกติ ห้องที่มีจอ"),
     ("E112", "ห้องทำงานโปรเจค"),
@@ -18,29 +17,29 @@ def seedRooms():
     ("B218", "ห้องคอมพิวเตอร์ตึก B")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO rooms (room_name, room_description) VALUES (?, ?)",
     rooms_data,
   )
 
 
-def seedTeachers():
+def seedTeachers(connection):
   teachers_data = [
-    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th"),
-    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th"),
-    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th"),
-    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th"),
-    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th"),
-    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th")
+    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th", "athasart"),
+    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th", "rattikorn"),
+    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th", "pisakorn"),
+    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th", "silar"),
+    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th", "sakawkarn"),
+    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th", "jaturong")
   ]
 
-  insertMany(
-    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact) VALUES (?, ?, ?)",
+  insertMany(connection,
+    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact, teacher_name_en) VALUES (?, ?, ?, ?)",
     teachers_data,
   )
 
 
-def seedStudents():
+def seedStudents(connection):
   students_data = [
     ("67200412", "นายรุจิณัฐ", "อาศิรเมธี", "006", "0800479886", "Rujinat_Fah"),
     ("67200014", "นางสาวกัณฐมณี", "กอบการ", "339", "0875732080", "kwin_mhy"),
@@ -59,102 +58,106 @@ def seedStudents():
     ("67200380", "นายปรินทร", "คงทอง", "339", "0631102883", "bank.parinthon")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO students (student_id, student_firstname, student_lastname, student_lineage, student_contact, student_instagram) VALUES (?, ?, ?, ?, ?, ?)",
     students_data,
   )
 
 
-def seedUsers():
+def seedUsers(connection):
   users_data = [
     ("superadmin", "hash_password(super_pw)", "superadmin@ce.ac.th", "superadmin"),
     ("admin_y1", "hash_password(admin_pw)", "admin_y1@ce.ac.th", "admin"),
     ("writer_y1", "hash_password(writer_pw)", "writer_y1@ce.ac.th", "writer")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO users (user_name, password_hash, user_email, user_role) VALUES (?, ?, ?, ?)",
     users_data,
   )
 
 
-def seedProjects():
+def seedProjects(connection):
   projects_data = [
-    (1, "H.I.V.E", "โปรเจค HoneyPot ของกลุ่มไปน์")
+    (1, "H.I.V.E", "โปรเจค HoneyPot ของกลุ่มไปน์", "hive.png")
   ]
 
-  insertMany(
-    "INSERT INTO projects (project_id, project_name, project_description) VALUES (?, ?, ?)",
+  insertMany(connection,
+    "INSERT INTO projects (project_id, project_name, project_description, project_image) VALUES (?, ?, ?, ?)",
     projects_data,
   )
 
 
-def seedStudentProjects():
+def seedStudentProjects(connection):
   student_projects_data = [
     ("67200099", 1)
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO student_projects (student_id, project_id) VALUES (?, ?)",
     student_projects_data,
   )
 
 
-def seedInternships():
+def seedInternships(connection):
   internships_data = [
     ("67200380", "Frontend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Frontend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO internships (student_id, internship_title, internship_company, internship_description) VALUES (?, ?, ?, ?)",
     internships_data,
   )
 
 
-def seedClassSchedules():
+def seedClassSchedules(connection):
   class_schedules_data = [
     ("1", "INFORMATION AND COMPUTER SECURITY", "5", "พื้นฐานสารสนเทศและความปลอดภัยของคอมพิวเตอร์", "wednesday", "13:00", "18:00")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO class_schedules (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end) VALUES (?, ?, ?, ?, ?, ?, ?)",
     class_schedules_data,
   )
 
 
-def seedExamSchedules():
+def seedExamSchedules(connection):
   exam_schedules_data = [
     ("INFORMATION AND COMPUTER SECURITY (MIDTERM)", 0, "13:30", "16:30")
   ]
 
-  insertMany(
+  insertMany(connection,
     "INSERT INTO exam_schedules (exam_name, exam_final, exam_start, exam_end) VALUES (?, ?, ?, ?)",
     exam_schedules_data,
   )
 
 
-def seedNewsItems():
+def seedNewsItems(connection):
   news_item_data = [
-    ("Topgun Riley", "งานแข่งขันด้าน Embemded System ร่วมกับ AI Automation", "งานแข่งขัน")
+    ("Topgun Riley", "งานแข่งขันด้าน Embemded System ร่วมกับ AI Automation", "งานแข่งขัน", "tesa_top_gun_rally_01.jpg")
   ]
 
-  insertMany(
-    "INSERT INTO news_item (news_title, news_description, news_category) VALUES (?, ?, ?)",
+  insertMany(connection,
+    "INSERT INTO news_item (news_title, news_description, news_category, news_image) VALUES (?, ?, ?, ?)",
     news_item_data,
   )
 
 
 def seedAll():
-  seedRooms()
-  seedTeachers()
-  seedStudents()
-  seedUsers()
-  seedProjects()
-  seedStudentProjects()
-  seedInternships()
-  seedClassSchedules()
-  seedExamSchedules()
-  seedNewsItems()
+  with sqlite3.connect(DB_PATH) as connection:
+    connection.execute("PRAGMA foreign_keys = ON")
+    if any(connection.execute(f"SELECT 1 FROM {table} LIMIT 1").fetchone() for table in ("rooms", "teachers", "students", "users", "projects", "student_projects", "internships", "class_schedules", "exam_schedules", "news_item")):
+      raise RuntimeError("Database already contains seed data")
+    seedRooms(connection)
+    seedTeachers(connection)
+    seedStudents(connection)
+    seedUsers(connection)
+    seedProjects(connection)
+    seedStudentProjects(connection)
+    seedInternships(connection)
+    seedClassSchedules(connection)
+    seedExamSchedules(connection)
+    seedNewsItems(connection)
 
 
 if __name__ == "__main__":
