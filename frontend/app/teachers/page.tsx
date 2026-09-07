@@ -31,7 +31,7 @@ export default function TeachersPage() {
         </table>
       */}
       <div className="mt-5 mb-5">
-        <h1 className="text-white">วิศวกรรมคอมพิวเตร์</h1>
+        <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
         <h1 className="text-primary">คณาจารย์</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>

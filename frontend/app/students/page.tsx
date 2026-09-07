@@ -61,7 +61,7 @@ export default function Home() {
         />
       </div>
       <div className="mt-5 mb-5">
-        <h1 className="text-white">วิศวกรรมคอมพิวเตร์</h1>
+        <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
         <h1 className="text-primary">นักศึกษา</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
