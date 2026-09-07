@@ -5,4 +5,5 @@ export type Internships = {
   internship_company: string;
   internship_description: string;
   created_at: string;
+  internship_company_image: string;
 };
