@@ -12,6 +12,7 @@ CREATE TABLE teachers (
     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
     teacher_firstname TEXT NOT NULL,
     teacher_lastname TEXT NOT NULL,
+    teacher_name_en TEXT,
     teacher_image TEXT,
     teacher_advise_year TEXT, -- Store array as JSON, e.g. '["2024","2025"]'
     teacher_contact TEXT NOT NULL,
