@@ -18,7 +18,7 @@ export default function Home() {
   }, []); //dependency array shit
 
   return (
-    <div className="bg-black p-5 py-5">
+    <div className="container py-4">
       {/*
         <table className="table table-striped">
           <thead>

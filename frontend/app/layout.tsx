@@ -23,6 +23,8 @@ const footerRoutes = [
   { href: "/internship", label: "Internship" },
 ];
 
+const currentYear = new Date().getFullYear();
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   useEffect(() => {
     // @ts-expect-error Bootstrap bundle has no TypeScript declarations.
@@ -150,7 +152,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </div>
           <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>© 2026 KMITL PCC All rights reserved.</p>
+            <p>© {currentYear} KMITL PCC All rights reserved.</p>
             <ul className="list-unstyled d-flex">
               <li className="ms-3">
                 <a className="text-white" href="#" aria-label="Instagram">

@@ -17,7 +17,7 @@ export default function TeachersPage() {
   }, []);
 
   return (
-    <div className="container-fluid px-5 py-5 bg-black">
+    <div className="container py-4">
       {/*
         <table className="table table-striped">
           <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Contact</th><th>Name_En</th></tr></thead>
@@ -42,8 +42,8 @@ export default function TeachersPage() {
               <Image
                 src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                 alt={teacher.teacher_firstname}
-                width={500}
-                height={200}
+                width={1000}
+                height={1000}
                 draggable="false"
               />
               <div className="card-body text-center">
