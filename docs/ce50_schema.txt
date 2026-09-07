@@ -12,11 +12,11 @@ CREATE TABLE teachers (
     teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
     teacher_firstname TEXT NOT NULL,
     teacher_lastname TEXT NOT NULL,
-    teacher_name_en TEXT,
     teacher_image TEXT,
     teacher_advise_year TEXT, -- Store array as JSON, e.g. '["2024","2025"]'
     teacher_contact TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    teacher_name_en TEXT
 );
 
 CREATE TABLE students (
@@ -71,6 +71,7 @@ CREATE TABLE internships (
     internship_company TEXT NOT NULL,
     internship_description TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    internship_company_image TEXT,
 
     FOREIGN KEY (student_id)
         REFERENCES students(student_id)
