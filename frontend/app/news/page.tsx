@@ -17,7 +17,7 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <div className="container py-4">
+    <div className="template-container">
       {/*
         <table className="table table-striped">
           <thead>
@@ -50,10 +50,10 @@ export default function NewsPage() {
               <Image
                 src={`http://localhost:8000/uploads/news/${item.news_image}`}
                 alt={item.news_title}
-                width={1500}
-                height={1500}
+                width={2000}
+                height={2000}
               />
-              <div className="carousel-caption d-none d-md-block text-black bg-white">
+              <div className="carousel-caption d-none d-md-block text-black bg-white opacity-80">
                 <h3>{item.news_title}</h3>
                 <p>{item.news_description}</p>
               </div>

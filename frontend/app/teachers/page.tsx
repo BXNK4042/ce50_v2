@@ -17,7 +17,7 @@ export default function TeachersPage() {
   }, []);
 
   return (
-    <div className="container py-4">
+    <div className="template-container">
       {/*
         <table className="table table-striped">
           <thead><tr><th>ID</th><th>Firstname</th><th>Lastname</th><th>Image</th><th>Contact</th><th>Name_En</th></tr></thead>

@@ -114,7 +114,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </li>
         </ul>
         {children}
-        <footer className="py-5 px-5 bg-black text-white">
+        <footer className="template-container text-white">
           <div className="row">
             <div className="col-2 col-md-6 mb-3">
               <h5 className="p-2">Section</h5>

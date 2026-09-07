@@ -16,7 +16,7 @@ export default function ExamPage() {
   }, []);
 
   return (
-    <div className="container py-4">
+    <div className="template-container">
       <table className="table table-striped">
         <thead>
           <tr>

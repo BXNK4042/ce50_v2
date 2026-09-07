@@ -18,7 +18,7 @@ export default function Home() {
   }, []); //dependency array shit
 
   return (
-    <div className="container py-4">
+    <div className="template-container">
       {/*
         <table className="table table-striped">
           <thead>
@@ -50,7 +50,7 @@ export default function Home() {
         </table>
       */}
 
-      <div className="bg-black bg-gradient">
+      <div className="bg-gradient">
         <Image
           src="/ce_04_cropped.webp"
           alt="ce_04"
