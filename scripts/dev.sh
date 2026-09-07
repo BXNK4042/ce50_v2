@@ -12,8 +12,8 @@ fi
 tmux new-session -d -s "$SESSION" -n dev -c "$ROOT/backend" \
   "exec '$ROOT/.venv/bin/python' -m uvicorn main:app --reload --port 8000"
 tmux split-window -h -t "$SESSION:dev" -c "$ROOT/frontend" "npm run dev"
-tmux select-pane -t "$SESSION:dev.0"
-tmux new-window -t "$SESSION" -n terminal -c "$ROOT"
+tmux select-pane -t "$SESSION:dev" -L
+tmux new-window -t "$SESSION" -n terminal -c "$ROOT" 'zeditor . & exec "${SHELL:-/bin/bash}"'
 tmux new-window -t "$SESSION" -n opencode -c "$ROOT" "opencode --yolo"
 
 exec tmux attach-session -t "$SESSION"
