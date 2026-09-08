@@ -97,10 +97,13 @@ CREATE TABLE class_schedules (
 
 CREATE TABLE exam_schedules (
     exam_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    exam_code TEXT NOT NULL,
     exam_name TEXT NOT NULL,
     exam_final INTEGER NOT NULL CHECK (exam_final IN (0, 1)),
+    exam_date TEXT NOT NULL,
     exam_start TEXT NOT NULL,
     exam_end TEXT NOT NULL,
+    exam_room TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

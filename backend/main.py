@@ -68,6 +68,15 @@ def internships():
   rows = cursor.execute("SELECT * FROM internships").fetchall()
   return [dict(row) for row in rows]
 
+@app.get("/companys")
+def companys():
+  cursor = sqlite3.connect("ce50.db").cursor()
+  cursor.row_factory = sqlite3.Row
+  rows = cursor.execute(
+    "SELECT rowid AS company_id, company_name, company_image FROM company"
+  ).fetchall()
+  return [dict(row) for row in rows]
+
 @app.get("/exam")
 def exam_schedule():
   cursor = sqlite3.connect("ce50.db").cursor()

@@ -14,8 +14,9 @@ def seedRooms():
     ("E111", "ห้องเรียนปกติ ห้องที่มีจอ"),
     ("E112", "ห้องทำงานโปรเจค"),
     ("E113", "ห้องสาขาวิศวกรรมคอมพิวเตอร์"),
-    ("E117", "ห้องปฏิบัติการคอมพิวเตอร์"),
-    ("B218", "ห้องคอมพิวเตอร์ตึก B")
+    ("E107", "ห้องปฏิบัติการคอมพิวเตอร์"),
+    ("B218", "ห้องคอมพิวเตอร์ตึก B"),
+    ("B217", "ห้องวัดระดับภาษาอังกฤษ")
   ]
 
   insertMany(
@@ -115,7 +116,17 @@ def seedInternships():
 
 def seedClassSchedules():
   class_schedules_data = [
-    ("1", "INFORMATION AND COMPUTER SECURITY", "5", "พื้นฐานสารสนเทศและความปลอดภัยของคอมพิวเตอร์", "wednesday", "13:00", "18:00")
+    (2, "Software Development Processes (ทฤษฎี)", 4, "หลักการและกระบวนการพัฒนาซอฟต์แวร์", "monday", "10:00", "12:00"),
+    (2, "Software Development Processes ปฏิบัติ)", 5, "ฝึกปฏิบัติกระบวนการพัฒนาซอฟต์แวร์", "monday", "13:00", "16:00"),
+    (3, "Team-Project 2 ปฏิบัติ)", 1, "ฝึกพัฒนาโครงงานเป็นทีม", "monday", "18:00", "20:00"),
+    (2, "Database Systems (ทฤษฎี)", 5, "หลักการออกแบบและจัดการฐานข้อมูล", "tuesday", "10:00", "12:00"),
+    (2, "Database Systems ปฏิบัติ)", 5, "ฝึกออกแบบและใช้งานฐานข้อมูล", "tuesday", "13:00", "16:00"),
+    (4, "Computer Hardware Design (ทฤษฎี)", 6, "หลักการออกแบบฮาร์ดแวร์คอมพิวเตอร์", "wednesday", "10:00", "12:00"),
+    (1, "Information and Computer Security ปฏิบัติ)", 5, "ฝึกปฏิบัติด้านความมั่นคงปลอดภัยคอมพิวเตอร์", "wednesday", "13:00", "16:00"),
+    (1, "Information and Computer Security (ทฤษฎี)", 5, "พื้นฐานความมั่นคงปลอดภัยสารสนเทศ", "wednesday", "16:00", "18:00"),
+    (4, "Computer Hardware Design ปฏิบัติ)", 6, "ฝึกออกแบบวงจรและฮาร์ดแวร์คอมพิวเตอร์", "thursday", "09:00", "12:00"),
+    (2, "Computer Architecture ปฏิบัติ)", 4, "ฝึกวิเคราะห์โครงสร้างและสถาปัตยกรรมคอมพิวเตอร์", "thursday", "17:00", "20:00"),
+    (2, "Computer Architecture (ทฤษฎี)", 1, "หลักการสถาปัตยกรรมคอมพิวเตอร์", "friday", "10:00", "12:00")
   ]
 
   insertMany(
@@ -126,11 +137,18 @@ def seedClassSchedules():
 
 def seedExamSchedules():
   exam_schedules_data = [
-    ("INFORMATION AND COMPUTER SECURITY (MIDTERM)", 0, "13:30", "16:30")
+    ("11256011", "Software Development Processes (MIDTERM)", 0, "2026-08-23", "13:30", "16:30", "E113"),
+    ("11256011", "Software Development Processes (FINAL)", 1, "2026-11-03", "13:30", "16:30", "E113"),
+    ("11256016", "Database Systems (MIDTERM)", 0, "2026-08-21", "13:30", "16:30", "E113"),
+    ("11256016", "Database Systems (FINAL)", 1, "2026-10-30", "13:30", "16:30", "E113"),
+    ("11256022", "Information and Computer Security (FINAL)", 1, "2026-10-26", "13:30", "16:30", "E113"),
+    ("11256025", "Computer Architecture (MIDTERM)", 0, "2026-08-19", "13:30", "16:30", "E113"),
+    ("11256025", "Computer Architecture (FINAL)", 1, "2026-10-28", "13:30", "16:30", "E113"),
+    ("11256027", "Computer Hardware Design (FINAL)", 1, "2026-11-04", "13:30", "16:30", "E113")
   ]
 
   insertMany(
-    "INSERT INTO exam_schedules (exam_name, exam_final, exam_start, exam_end) VALUES (?, ?, ?, ?)",
+    "INSERT INTO exam_schedules (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room) VALUES (?, ?, ?, ?, ?, ?, ?)",
     exam_schedules_data,
   )
 

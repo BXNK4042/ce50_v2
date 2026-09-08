@@ -1,19 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Internships } from "@/types/internship";
+//import { Internships } from "@/types/internship";
+import { Companys } from "@/types/companys";
 import Image from "next/image";
 
 export default function InternshipPage() {
-  const [internships, setInternships] = useState<Internships[]>([]);
+  const [companys, setCompanys] = useState<Companys[]>([]);
+
+  {
+    /*
+    useEffect(() => {
+      async function getInternships() {
+        const response = await fetch("http://localhost:8000/internship");
+        getInternships(await response.json());
+      }
+
+      getInternships();
+    }, []);
+    */
+  }
 
   useEffect(() => {
-    async function getInternships() {
-      const response = await fetch("http://localhost:8000/internship");
-      setInternships(await response.json());
+    async function getCompanys() {
+      const response = await fetch("http://localhost:8000/companys");
+      setCompanys(await response.json());
     }
 
-    getInternships();
+    getCompanys();
   }, []);
 
   return (
@@ -44,22 +58,20 @@ export default function InternshipPage() {
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
       <div className="row rows-cols-1 row-cols-md-6 g-4">
-        {internships.map((internship) => {
-          return (
-            <div className="col" key={internship.internship_id}>
-              <div className="card bg-black ">
-                <Image
-                  src={`http://localhost:8000/uploads/internships/${internship.internship_company_image}`}
-                  alt={internship.internship_company}
-                  width={1000}
-                  height={1000}
-                  draggable="false"
-                  className="card-img-top hover:opacity-70 duration-150"
-                />
-              </div>
+        {companys.map((company) => (
+          <div className="col" key={company.company_id}>
+            <div className="card bg-black ">
+              <Image
+                src={`http://localhost:8000/uploads/companys/${company.company_image}.jpg`}
+                alt={company.company_name}
+                width={1000}
+                height={1000}
+                draggable="false"
+                className="card-img-top hover:opacity-70 duration-150"
+              />
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );
