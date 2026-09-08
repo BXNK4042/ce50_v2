@@ -73,7 +73,7 @@ def companys():
   cursor = sqlite3.connect("ce50.db").cursor()
   cursor.row_factory = sqlite3.Row
   rows = cursor.execute(
-    "SELECT rowid AS company_id, company_name, company_image FROM company"
+    "SELECT rowid AS company_id, company_name, company_image FROM companys"
   ).fetchall()
   return [dict(row) for row in rows]
 
