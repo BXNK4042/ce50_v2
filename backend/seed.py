@@ -26,16 +26,16 @@ def seedRooms():
 
 def seedTeachers():
   teachers_data = [
-    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th"),
-    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th"),
-    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th"),
-    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th"),
-    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th"),
-    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th")
+    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th", "athasart"),
+    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th", "rattikorn"),
+    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th", "pisakorn"),
+    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th", "silar"),
+    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th", "sakawkarn"),
+    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th", "jaturong")
   ]
 
   insertMany(
-    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact) VALUES (?, ?, ?)",
+    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact, teacher_name_en) VALUES (?, ?, ?, ?)",
     teachers_data,
   )
 
@@ -80,11 +80,11 @@ def seedUsers():
 
 def seedProjects():
   projects_data = [
-    (1, "H.I.V.E", "โปรเจค HoneyPot ของกลุ่มไปน์")
+    (1, "H.I.V.E", "โปรเจค HoneyPot ของกลุ่มไปน์", "hive.png")
   ]
 
   insertMany(
-    "INSERT INTO projects (project_id, project_name, project_description) VALUES (?, ?, ?)",
+    "INSERT INTO projects (project_id, project_name, project_description, project_image) VALUES (?, ?, ?, ?)",
     projects_data,
   )
 
@@ -102,11 +102,13 @@ def seedStudentProjects():
 
 def seedInternships():
   internships_data = [
-    ("67200380", "Frontend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Frontend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน")
+    ("67200380", "Frontend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Frontend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน", "scg.jpg"),
+    ("67200030", "Backend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Backend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน", "scg.jpg"),
+    ("67200099", "Cybersecurity Analyst", "Secure-D", "ฝึกงานตำแหน่ง Cybersecurity Analyst ที่บริษัท Secure-D เป็นเวลา 3 เดือน", "secure-d.jpg")
   ]
 
   insertMany(
-    "INSERT INTO internships (student_id, internship_title, internship_company, internship_description) VALUES (?, ?, ?, ?)",
+    "INSERT INTO internships (student_id, internship_title, internship_company, internship_description, internship_company_image) VALUES (?, ?, ?, ?, ?)",
     internships_data,
   )
 
@@ -135,11 +137,11 @@ def seedExamSchedules():
 
 def seedNewsItems():
   news_item_data = [
-    ("Topgun Riley", "งานแข่งขันด้าน Embemded System ร่วมกับ AI Automation", "งานแข่งขัน")
+    ("Topgun Riley", "งานแข่งขันด้าน Embemded System ร่วมกับ AI Automation", "งานแข่งขัน", "tesa_top_gun_rally_01.jpg")
   ]
 
   insertMany(
-    "INSERT INTO news_item (news_title, news_description, news_category) VALUES (?, ?, ?)",
+    "INSERT INTO news_item (news_title, news_description, news_category, news_image) VALUES (?, ?, ?, ?)",
     news_item_data,
   )
 
