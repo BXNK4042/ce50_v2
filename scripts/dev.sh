@@ -14,6 +14,6 @@ tmux new-session -d -s "$SESSION" -n dev -c "$ROOT/backend" \
 tmux split-window -h -t "$SESSION:dev" -c "$ROOT/frontend" "npm run dev"
 tmux select-pane -t "$SESSION:dev" -L
 tmux new-window -t "$SESSION" -n terminal -c "$ROOT" 'zeditor . & exec "${SHELL:-/bin/bash}"'
-tmux new-window -t "$SESSION" -n opencode -c "$ROOT" "opencode --yolo"
+tmux new-window -t "$SESSION" -n hermes -c "$ROOT" "hermes"
 
 exec tmux attach-session -t "$SESSION"
