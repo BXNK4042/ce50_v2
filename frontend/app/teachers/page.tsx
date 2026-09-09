@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export default function TeachersPage() {
   const [teachers, setTeachers] = useState<Teachers[]>([]);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     async function getTeachers() {
@@ -15,6 +16,16 @@ export default function TeachersPage() {
 
     getTeachers();
   }, []);
+
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? teachers.filter(
+        (t) =>
+          t.teacher_firstname?.toLowerCase().includes(q) ||
+          t.teacher_lastname?.toLowerCase().includes(q) ||
+          t.teacher_name_en?.toLowerCase().includes(q)
+      )
+    : teachers;
 
   return (
     <div className="template-container">
@@ -35,8 +46,17 @@ export default function TeachersPage() {
         <h1 className="text-primary">คณาจารย์</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
+      <div className="mb-4">
+        <input
+          type="search"
+          placeholder="ค้นหาอาจารย์ (ชื่อไทย / อังกฤษ)..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="form-control"
+        />
+      </div>
       <div className="row row-cols-1 row-cols-md-4 g-4">
-        {teachers.map((teacher) => (
+        {filtered.map((teacher) => (
           <div className="col" key={teacher.teacher_id}>
             <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
               <Image
