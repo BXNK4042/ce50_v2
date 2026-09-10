@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Companys } from "@/types/companys";
 import Image from "next/image";
 
-export default function InternshipPage() {
+export default function CompanyPage() {
   const [companys, setCompanys] = useState<Companys[]>([]);
 
   {
