@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Internships } from "@/types/internship";
+import { useParams } from "next/navigation";
 
 export default function InternshipPage() {
+  const { id } = useParams();
   const [internships, setInternships] = useState<Internships[]>([]);
 
   useEffect(() => {
@@ -15,7 +17,7 @@ export default function InternshipPage() {
   }, []);
 
   const filtered = internships.filter(
-    (internship) => internship.company_id === 1,
+    (internship) => internship.company_id === Number(id),
   );
 
   return (

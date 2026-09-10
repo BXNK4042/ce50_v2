@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 //import { Internships } from "@/types/internship";
 import { Companys } from "@/types/companys";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function CompanyPage() {
   const [companys, setCompanys] = useState<Companys[]>([]);
@@ -61,14 +62,16 @@ export default function CompanyPage() {
         {companys.map((company) => (
           <div className="col" key={company.company_id}>
             <div className="card bg-black ">
-              <Image
-                src={`http://localhost:8000/uploads/companys/${company.company_image}.jpg`}
-                alt={company.company_name}
-                width={1000}
-                height={1000}
-                draggable="false"
-                className="card-img-top hover:opacity-70 duration-150"
-              />
+              <Link href={`/internship/${company.company_id}`}>
+                <Image
+                  src={`http://localhost:8000/uploads/companys/${company.company_image}.jpg`}
+                  alt={company.company_name}
+                  width={1000}
+                  height={1000}
+                  draggable="false"
+                  className="card-img-top hover:opacity-70 duration-150"
+                />
+              </Link>
             </div>
           </div>
         ))}
