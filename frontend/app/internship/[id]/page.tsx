@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { Internships } from "@/types/internship";
 import { useParams } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function InternshipPage() {
   const { id } = useParams();
@@ -22,6 +24,12 @@ export default function InternshipPage() {
 
   return (
     <div className="template-container">
+      <Link href="/company">
+        <div className="flex text-decoration-none">
+          <ArrowLeft />
+          <p className="text-decoration-none">Back to Company</p>
+        </div>
+      </Link>
       <table className="table table-striped">
         <thead>
           <tr>
