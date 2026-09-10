@@ -14,8 +14,12 @@ export default function InternshipPage() {
     getInternship();
   }, []);
 
+  const filtered = internships.filter(
+    (internship) => internship.company_id === 1,
+  );
+
   return (
-    <div>
+    <div className="template-container">
       <table className="table table-striped">
         <thead>
           <tr>
@@ -27,36 +31,17 @@ export default function InternshipPage() {
           </tr>
         </thead>
         <tbody>
-          {internships.map((internship) => (
+          {filtered.map((internship) => (
             <tr key={internship.internship_id}>
               <td>{internship.internship_id}</td>
               <td>{internship.student_id}</td>
-              <td>{internship.company_id}</td>
               <td>{internship.internship_title}</td>
+              <td>{internship.company_id}</td>
               <td>{internship.internship_description}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {/*
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Company</th>
-            </tr>
-          </thead>
-          <tbody>
-            {internships.map((internship) => (
-              <tr key={internship.internship_id}>
-                <td>{internship.internship_id}</td>
-                <td>{internship.internship_title}</td>
-                <td>{internship.internship_company}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>*/}
     </div>
   );
 }
