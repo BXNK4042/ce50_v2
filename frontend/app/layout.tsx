@@ -20,7 +20,7 @@ const footerRoutes = [
   { href: "/exam", label: "Exam" },
   { href: "/class", label: "Class" },
   { href: "/rooms", label: "Rooms" },
-  { href: "/internship", label: "Internship" },
+  { href: "/company", label: "Company" },
 ];
 
 const currentYear = new Date().getFullYear();
@@ -108,7 +108,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
           </li>
           <li className="nav-item">
-            <Link href="/internship" className="nav nav-link text-light">
+            <Link href="/company" className="nav nav-link text-light">
               Internship
             </Link>
           </li>
