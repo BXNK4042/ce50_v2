@@ -101,15 +101,27 @@ def seedStudentProjects():
   )
 
 
-def seedInternships():
-  internships_data = [
-    ("67200380", "Frontend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Frontend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน", "scg.jpg"),
-    ("67200030", "Backend Developer", "SCG Thungsong", "ฝึกงานตำแหน่ง Backend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน", "scg.jpg"),
-    ("67200099", "Cybersecurity Analyst", "Secure-D", "ฝึกงานตำแหน่ง Cybersecurity Analyst ที่บริษัท Secure-D เป็นเวลา 3 เดือน", "secure-d.jpg")
+def seedCompanys():
+  companys_data = [
+    (1, "SCG", "scg"),
+    (3, "armstrong", "armstrong"),
   ]
 
   insertMany(
-    "INSERT INTO internships (student_id, internship_title, internship_company, internship_description, internship_company_image) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO companys (company_id, company_name, company_image) VALUES (?, ?, ?)",
+    companys_data,
+  )
+
+
+def seedInternships():
+  internships_data = [
+    ("67200380", "Frontend Developer", 1, "ฝึกงานตำแหน่ง Frontend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน"),
+    ("67200030", "Backend Developer", 1, "ฝึกงานตำแหน่ง Backend Developer ที่บริษัท SCG Thungsong เป็นเวลา 3 เดือน"),
+    ("67200099", "Security Engineer", 3, "จัดการโครงสร้างพื้นฐานระบบเครือข่าย พัฒนาโซลูชันความปลอดภัยทางไซเบอร์ ผู้เชี่ยวชาญการแข่งขัน CTF"),
+  ]
+
+  insertMany(
+    "INSERT INTO internships (student_id, internship_title, company_id, internship_description) VALUES (?, ?, ?, ?)",
     internships_data,
   )
 
@@ -171,6 +183,7 @@ def seedAll():
   seedUsers()
   seedProjects()
   seedStudentProjects()
+  seedCompanys()
   seedInternships()
   seedClassSchedules()
   seedExamSchedules()
