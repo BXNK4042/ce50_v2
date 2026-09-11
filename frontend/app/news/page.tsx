@@ -99,7 +99,13 @@ export default function NewsPage() {
         <div className="row">
           <div className="col-lg-6  mb-5 mb-sm-2">
             <div className="position-relative image-hover">
-              <img src="404.png" className="img-fluid" alt="world-news" />
+              <Image
+                src="/404.png"
+                className="img-fluid"
+                alt="ce50-news"
+                width={700}
+                height={700}
+              />
             </div>
             <h1 className="font-weight-600 mt-3">
               Melania Trump speaks about courage at State Department
@@ -109,7 +115,13 @@ export default function NewsPage() {
             <div className="row">
               <div className="col-sm-6  mb-5 mb-sm-2">
                 <div className="position-relative image-hover">
-                  <img src="404.png" className="img-fluid" alt="world-news" />
+                  <Image
+                    src="/404.png"
+                    className="img-fluid"
+                    alt="ce50-news"
+                    width={700}
+                    height={700}
+                  />
                 </div>
                 <h5 className="font-weight-600 mt-3">
                   A look at California's eerie plane graveyards
@@ -117,7 +129,13 @@ export default function NewsPage() {
               </div>
               <div className="col-sm-6  mb-5 mb-sm-2">
                 <div className="position-relative image-hover">
-                  <img src="404.png" className="img-fluid" alt="world-news" />
+                  <Image
+                    src="/404.png"
+                    className="img-fluid"
+                    alt="ce50-news"
+                    width={700}
+                    height={700}
+                  />
                 </div>
                 <h5 className="font-weight-600 mt-3">
                   The world's most beautiful racecourses
@@ -127,7 +145,13 @@ export default function NewsPage() {
             <div className="row mt-3">
               <div className="col-sm-6  mb-5 mb-sm-2">
                 <div className="position-relative image-hover">
-                  <img src="404.png" className="img-fluid" alt="world-news" />
+                  <Image
+                    src="/404.png"
+                    className="img-fluid"
+                    alt="ce50-news"
+                    width={700}
+                    height={700}
+                  />
                 </div>
                 <h5 className="font-weight-600 mt-3">
                   Japan cancels cherry blossom festivals over virus fears
@@ -135,7 +159,13 @@ export default function NewsPage() {
               </div>
               <div className="col-sm-6">
                 <div className="position-relative image-hover">
-                  <img src="404.png" className="img-fluid" alt="world-news" />
+                  <Image
+                    src="/404.png"
+                    className="img-fluid"
+                    alt="ce50-news"
+                    width={700}
+                    height={700}
+                  />
                 </div>
                 <h5 className="font-weight-600 mt-3">
                   classNameic cars reborn as electric vehicles
@@ -159,7 +189,13 @@ export default function NewsPage() {
         <div className="row">
           <div className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2">
             <div className="position-relative image-hover">
-              <img src="404.png" className="img-fluid" alt="world-news" />
+              <Image
+                src="/404.png"
+                className="img-fluid"
+                alt="ce50-news"
+                width={700}
+                height={700}
+              />
             </div>
             <h5 className="font-weight-bold mt-3">
               Refugees flood Turkey's border with Greece
@@ -170,7 +206,13 @@ export default function NewsPage() {
           </div>
           <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
             <div className="position-relative image-hover">
-              <img src="404.png" className="img-fluid" alt="world-news" />
+              <Image
+                src="/404.png"
+                className="img-fluid"
+                alt="ce50-news"
+                width={700}
+                height={700}
+              />
             </div>
             <h5 className="font-weight-bold mt-3">
               South Korea’s Moon Jae-in sworn in vowing address
@@ -181,7 +223,13 @@ export default function NewsPage() {
           </div>
           <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
             <div className="position-relative image-hover">
-              <img src="404.png" className="img-fluid" alt="world-news" />
+              <Image
+                src="/404.png"
+                className="img-fluid"
+                alt="ce50-news"
+                width={700}
+                height={700}
+              />
             </div>
             <h5 className="font-weight-bold mt-3">
               These puppies are training to assist in avalanche rescue
@@ -192,7 +240,13 @@ export default function NewsPage() {
           </div>
           <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
             <div className="position-relative image-hover">
-              <img src="404.png" className="img-fluid" alt="world-news" />
+              <Image
+                src="/404.png"
+                className="img-fluid"
+                alt="ce50-news"
+                width={700}
+                height={700}
+              />
             </div>
             <h5 className="font-weight-bold mt-3">
               'Love Is Blind' couple opens up about their first year
