@@ -113,7 +113,7 @@ export default function InternshipPage() {
                       <p>
                         {student.student_firstname} {student.student_lastname}
                       </p>
-                      {/*internship_description*/}
+                      {/*internship_description, how am I going to be able to get internship.internship_description since we're in student T_T. still working on it*/}
                     </div>
                     <div className="modal-footer">
                       <button
