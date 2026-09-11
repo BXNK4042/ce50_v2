@@ -6,6 +6,9 @@ import Image from "next/image";
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [techNews, setTechNews] = useState<
+    { title: string; description: string; image: string; url: string }[]
+  >([]);
 
   useEffect(() => {
     async function getNews() {
@@ -13,7 +16,18 @@ export default function NewsPage() {
       setNews(await response.json());
     }
 
+    async function getTechNews() {
+      try {
+        const response = await fetch("http://localhost:8000/gnews");
+        const data = await response.json();
+        setTechNews(data.articles || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     getNews();
+    getTechNews();
   }, []);
 
   return (
@@ -187,74 +201,69 @@ export default function NewsPage() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2">
-            <div className="position-relative image-hover">
-              <Image
-                src="/404.png"
-                className="img-fluid"
-                alt="ce50-news"
-                width={700}
-                height={700}
-              />
+          {(techNews.length > 0
+            ? techNews.slice(0, 4)
+            : [
+                {
+                  title: "Refugees flood Turkey's border with Greece",
+                  description:
+                    "Lorem Ipsum has been the industry's standard dummy text",
+                  image: "/404.png",
+                  url: "#",
+                },
+                {
+                  title: "South Korea’s Moon Jae-in sworn in vowing address",
+                  description:
+                    "Lorem Ipsum has been the industry's standard dummy text",
+                  image: "/404.png",
+                  url: "#",
+                },
+                {
+                  title: "These puppies are training to assist in avalanche rescue",
+                  description:
+                    "Lorem Ipsum has been the industry's standard dummy text",
+                  image: "/404.png",
+                  url: "#",
+                },
+                {
+                  title: "'Love Is Blind' couple opens up about their first year",
+                  description:
+                    "Lorem Ipsum has been the industry's standard dummy text",
+                  image: "/404.png",
+                  url: "#",
+                },
+              ]
+          ).map((article, idx) => (
+            <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2" key={idx}>
+              <div className="position-relative image-hover">
+                <Image
+                  src={
+                    article.image && article.image.startsWith("http")
+                      ? article.image
+                      : "/404.png"
+                  }
+                  className="img-fluid"
+                  alt={article.title || "tech-news"}
+                  width={700}
+                  height={700}
+                  unoptimized
+                />
+              </div>
+              <h5 className="font-weight-bold mt-3">
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-light text-decoration-none"
+                >
+                  {article.title}
+                </a>
+              </h5>
+              <p className="fs-15 font-weight-normal text-secondary">
+                {article.description}
+              </p>
             </div>
-            <h5 className="font-weight-bold mt-3">
-              Refugees flood Turkey's border with Greece
-            </h5>
-            <p className="fs-15 font-weight-normal">
-              Lorem Ipsum has been the industry's standard dummy text
-            </p>
-          </div>
-          <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-            <div className="position-relative image-hover">
-              <Image
-                src="/404.png"
-                className="img-fluid"
-                alt="ce50-news"
-                width={700}
-                height={700}
-              />
-            </div>
-            <h5 className="font-weight-bold mt-3">
-              South Korea’s Moon Jae-in sworn in vowing address
-            </h5>
-            <p className="fs-15 font-weight-normal">
-              Lorem Ipsum has been the industry's standard dummy text
-            </p>
-          </div>
-          <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-            <div className="position-relative image-hover">
-              <Image
-                src="/404.png"
-                className="img-fluid"
-                alt="ce50-news"
-                width={700}
-                height={700}
-              />
-            </div>
-            <h5 className="font-weight-bold mt-3">
-              These puppies are training to assist in avalanche rescue
-            </h5>
-            <p className="fs-15 font-weight-normal">
-              Lorem Ipsum has been the industry's standard dummy text
-            </p>
-          </div>
-          <div className="col-lg-3 col-sm-6 mb-5 mb-sm-2">
-            <div className="position-relative image-hover">
-              <Image
-                src="/404.png"
-                className="img-fluid"
-                alt="ce50-news"
-                width={700}
-                height={700}
-              />
-            </div>
-            <h5 className="font-weight-bold mt-3">
-              'Love Is Blind' couple opens up about their first year
-            </h5>
-            <p className="fs-15 font-weight-normal">
-              Lorem Ipsum has been the industry's standard dummy text
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </div>

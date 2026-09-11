@@ -1,0 +1,1717 @@
+{
+  "roles": {
+    "23059": "Systems administrator",
+    "23060": "e-Commerce manager",
+    "23061": "Data scientist",
+    "23062": "Social media manager",
+    "23063": "Computing teacher",
+    "23064": "IT support technician",
+    "23065": "Entrepreneur",
+    "23066": "Content creator",
+    "23067": "DevOps engineer",
+    "23068": "SEO specialist",
+    "23069": "Digital marketer",
+    "23071": "Technical writer",
+    "23072": "Web developer",
+    "23073": "Data analyst",
+    "23074": "AI/ML engineer",
+    "23075": "Project manager",
+    "23076": "UX/UI designer",
+    "23077": "Cyber specialist",
+    "23078": "Cloud architect",
+    "23079": "Software developer"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "question": "Which of these activities do you enjoy most?",
+      "options": [
+        {
+          "text": "Solving puzzles and problems",
+          "roleIds": [
+            23079,
+            23059,
+            23073,
+            23067,
+            23062,
+            23066,
+            23072,
+            23063
+          ]
+        },
+        {
+          "text": "Helping others and making a positive impact",
+          "roleIds": [
+            23075,
+            23078,
+            23064,
+            23069,
+            23074,
+            23077
+          ]
+        },
+        {
+          "text": "Expressing creativity and imagination",
+          "roleIds": [
+            23071,
+            23061,
+            23076,
+            23065,
+            23060
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Which type of work environment do you prefer?",
+      "options": [
+        {
+          "text": "Fast-paced and constantly changing",
+          "roleIds": [
+            23071,
+            23060,
+            23065
+          ]
+        },
+        {
+          "text": "Collaborative and team-oriented",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23078,
+            23076,
+            23069,
+            23067,
+            23062,
+            23068,
+            23072,
+            23063,
+            23074,
+            23077
+          ]
+        },
+        {
+          "text": "Quiet and independent",
+          "roleIds": [
+            23059,
+            23066,
+            23061,
+            23079
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": []
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "How do you like to learn new things?",
+      "options": [
+        {
+          "text": "Hands-on experience and trial-and-error",
+          "roleIds": [
+            23075,
+            23073,
+            23071,
+            23064,
+            23078,
+            23076,
+            23067,
+            23069,
+            23062,
+            23066,
+            23065,
+            23072,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Reading and research",
+          "roleIds": [
+            23061,
+            23063
+          ]
+        },
+        {
+          "text": "Discussion and group activities",
+          "roleIds": [
+            23059,
+            23060,
+            23074
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "What's your long-term career goal?",
+      "options": [
+        {
+          "text": "To have financial stability",
+          "roleIds": [
+            23069
+          ]
+        },
+        {
+          "text": "To have a fulfilling career that makes a positive impact",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23071,
+            23064,
+            23061,
+            23078,
+            23067,
+            23062,
+            23072,
+            23060,
+            23063,
+            23065,
+            23074,
+            23079
+          ]
+        },
+        {
+          "text": "To have a creative career that allows for self-expression",
+          "roleIds": [
+            23076
+          ]
+        },
+        {
+          "text": "To be a specialist in my field",
+          "roleIds": [
+            23066,
+            23077
+          ]
+        },
+        {
+          "text": "Something else",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "How do you handle pressure?",
+      "options": [
+        {
+          "text": "I enjoy a challenge and thrive under pressure",
+          "roleIds": [
+            23073,
+            23075,
+            23071,
+            23064,
+            23078,
+            23067,
+            23069,
+            23066,
+            23062,
+            23063,
+            23065,
+            23072,
+            23077
+          ]
+        },
+        {
+          "text": "I prefer a steady pace and try to avoid stressful situations",
+          "roleIds": [
+            23059,
+            23060,
+            23061,
+            23079
+          ]
+        },
+        {
+          "text": "I use creative outlets to relieve stress",
+          "roleIds": [
+            23076,
+            23068,
+            23074
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": []
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Which skill do you think is your strongest?",
+      "options": [
+        {
+          "text": "Problem-solving / analytical thinking",
+          "roleIds": [
+            23059,
+            23073,
+            23071,
+            23064,
+            23061,
+            23078,
+            23067,
+            23069,
+            23063,
+            23072,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Communication",
+          "roleIds": [
+            23066
+          ]
+        },
+        {
+          "text": "Creativity and innovation",
+          "roleIds": [
+            23076,
+            23065,
+            23062
+          ]
+        },
+        {
+          "text": "Leadership",
+          "roleIds": [
+            23074,
+            23075
+          ]
+        },
+        {
+          "text": "Adaptability",
+          "roleIds": [
+            23060
+          ]
+        },
+        {
+          "text": "Something else",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "question": "When you work in a group, which role do you tend to take on?",
+      "options": [
+        {
+          "text": "Leader",
+          "roleIds": [
+            23078,
+            23066
+          ]
+        },
+        {
+          "text": "Organiser",
+          "roleIds": [
+            23075,
+            23073,
+            23069,
+            23062,
+            23072,
+            23060
+          ]
+        },
+        {
+          "text": "Idea generator",
+          "roleIds": [
+            23059,
+            23064,
+            23071,
+            23061,
+            23076,
+            23065,
+            23063,
+            23067,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Listener",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Other",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "question": "How do you prefer to communicate?",
+      "options": [
+        {
+          "text": "Face to face",
+          "roleIds": [
+            23061,
+            23066,
+            23068,
+            23072,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Phone or video call",
+          "roleIds": [
+            23060,
+            23074
+          ]
+        },
+        {
+          "text": "Email or text",
+          "roleIds": [
+            23059,
+            23073,
+            23071,
+            23069,
+            23062,
+            23065
+          ]
+        },
+        {
+          "text": "It depends on the situation",
+          "roleIds": [
+            23075,
+            23064,
+            23078,
+            23076,
+            23067,
+            23063
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "question": "How do you handle conflict or disagreement?",
+      "options": [
+        {
+          "text": "I look for a compromise or solution that works for everyone",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23071,
+            23064,
+            23061,
+            23078,
+            23076,
+            23067,
+            23069,
+            23062,
+            23066,
+            23072,
+            23060,
+            23063,
+            23065,
+            23074,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "I try to avoid conflicts and hope they resolve themselves",
+          "roleIds": []
+        },
+        {
+          "text": "I always stand up for my own beliefs and opinions",
+          "roleIds": []
+        },
+        {
+          "text": "None of these",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "question": "What's your approach when faced with a complex problem?",
+      "options": [
+        {
+          "text": "I break it down into smaller parts and work through each one",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23064,
+            23078,
+            23072,
+            23063,
+            23065,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "I try to come up with creative solutions and think outside the box",
+          "roleIds": [
+            23071,
+            23061,
+            23076,
+            23067,
+            23069,
+            23060,
+            23074
+          ]
+        },
+        {
+          "text": "I collaborate with others and ask for help when needed",
+          "roleIds": [
+            23062,
+            23066
+          ]
+        },
+        {
+          "text": "Something else",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "question": "How do you manage your time and prioritise tasks?",
+      "options": [
+        {
+          "text": "I make lists and prioritise based on urgency and importance",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23071,
+            23064,
+            23061,
+            23078,
+            23067,
+            23062,
+            23069,
+            23072,
+            23060,
+            23063,
+            23065,
+            23074,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "I start with the task that's most interesting or enjoyable",
+          "roleIds": [
+            23076,
+            23066
+          ]
+        },
+        {
+          "text": "I tend to procrastinate and wait until the last minute",
+          "roleIds": [
+            23068
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": []
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "question": "How do you make sure you meet deadlines?",
+      "options": [
+        {
+          "text": "I create a detailed schedule and plan ahead",
+          "roleIds": [
+            23073,
+            23071,
+            23064,
+            23061,
+            23069,
+            23060,
+            23063,
+            23065,
+            23077
+          ]
+        },
+        {
+          "text": "I work quickly and efficiently under pressure",
+          "roleIds": [
+            23075,
+            23074,
+            23079
+          ]
+        },
+        {
+          "text": "I communicate with others and ask for help if needed",
+          "roleIds": [
+            23059,
+            23078,
+            23076,
+            23067,
+            23062,
+            23066,
+            23072
+          ]
+        },
+        {
+          "text": "None of these",
+          "roleIds": [
+            23068
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "question": "I love learning new things",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23066
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23071,
+            23078,
+            23076,
+            23067,
+            23069,
+            23060
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23061,
+            23072,
+            23065,
+            23063,
+            23079,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "question": "I enjoy finding creative solutions to problems",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23067
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23064,
+            23062,
+            23078,
+            23066,
+            23060,
+            23063,
+            23074,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23071,
+            23061,
+            23076,
+            23072,
+            23069,
+            23065
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "question": "I'm good at handling stressful situations",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23071,
+            23064,
+            23074,
+            23079
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23059,
+            23061,
+            23076,
+            23069,
+            23066,
+            23063
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23073,
+            23075,
+            23078,
+            23067,
+            23060,
+            23072,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23065,
+            23062
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "question": "I like working under pressure to meet a deadline",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23071
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23067,
+            23066
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23064,
+            23061,
+            23078,
+            23076,
+            23069,
+            23063,
+            23065,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23072,
+            23060,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "question": "I'm good at handling mistakes or failure",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23076
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23075,
+            23072,
+            23066,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23073,
+            23071,
+            23064,
+            23063,
+            23074
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23061,
+            23067,
+            23069,
+            23065
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23078,
+            23060
+          ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "question": "I enjoy working collaboratively with others to achieve a common goal",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23071
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23066,
+            23074
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23064,
+            23061,
+            23076,
+            23067,
+            23060,
+            23063,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23075,
+            23078,
+            23069,
+            23062,
+            23072,
+            23065
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "question": "I have strong leadership skills",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23076
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23066
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23071,
+            23064,
+            23061,
+            23074
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23078,
+            23067,
+            23062,
+            23072,
+            23060,
+            23063,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23065,
+            23069
+          ]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "question": "I handle criticism or feedback on my work well",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23065,
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23076,
+            23062,
+            23060,
+            23079
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23071,
+            23064,
+            23061,
+            23067,
+            23069,
+            23066,
+            23072,
+            23063,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23078
+          ]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "question": "I communicate effectively with someone who has a different perspective or background to me",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23059,
+            23072,
+            23071,
+            23067
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23061,
+            23078,
+            23076,
+            23069,
+            23062,
+            23066,
+            23060,
+            23063,
+            23065,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": []
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "question": "I'm good at prioritising tasks when I'm working on multiple projects",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23076
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23071,
+            23059
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23061,
+            23078,
+            23067,
+            23069,
+            23062,
+            23066,
+            23068,
+            23072,
+            23063,
+            23060,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23065,
+            23074,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "question": "People respond well when I communicate my ideas or concerns",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23066
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23071,
+            23064,
+            23078,
+            23067,
+            23069,
+            23062,
+            23060,
+            23072,
+            23063,
+            23065,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23076,
+            23061
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "question": "I'm good at handling disagreements or conflict within a team",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23065,
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23059,
+            23071,
+            23064,
+            23061,
+            23076,
+            23067,
+            23069,
+            23072,
+            23063
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23073,
+            23075,
+            23066,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23078,
+            23062,
+            23060,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "question": "I love getting feedback or constructive criticism",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23065,
+            23068
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23071,
+            23067,
+            23069,
+            23079
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23064,
+            23061,
+            23078,
+            23076,
+            23062,
+            23066,
+            23063,
+            23074,
+            23072,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23060
+          ]
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "question": "One of my strengths is solving difficult problems",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": []
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23062,
+            23066,
+            23060
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23071,
+            23064,
+            23061,
+            23067,
+            23072,
+            23063,
+            23065,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23075,
+            23078,
+            23076,
+            23069
+          ]
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "question": "I'm good at meeting deadlines",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23076
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23059,
+            23066
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23071,
+            23064,
+            23078,
+            23067,
+            23069,
+            23062,
+            23060,
+            23074,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23073,
+            23075,
+            23061,
+            23063,
+            23065,
+            23072,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "question": "I'm able to stay focused and motivated when working on long-term projects",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": [
+            23065
+          ]
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23076,
+            23067
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23071,
+            23069,
+            23066,
+            23060,
+            23074
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23073,
+            23075,
+            23064,
+            23061,
+            23062,
+            23078,
+            23072,
+            23063,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "question": "I adapt well to changes or unexpected challenges in a project",
+      "options": [
+        {
+          "text": "Not me",
+          "roleIds": []
+        },
+        {
+          "text": "Not especially",
+          "roleIds": [
+            23074
+          ]
+        },
+        {
+          "text": "Hmm, not sure",
+          "roleIds": [
+            23069
+          ]
+        },
+        {
+          "text": "Usually, yes",
+          "roleIds": [
+            23059,
+            23075,
+            23073,
+            23061,
+            23064,
+            23067,
+            23076,
+            23066,
+            23062,
+            23063,
+            23060,
+            23072,
+            23079
+          ]
+        },
+        {
+          "text": "Absolutely!",
+          "roleIds": [
+            23071,
+            23065,
+            23078,
+            23077
+          ]
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "question": "What are you into? Pick as many as you like.",
+      "options": [
+        {
+          "text": "Music and performance arts",
+          "roleIds": [
+            23073,
+            23075,
+            23072,
+            23065,
+            23079
+          ]
+        },
+        {
+          "text": "Fashion and beauty",
+          "roleIds": [
+            23073,
+            23065,
+            23075,
+            23060,
+            23074,
+            23072,
+            23063,
+            23078,
+            23079
+          ]
+        },
+        {
+          "text": "Technology and gadgets",
+          "roleIds": [
+            23073,
+            23075,
+            23072,
+            23063,
+            23064,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Science and technology",
+          "roleIds": [
+            23073,
+            23075,
+            23063,
+            23077,
+            23079
+          ]
+        },
+        {
+          "text": "Animals and nature",
+          "roleIds": [
+            23073,
+            23075,
+            23063,
+            23064,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Philosophy and ethics",
+          "roleIds": [
+            23075,
+            23073,
+            23065,
+            23063,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Social media and digital communication",
+          "roleIds": [
+            23073,
+            23065,
+            23072,
+            23075,
+            23063,
+            23077
+          ]
+        },
+        {
+          "text": "Personal development and growth",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Cooking and culinary arts",
+          "roleIds": [
+            23073,
+            23064,
+            23072,
+            23065,
+            23077,
+            23079
+          ]
+        },
+        {
+          "text": "Cars and racing",
+          "roleIds": [
+            23073,
+            23075,
+            23074,
+            23069,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Environmentalism and sustainability",
+          "roleIds": [
+            23073,
+            23075,
+            23072,
+            23065,
+            23064,
+            23079
+          ]
+        },
+        {
+          "text": "Languages and linguistics",
+          "roleIds": [
+            23073,
+            23075,
+            23065,
+            23063,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Religion and spirituality",
+          "roleIds": [
+            23073,
+            23060,
+            23075,
+            23072,
+            23063,
+            23064,
+            23061,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Volunteer work and community outreach",
+          "roleIds": [
+            23073,
+            23075,
+            23072,
+            23077,
+            23079
+          ]
+        },
+        {
+          "text": "Politics and social issues",
+          "roleIds": [
+            23079,
+            23073,
+            23075,
+            23065,
+            23077
+          ]
+        },
+        {
+          "text": "Health and wellness",
+          "roleIds": [
+            23073,
+            23072,
+            23078,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "History and culture",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23078,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Reading and literature",
+          "roleIds": [
+            23063,
+            23075,
+            23073,
+            23064,
+            23079
+          ]
+        },
+        {
+          "text": "Astronomy and space exploration",
+          "roleIds": [
+            23073,
+            23072,
+            23075,
+            23065,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Art and design",
+          "roleIds": [
+            23073,
+            23075,
+            23065,
+            23064,
+            23079
+          ]
+        },
+        {
+          "text": "Film and cinema",
+          "roleIds": [
+            23073,
+            23075,
+            23072,
+            23078,
+            23077,
+            23079
+          ]
+        },
+        {
+          "text": "Gaming and entertainment",
+          "roleIds": [
+            23073,
+            23075,
+            23064,
+            23079,
+            23077
+          ]
+        },
+        {
+          "text": "Sports and fitness",
+          "roleIds": [
+            23073,
+            23078,
+            23072,
+            23075,
+            23079
+          ]
+        },
+        {
+          "text": "DIY and home improvement",
+          "roleIds": [
+            23073,
+            23072,
+            23078,
+            23075,
+            23077
+          ]
+        },
+        {
+          "text": "Entrepreneurship and innovation",
+          "roleIds": [
+            23073,
+            23075,
+            23065,
+            23074,
+            23072,
+            23078,
+            23064,
+            23077,
+            23079
+          ]
+        },
+        {
+          "text": "Travel and exploration",
+          "roleIds": [
+            23073,
+            23072,
+            23075,
+            23079,
+            23077
+          ]
+        }
+      ]
+    }
+  ]
+}

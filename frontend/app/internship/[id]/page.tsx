@@ -81,6 +81,9 @@ export default function InternshipPage() {
       <div className="row rows-cols-1 row-cols-md-6 g-4">
         {studentFiltered.map((student) => {
           const modalId = `student-${student.student_id}-modal`;
+          const internItem = internFiltered.find(
+            (item) => item.student_id === student.student_id,
+          );
 
           return (
             <div className="col" key={student.student_id}>
@@ -110,10 +113,14 @@ export default function InternshipPage() {
                       </p>
                     </div>
                     <div className="modal-body">
-                      <p>
+                      <p className="fw-bold">
                         {student.student_firstname} {student.student_lastname}
                       </p>
-                      {/*internship_description, how am I going to be able to get internship.internship_description since we're in student T_T. still working on it*/}
+                      {internItem?.internship_description && (
+                        <p className="text-secondary mt-2">
+                          {internItem.internship_description}
+                        </p>
+                      )}
                     </div>
                     <div className="modal-footer">
                       <button
