@@ -1,11 +1,16 @@
+import os
 import sqlite3
+from webbrowser import get
 
+import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+client = httpx.Client()
+api_key = os.getenv("GNEWS_API_KEY")
 
 origins = [
   "http://localhost:3000",
@@ -90,3 +95,11 @@ def class_schedule():
   cursor.row_factory = sqlite3.Row
   rows = cursor.execute("SELECT * FROM class_schedules").fetchall()
   return [dict(row) for row in rows]
+
+@app.get("/gnews")
+def gnews_tech():
+  res = httpx.get(
+      "http://gnews.io/api/v4/search",
+      params={"q": "cpypto", "lang": "en", "apikey": {api_key}}
+  )
+  return res.json()
