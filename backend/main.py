@@ -100,6 +100,6 @@ def class_schedule():
 def gnews_tech():
   res = httpx.get(
       "http://gnews.io/api/v4/search",
-      params={"q": "cpypto", "lang": "en", "apikey": {api_key}}
+      params={"q": "ai", "lang": "en", "apikey": {api_key}}
   )
   return res.json()
