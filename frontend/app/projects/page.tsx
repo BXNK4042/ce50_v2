@@ -43,20 +43,20 @@ export default function ProjectsPage() {
         <h1 className="text-primary">โครงงาน</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
-      <div className="row rows-cols-1 row-cols-md-3 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 g-md-4">
         {projects.map((project) => {
           const modalId = `project-${project.project_id}-modal`;
 
           return (
             <div className="col" key={project.project_id}>
-              <div className="card bg-black ">
+              <div className="card bg-black h-100 overflow-hidden">
                 <Image
                   src={`http://localhost:8000/uploads/projects/${project.project_image}`}
                   alt={project.project_name}
                   width={1000}
                   height={1000}
                   draggable="false"
-                  className="card-img-top hover:opacity-70 duration-150"
+                  className="card-img-top hover:opacity-70 duration-150 img-fluid w-100 h-auto object-cover"
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
                 />

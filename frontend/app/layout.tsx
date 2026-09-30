@@ -34,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <ul className="nav justify-content-center bg-black align-items-center">
+        <ul className="nav justify-content-center bg-black align-items-center flex-wrap px-2 py-1">
           <li className="nav-item dropdown">
             <a
               className="nav-link dropdown-toggle text-light"
@@ -113,12 +113,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
           </li>
         </ul>
-        {children}
+        <main className="flex-grow-1 w-100">{children}</main>
         <footer className="template-container text-white">
           <div className="row">
-            <div className="col-2 col-md-6 mb-3">
+            <div className="col-12 col-md-6 mb-3">
               <h5 className="p-2">Section</h5>
-              <ul className="nav flex-row">
+              <ul className="nav flex-row flex-wrap">
                 {footerRoutes.map((route) => (
                   <li key={route.href} className="nav-item mb-2">
                     <Link href={route.href} className="nav-link p-2 text-white">

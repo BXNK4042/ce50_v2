@@ -35,19 +35,20 @@ export default function TeachersPage() {
         <h1 className="text-primary">คณาจารย์</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
-      <div className="row row-cols-1 row-cols-md-4 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3 g-md-4">
         {teachers.map((teacher) => (
           <div className="col" key={teacher.teacher_id}>
-            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
+            <div className="card text-bg-dark h-100 justify-content-between align-items-center hover:opacity-75 duration-150 overflow-hidden">
               <Image
                 src={`http://localhost:8000/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                 alt={teacher.teacher_firstname}
                 width={1000}
                 height={1000}
                 draggable="false"
+                className="img-fluid w-100 h-auto object-cover"
               />
-              <div className="card-body text-center">
-                <h5 className="card-title">
+              <div className="card-body text-center w-100">
+                <h5 className="card-title mb-0">
                   {teacher.teacher_firstname} {teacher.teacher_lastname}
                 </h5>
               </div>

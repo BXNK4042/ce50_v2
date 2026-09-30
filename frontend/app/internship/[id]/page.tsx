@@ -78,20 +78,20 @@ export default function InternshipPage() {
           </tbody>
         </table>
       */}
-      <div className="row rows-cols-1 row-cols-md-6 g-4">
+      <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 g-md-4">
         {studentFiltered.map((student) => {
           const modalId = `student-${student.student_id}-modal`;
 
           return (
             <div className="col" key={student.student_id}>
-              <div className="card bg-black ">
+              <div className="card bg-black h-100 overflow-hidden">
                 <Image
                   src={`http://localhost:8000/uploads/students/ce_04/${student.student_id}.png`}
                   alt={student.student_firstname}
                   width={500}
                   height={500}
                   draggable="false"
-                  className="card-img-top hover:opacity-70 duration-150"
+                  className="card-img-top hover:opacity-70 duration-150 img-fluid w-100 h-auto object-cover"
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
                 />

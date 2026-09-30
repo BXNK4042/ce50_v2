@@ -43,7 +43,7 @@ export default function NewsPage() {
         <h1 className="text-primary">ข่าวสาร</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
-      <div id="carouselExample" className="carousel slide">
+      <div id="carouselExample" className="carousel slide overflow-hidden rounded mb-4">
         <div className="carousel-inner">
           {news.map((item) => (
             <div className="carousel-item active" key={item.news_id}>
@@ -52,8 +52,10 @@ export default function NewsPage() {
                 alt={item.news_title}
                 width={2000}
                 height={2000}
+                className="d-block w-100 h-auto object-cover"
+                style={{ maxHeight: "60vh", minHeight: "250px" }}
               />
-              <div className="carousel-caption d-none d-md-block text-black bg-white opacity-80">
+              <div className="carousel-caption d-none d-md-block text-black bg-white opacity-80 rounded p-2">
                 <h3>{item.news_title}</h3>
                 <p>{item.news_description}</p>
               </div>
