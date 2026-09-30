@@ -34,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <header className="sticky-top z-50 bg-black">
+        <header className="fixed-top z-50 bg-black/95 backdrop-blur-sm border-bottom border-secondary border-opacity-25 shadow-sm">
           <ul className="nav justify-content-center align-items-center flex-wrap px-2 py-1 mb-0">
             <li className="nav-item dropdown">
               <a
@@ -115,7 +115,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </li>
           </ul>
         </header>
-        <main className="flex-grow-1 w-100">{children}</main>
+        <main className="flex-grow-1 w-100 pt-[60px]">{children}</main>
         <footer className="template-container text-white">
           <div className="row">
             <div className="col-12 col-md-6 mb-3">
