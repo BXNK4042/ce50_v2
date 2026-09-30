@@ -8,8 +8,14 @@ export default function ClassPage() {
 
   useEffect(() => {
     async function getClasses() {
-      const response = await fetch("http://localhost:8000/class");
-      setClasses(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/class");
+        if (response.ok) {
+          setClasses(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch classes:", err);
+      }
     }
 
     getClasses();

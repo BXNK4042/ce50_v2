@@ -9,8 +9,14 @@ export default function RoomsPage() {
 
   useEffect(() => {
     async function getRooms() {
-      const response = await fetch("http://localhost:8000/rooms");
-      setRooms(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/rooms");
+        if (response.ok) {
+          setRooms(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch rooms:", err);
+      }
     }
 
     getRooms();

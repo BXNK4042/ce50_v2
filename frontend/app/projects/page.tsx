@@ -9,8 +9,14 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     async function getProjects() {
-      const response = await fetch("http://localhost:8000/projects");
-      setProjects(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/projects");
+        if (response.ok) {
+          setProjects(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+      }
     }
 
     getProjects();

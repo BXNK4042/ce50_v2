@@ -9,13 +9,19 @@ export default function Home() {
 
   useEffect(() => {
     async function getStudent() {
-      const response = await fetch("http://localhost:8000/students");
-      const result = await response.json();
-      setStudents(result);
+      try {
+        const response = await fetch("http://localhost:8000/students");
+        if (response.ok) {
+          const result = await response.json();
+          setStudents(result);
+        }
+      } catch (err) {
+        console.error("Failed to fetch students:", err);
+      }
     }
 
     getStudent();
-  }, []); //dependency array shit
+  }, []);
 
   return (
     <div className="template-container">

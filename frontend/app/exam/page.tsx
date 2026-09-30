@@ -8,8 +8,14 @@ export default function ExamPage() {
 
   useEffect(() => {
     async function getExams() {
-      const response = await fetch("http://localhost:8000/exam");
-      setExams(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/exam");
+        if (response.ok) {
+          setExams(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch exams:", err);
+      }
     }
 
     getExams();

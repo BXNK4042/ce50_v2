@@ -24,8 +24,14 @@ export default function CompanyPage() {
 
   useEffect(() => {
     async function getCompanys() {
-      const response = await fetch("http://localhost:8000/companys");
-      setCompanys(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/companys");
+        if (response.ok) {
+          setCompanys(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch companys:", err);
+      }
     }
 
     getCompanys();

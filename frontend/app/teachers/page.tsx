@@ -9,8 +9,14 @@ export default function TeachersPage() {
 
   useEffect(() => {
     async function getTeachers() {
-      const response = await fetch("http://localhost:8000/teachers");
-      setTeachers(await response.json());
+      try {
+        const response = await fetch("http://localhost:8000/teachers");
+        if (response.ok) {
+          setTeachers(await response.json());
+        }
+      } catch (err) {
+        console.error("Failed to fetch teachers:", err);
+      }
     }
 
     getTeachers();
