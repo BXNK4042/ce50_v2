@@ -34,85 +34,90 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={outfit.className}>
-        <ul className="nav justify-content-center bg-black align-items-center flex-wrap px-2 py-1">
-          <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle text-light"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              People
-            </a>
-            <ul className="dropdown-menu">
+        <header className="sticky top-3 z-50 px-2 px-md-3 w-100 d-flex justify-content-center pointer-events-none mb-2">
+          <nav className="pointer-events-auto bg-black/80 backdrop-blur-md border border-white/15 rounded-4 rounded-md-pill px-3 py-1 shadow-2xl transition-all duration-300 max-w-[95vw]">
+            <ul className="nav justify-content-center align-items-center flex-wrap mb-0 gap-1">
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle text-light px-2 py-1.5"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  People
+                </a>
+                <ul className="dropdown-menu dropdown-menu-dark shadow-lg">
+                  <li className="nav-item">
+                    <Link href="/teachers" className="dropdown-item">
+                      Teachers
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/students" className="dropdown-item">
+                      Students
+                    </Link>
+                  </li>
+                </ul>
+              </li>
               <li className="nav-item">
-                <Link href="/teachers" className="dropdown-item">
-                  Teachers
+                <Link href="/news" className="nav-link text-light px-2 py-1.5">
+                  News
                 </Link>
               </li>
               <li className="nav-item">
-                <Link href="/students" className="dropdown-item">
-                  Students
+                <Link href="/projects" className="nav-link text-light px-2 py-1.5">
+                  Projects
+                </Link>
+              </li>
+              <li className="nav-item mx-1">
+                <Link href="/" className="nav-link p-1 d-flex align-items-center">
+                  <Image
+                    src={ce_logo}
+                    alt="CE_LOGO"
+                    width={38}
+                    height={38}
+                    draggable="false"
+                    className="transition-transform duration-200 hover:scale-110"
+                  />
+                </Link>
+              </li>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle text-light px-2 py-1.5"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Schedule
+                </a>
+                <ul className="dropdown-menu dropdown-menu-dark shadow-lg">
+                  <li className="nav-item">
+                    <Link href="/exam" className="dropdown-item">
+                      Exam
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link href="/class" className="dropdown-item">
+                      Class
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className="nav-item">
+                <Link href="/rooms" className="nav-link text-light px-2 py-1.5">
+                  Rooms
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link href="/company" className="nav-link text-light px-2 py-1.5">
+                  Internship
                 </Link>
               </li>
             </ul>
-          </li>
-          <li className="nav-item">
-            <Link href="/news" className="nav nav-link text-light">
-              News
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/projects" className="nav nav-link text-light">
-              Projects
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/" className="nav nav-link">
-              <Image
-                src={ce_logo}
-                alt="CE_LOGO"
-                width="50"
-                height="50"
-                draggable="false"
-              />
-            </Link>
-          </li>
-          <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle text-light"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Schedule
-            </a>
-            <ul className="dropdown-menu">
-              <li className="nav-item">
-                <Link href="/exam" className="dropdown-item">
-                  Exam
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/class" className="dropdown-item">
-                  Class
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li className="nav-item">
-            <Link href="/rooms" className="nav nav-link text-light">
-              Rooms
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/company" className="nav nav-link text-light">
-              Internship
-            </Link>
-          </li>
-        </ul>
+          </nav>
+        </header>
         <main className="flex-grow-1 w-100">{children}</main>
         <footer className="template-container text-white">
           <div className="row">
