@@ -230,7 +230,7 @@ export default function NewsFeed({
     <div className="w-full flex flex-col gap-6">
       <div className="row g-4 items-stretch">
         {/* 1. Left Column: Featured News (Large) */}
-        <div className="col-12 col-lg-7">
+        <div className={smallNewsItems.length > 0 ? "col-12 col-lg-7" : "col-12 col-lg-8"}>
           <div className="card text-bg-dark h-100 border border-zinc-800 rounded-2xl overflow-hidden p-4 d-flex flex-column gap-3">
             <div className="d-flex align-items-center gap-3">
               <span
@@ -291,55 +291,57 @@ export default function NewsFeed({
         </div>
 
         {/* 2. Right Column: 2x2 Grid of Small News Items */}
-        <div className="col-12 col-lg-5">
-          <div className="row row-cols-1 row-cols-sm-2 g-3 h-100">
-            {smallNewsItems.map((item, idx) => {
-              const cat = getSmallCategoryDetails(
-                item.news_category || item.category,
-              );
-              const title = item.news_title || item.title || "";
-              const body = item.news_description || item.body || "";
-              const img = getImageUrl(item.news_image || item.image);
-              const date = item.created_at || item.published_at;
+        {smallNewsItems.length > 0 && (
+          <div className="col-12 col-lg-5">
+            <div className="row row-cols-1 row-cols-sm-2 g-3 h-100">
+              {smallNewsItems.map((item, idx) => {
+                const cat = getSmallCategoryDetails(
+                  item.news_category || item.category,
+                );
+                const title = item.news_title || item.title || "";
+                const body = item.news_description || item.body || "";
+                const img = getImageUrl(item.news_image || item.image);
+                const date = item.created_at || item.published_at;
 
-              return (
-                <div className="col" key={item.news_id || item.id || idx}>
-                  <div
-                    className="relative w-full h-[280px] overflow-hidden rounded-2xl border border-zinc-800 transition-all duration-300 hover:shadow-xl hover:border-zinc-600 cursor-pointer select-none group flex flex-col justify-end"
-                    onClick={() => {
-                      if (item.link) window.open(item.link, "_blank");
-                    }}
-                  >
-                    <img
-                      src={img}
-                      alt={title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
-                    <div className="p-3.5 flex flex-col gap-1.5 z-20 text-left w-full">
-                      <div className="flex items-center justify-between text-[10px] text-white/80">
-                        <span
-                          className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}
-                        >
-                          {cat.label}
-                        </span>
-                        <span>{formatDate(date)}</span>
+                return (
+                  <div className="col" key={item.news_id || item.id || idx}>
+                    <div
+                      className="relative w-full h-[280px] overflow-hidden rounded-2xl border border-zinc-800 transition-all duration-300 hover:shadow-xl hover:border-zinc-600 cursor-pointer select-none group flex flex-col justify-end"
+                      onClick={() => {
+                        if (item.link) window.open(item.link, "_blank");
+                      }}
+                    >
+                      <img
+                        src={img}
+                        alt={title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
+                      <div className="p-3.5 flex flex-col gap-1.5 z-20 text-left w-full">
+                        <div className="flex items-center justify-between text-[10px] text-white/80">
+                          <span
+                            className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}
+                          >
+                            {cat.label}
+                          </span>
+                          <span>{formatDate(date)}</span>
+                        </div>
+                        <h4 className="text-sm font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 mb-0">
+                          {title}
+                        </h4>
+                        {body && (
+                          <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed mb-0">
+                            {body}
+                          </p>
+                        )}
                       </div>
-                      <h4 className="text-sm font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 mb-0">
-                        {title}
-                      </h4>
-                      {body && (
-                        <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed mb-0">
-                          {body}
-                        </p>
-                      )}
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* 3. Bottom Row: Archive (if not excluded) */}
