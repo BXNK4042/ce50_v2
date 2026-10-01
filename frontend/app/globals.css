@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html {
   overflow-x: hidden;
   box-sizing: border-box;
@@ -9,17 +11,34 @@ html {
   box-sizing: inherit;
 }
 
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --bs-border-color: #27272a;
+  --bs-body-font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --bs-font-sans-serif: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+.border:not([class*="border-"]) {
+  border-color: #27272a;
+}
+
+button.rounded-full,
+button.rounded-circle,
+.rounded-full {
+  border-radius: 9999px !important;
+}
+
 body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif !important;
   min-height: 100vh;
   background-color: #000;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-}
-
-img, video {
-  max-width: 100%;
-  height: auto;
 }
 
 .template-container {
@@ -29,4 +48,39 @@ img, video {
   padding-inline: clamp(1rem, 3.5vw, 4rem);
   padding-top: clamp(1rem, 2vw, 2rem);
   padding-bottom: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* 3D Flip Card Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Ensure Tailwind group-hover opacity overrides Bootstrap !important */
+.group:hover .group-hover\:opacity-100,
+.group-hover\:opacity-100:is(:where(.group):hover *) {
+  opacity: 1 !important;
+}
+.group:hover .group-hover\:opacity-0,
+.group-hover\:opacity-0:is(:where(.group):hover *) {
+  opacity: 0 !important;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(15deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(15deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite linear;
 }

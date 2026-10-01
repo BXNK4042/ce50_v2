@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsItem } from "@/types/news-item";
@@ -69,6 +69,15 @@ export default function Home() {
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
 
   useEffect(() => {
     async function getNews() {
@@ -141,18 +150,21 @@ export default function Home() {
   return (
     <div className="w-100 overflow-hidden">
       {/* Hero Section */}
-      <div className="bg-black flex justify-center items-center relative overflow-hidden min-h-[50vh]">
-        <Image
-          src="/ce_logo.webp"
-          alt="CE_LOGO"
-          width="500"
-          height="500"
-          className="absolute z-1 transition-transform duration-300 ease-in-out hover:scale-110 w-[min(45vw,480px)] h-auto max-w-full"
-          draggable="false"
-          priority
-        />
+      <section className="relative w-full flex flex-col items-center justify-center text-center min-h-[calc(100vh-60px)] overflow-hidden bg-black select-none">
+        {/* Background Video */}
         <video
-          className="w-100 h-auto object-cover opacity-50 z-0"
+          ref={videoRef}
+          className="pointer-events-none"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.5,
+            zIndex: 0,
+          }}
           muted
           autoPlay
           loop
@@ -160,7 +172,40 @@ export default function Home() {
         >
           <source src="/ce_hero_footage_zoomed.mp4" type="video/mp4" />
         </video>
-      </div>
+
+        {/* Relative container for the logo and overlay text */}
+        <div
+          className="relative z-10 flex items-center justify-center transition-transform duration-300 hover:scale-105 group"
+          style={{ width: "min(450px, 85vw)", height: "min(450px, 85vw)" }}
+        >
+          <Image
+            src="/ce_logo.webp"
+            alt="CE Logo"
+            width={450}
+            height={450}
+            className="w-full h-full object-contain"
+            priority
+            draggable={false}
+          />
+          {/* Overlaid Title */}
+          <h1
+            className="absolute inset-0 flex items-center justify-center text-white whitespace-nowrap pointer-events-none"
+            style={{
+              fontSize: "clamp(2.75rem, 5.5vw, 4.5rem)",
+              fontWeight: 800,
+              fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+              letterSpacing: "-0.025em",
+              textShadow: "0 2px 4px rgba(0,0,0,0.8)",
+              filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.6))",
+              margin: 0,
+              padding: 0,
+              lineHeight: 1,
+            }}
+          >
+            WE ARE CE
+          </h1>
+        </div>
+      </section>
 
       {/* News Section (ขนาดการ์ดกว้าง 500px สวยงาม พร้อมระบบเลื่อนอัตโนมัติขวาไปซ้ายเรื่อยๆ) */}
       <section className="relative w-full bg-[#0a192f] py-10 px-6 sm:px-10 md:px-16 flex flex-col gap-8 transition-colors duration-300">
@@ -177,8 +222,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrev}
-                  className="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center p-2"
-                  style={{ width: "36px", height: "36px" }}
+                  className="w-10 h-10 rounded-full bg-white/10 hover:bg-sky-500 border border-white/20 hover:border-sky-400 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer"
                   aria-label="Previous slide"
                   type="button"
                 >
@@ -188,7 +232,7 @@ export default function Home() {
                     viewBox="0 0 24 24"
                     strokeWidth={2.5}
                     stroke="currentColor"
-                    style={{ width: "16px", height: "16px" }}
+                    className="w-4 h-4"
                   >
                     <path
                       strokeLinecap="round"
@@ -199,8 +243,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={handleNext}
-                  className="btn btn-outline-light rounded-circle d-flex align-items-center justify-content-center p-2"
-                  style={{ width: "36px", height: "36px" }}
+                  className="w-10 h-10 rounded-full bg-white/10 hover:bg-sky-500 border border-white/20 hover:border-sky-400 flex items-center justify-center text-white hover:scale-105 active:scale-95 transition-all duration-200 shadow-sm cursor-pointer"
                   aria-label="Next slide"
                   type="button"
                 >
@@ -210,7 +253,7 @@ export default function Home() {
                     viewBox="0 0 24 24"
                     strokeWidth={2.5}
                     stroke="currentColor"
-                    style={{ width: "16px", height: "16px" }}
+                    className="w-4 h-4"
                   >
                     <path
                       strokeLinecap="round"
@@ -315,9 +358,9 @@ export default function Home() {
         )}
       </section>
 
-      {/* People Section (สไตล์ ce50) */}
-      <section className="relative w-full bg-black/90 py-12 px-6 sm:px-10 md:px-16 flex flex-col gap-8 border-t border-zinc-800/80">
-        <PeopleSlider title="คณาจารย์และบุคลากร" />
+      {/* Section 3: People Section (สไตล์ ce50) */}
+      <section className="relative w-full bg-black px-6 sm:px-10 md:px-16 py-12 md:py-16 flex flex-col gap-6 border-t border-zinc-800/80">
+        <PeopleSlider title="บุคลากร" />
       </section>
     </div>
   );
