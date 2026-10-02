@@ -412,8 +412,9 @@ def get_users():
 # Secure File Upload (TC_TCH_003, TC_TCH_004)
 # ==========================================
 
-ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".pdf"}
+MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024   # 5 MB for images (TC_TCH_004)
+MAX_DOC_FILE_SIZE = 25 * 1024 * 1024    # 25 MB for PDF project documents
 
 @app.post("/upload")
 async def upload_file(
@@ -421,17 +422,18 @@ async def upload_file(
     module: str = Form("general")
 ):
     ext = Path(file.filename or "").suffix.lower()
-    if ext not in ALLOWED_IMAGE_EXTENSIONS:
+    if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail=f"อนุญาตเฉพาะไฟล์รูปภาพ ({', '.join(ALLOWED_IMAGE_EXTENSIONS)}) เท่านั้น (TC_TCH_003)"
+            detail=f"อนุญาตเฉพาะไฟล์รูปภาพหรือเอกสาร PDF ({', '.join(ALLOWED_EXTENSIONS)}) เท่านั้น (TC_TCH_003)"
         )
     
     content = await file.read()
-    if len(content) > MAX_IMAGE_FILE_SIZE:
+    max_size = MAX_DOC_FILE_SIZE if ext == ".pdf" else MAX_IMAGE_FILE_SIZE
+    if len(content) > max_size:
         raise HTTPException(
             status_code=400,
-            detail="ขนาดไฟล์ภาพต้องไม่เกิน 5MB (TC_TCH_004)"
+            detail=f"ขนาดไฟล์ต้องไม่เกิน {'25MB' if ext == '.pdf' else '5MB'} (TC_TCH_004)"
         )
     
     target_dir = UPLOADS_DIR / module
@@ -621,6 +623,7 @@ class ProjectCreate(BaseModel):
     project_name: str
     project_description: str
     project_image: Optional[str] = None
+    project_pdf: Optional[str] = None
     student_id: Optional[str] = None
 
 @app.post("/projects")
@@ -628,8 +631,8 @@ def create_project(data: ProjectCreate):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO projects (project_name, project_description, project_image) VALUES (?, ?, ?)",
-            (data.project_name, data.project_description, data.project_image)
+            "INSERT INTO projects (project_name, project_description, project_image, project_pdf) VALUES (?, ?, ?, ?)",
+            (data.project_name, data.project_description, data.project_image, data.project_pdf)
         )
         pid = cursor.lastrowid
         if data.student_id:
@@ -644,8 +647,8 @@ def create_project(data: ProjectCreate):
 def update_project(project_id: int, data: ProjectCreate):
     with get_db() as conn:
         conn.execute(
-            "UPDATE projects SET project_name = ?, project_description = ?, project_image = ? WHERE project_id = ?",
-            (data.project_name, data.project_description, data.project_image, project_id)
+            "UPDATE projects SET project_name = ?, project_description = ?, project_image = ?, project_pdf = ? WHERE project_id = ?",
+            (data.project_name, data.project_description, data.project_image, data.project_pdf, project_id)
         )
         if data.student_id:
             conn.execute("DELETE FROM student_projects WHERE project_id = ?", (project_id,))

@@ -48,6 +48,7 @@ CREATE TABLE projects (
     project_name TEXT NOT NULL,
     project_description TEXT NOT NULL,
     project_image TEXT,
+    project_pdf TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

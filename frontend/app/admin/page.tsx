@@ -492,6 +492,7 @@ export default function AdminDashboardPage() {
                   <th>ชื่อโครงงาน</th>
                   <th>คำอธิบายโครงงาน</th>
                   <th>รูปภาพ</th>
+                  <th>เล่ม PDF</th>
                   <th style={{ width: "160px" }}>จัดการ</th>
                 </tr>
               </thead>
@@ -500,8 +501,22 @@ export default function AdminDashboardPage() {
                   <tr key={p.project_id}>
                     <td>{p.project_id}</td>
                     <td className="fw-semibold text-primary">{p.project_name}</td>
-                    <td className="text-truncate" style={{ maxWidth: "350px" }}>{p.project_description}</td>
+                    <td className="text-truncate" style={{ maxWidth: "300px" }}>{p.project_description}</td>
                     <td>{p.project_image || "-"}</td>
+                    <td>
+                      {p.project_pdf ? (
+                        <a
+                          href={`http://localhost:8000/uploads/projects/${p.project_pdf}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="badge bg-danger text-decoration-none"
+                        >
+                          <i className="bi bi-file-earmark-pdf me-1"></i>PDF
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(p, "project_id")}>
@@ -935,6 +950,21 @@ export default function AdminDashboardPage() {
                           onChange={(e) => setFormData({ ...formData, project_description: e.target.value })}
                           required
                         ></textarea>
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">อัปโหลดไฟล์เล่มโครงงาน (PDF Document)</label>
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "projects", "project_pdf")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดเอกสาร PDF...</span>}
+                        {formData.project_pdf && (
+                          <span className="small text-danger d-block mt-1">
+                            <i className="bi bi-file-earmark-pdf me-1"></i>ไฟล์ PDF ปัจจุบัน: {formData.project_pdf}
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}

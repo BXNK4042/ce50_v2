@@ -3,5 +3,6 @@ export type Projects = {
   project_name: string;
   project_description: string;
   project_image: string;
+  project_pdf?: string;
   created_at: string;
 };

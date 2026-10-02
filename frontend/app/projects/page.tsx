@@ -49,7 +49,7 @@ export default function ProjectsPage() {
 
           return (
             <div className="col" key={project.project_id}>
-              <div className="card bg-black ">
+              <div className="card bg-black position-relative">
                 <Image
                   src={`http://localhost:8000/uploads/projects/${project.project_image}`}
                   alt={project.project_name}
@@ -59,7 +59,13 @@ export default function ProjectsPage() {
                   className="card-img-top hover:opacity-70 duration-150"
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
+                  unoptimized
                 />
+                {project.project_pdf && (
+                  <span className="badge bg-danger position-absolute top-0 end-0 m-2 d-flex align-items-center gap-1 shadow-sm">
+                    <i className="bi bi-file-earmark-pdf"></i> PDF
+                  </span>
+                )}
               </div>
               <div
                 className="modal fade"
@@ -76,6 +82,20 @@ export default function ProjectsPage() {
                     </div>
                     <div className="modal-body">
                       <p>{project.project_description}</p>
+                      {project.project_pdf && (
+                        <div className="mt-4 pt-3 border-top border-secondary">
+                          <p className="text-secondary small fw-bold mb-2">เอกสารเล่มโครงงาน:</p>
+                          <a
+                            href={`http://localhost:8000/uploads/projects/${project.project_pdf}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-2"
+                          >
+                            <i className="bi bi-file-earmark-pdf-fill fs-5"></i>
+                            <span>เปิดอ่านเล่มโครงงาน (PDF)</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div className="modal-footer">
                       <button
