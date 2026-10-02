@@ -773,7 +773,6 @@ export default function AdminDashboardPage() {
                           className="form-control bg-black border-secondary text-white"
                           value={formData.student_id || ""}
                           onChange={(e) => setFormData({ ...formData, student_id: Number(e.target.value) })}
-                          disabled={!!editingId}
                           required
                         />
                       </div>

@@ -533,23 +533,43 @@ def create_student(data: StudentCreate):
 
 @app.put("/students/{student_id}")
 def update_student(student_id: int, data: StudentCreate):
-    email = data.student_email or data.student_contact or f"{student_id}@kmitl.ac.th"
+    new_student_id = data.student_id if data.student_id else student_id
+    email = data.student_email or data.student_contact or f"{new_student_id}@kmitl.ac.th"
     with get_db() as conn:
-        conn.execute(
-            """UPDATE students SET 
-               student_firstname = ?, student_lastname = ?, student_lineage = ?,
-               student_email = ?, student_contact = ?, student_instagram = ?,
-               student_role = ?, student_image = ?
-               WHERE student_id = ?""",
-            (data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image, student_id)
-        )
+        if new_student_id != student_id:
+            conn.execute("PRAGMA foreign_keys = OFF;")
+            conn.execute(
+                """UPDATE students SET 
+                   student_id = ?, student_firstname = ?, student_lastname = ?, student_lineage = ?,
+                   student_email = ?, student_contact = ?, student_instagram = ?,
+                   student_role = ?, student_image = ?
+                   WHERE student_id = ?""",
+                (new_student_id, data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image, student_id)
+            )
+            # Cascade update in internships and student_projects
+            conn.execute("UPDATE internships SET student_id = ? WHERE student_id = ?", (str(new_student_id), str(student_id)))
+            conn.execute("UPDATE student_projects SET student_id = ? WHERE student_id = ?", (str(new_student_id), str(student_id)))
+            conn.execute("PRAGMA foreign_keys = ON;")
+        else:
+            conn.execute(
+                """UPDATE students SET 
+                   student_firstname = ?, student_lastname = ?, student_lineage = ?,
+                   student_email = ?, student_contact = ?, student_instagram = ?,
+                   student_role = ?, student_image = ?
+                   WHERE student_id = ?""",
+                (data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image, student_id)
+            )
         conn.commit()
-        return {"success": True, "student_id": student_id}
+        return {"success": True, "student_id": new_student_id}
 
 @app.delete("/students/{student_id}")
 def delete_student(student_id: int):
     with get_db() as conn:
+        conn.execute("PRAGMA foreign_keys = OFF;")
+        conn.execute("DELETE FROM student_projects WHERE student_id = ?", (str(student_id),))
+        conn.execute("DELETE FROM internships WHERE student_id = ?", (str(student_id),))
         conn.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
+        conn.execute("PRAGMA foreign_keys = ON;")
         conn.commit()
         return {"success": True, "deleted_id": student_id}
 
