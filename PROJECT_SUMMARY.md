@@ -355,44 +355,47 @@ sequenceDiagram
 
 ---
 
-### 4.3 ภารกิจที่ 3: ระบบประเมินสายอาชีพด้านไอที (Tech Career Quiz Engine)
-*เป้าหมายร่วมกับ Leo: พัฒนาแบบทดสอบทักษะ 30 ข้อ เพื่อคำนวณและแนะนำสายอาชีพที่เหมาะสม 20 อาชีพ อ้างอิงจาก `docs/bcs-tech-career-quiz.md`*
+### 4.3 ภารกิจที่ 3: ระบบประเมินสายอาชีพด้านไอที (Tech Career Quiz Engine) - [COMPLETED / ดำเนินการเสร็จสมบูรณ์]
+*เป้าหมาย: พัฒนาระบบแบบประเมินทักษะ 30 ข้อ และกลไกคำนวณจับคู่ 20 สายอาชีพด้านไอทีตามมาตรฐาน BCS Tech Career Framework แบบ End-to-End*
 
 ```mermaid
 flowchart LR
-    User["ผู้ใช้งานทำแบบประเมิน (30 ข้อ)"] --> Form["Frontend Quiz UI"]
-    Form --> API["POST /quiz/evaluate"]
+    User["ผู้ใช้งานทำแบบประเมิน (30 ข้อ)"] --> UI["Frontend Quiz UI (/quiz)"]
+    UI --> Demo["Quick Test Autofill (ทดสอบใน 1 คลิก)"]
+    UI --> API["POST /quiz/evaluate"]
     API --> Scoring["Scoring Engine (บวกคะแนนตาม Role IDs)"]
-    Scoring --> TieBreaker["Tie-breaker Algorithm"]
-    TieBreaker --> Result["ผลลัพธ์: สายอาชีพ + ทักษะ + คำอธิบาย"]
+    Scoring --> TieBreaker["Tie-breaker (Skills+Abilities Subscore)"]
+    TieBreaker --> Result["ผลลัพธ์: Top 3 อาชีพ + ตาราง 20 อาชีพ + รายวิชา CE แนะนำ"]
 ```
 
-#### สิ่งที่ Fah ต้องดำเนินการ (Backend Logic & Data Structure):
-1. **จัดเตรียมชุดข้อมูลคำถามและบทบาทอาชีพ (Data Modeling)**:
-   - **20 สายอาชีพด้านไอที**:
-     - `23059`: Systems administrator | `23060`: e-Commerce manager
-     - `23061`: Data scientist | `23062`: Social media manager
-     - `23063`: Computing teacher | `23064`: IT support technician
-     - `23065`: Entrepreneur | `23066`: Content creator
-     - `23067`: DevOps engineer | `23068`: SEO specialist
-     - `23069`: Digital marketer | `23071`: Technical writer
-     - `23072`: Web developer | `23073`: Data analyst
-     - `23074`: AI/ML engineer | `23075`: Project manager
-     - `23076`: UX/UI designer | `23077`: Cyber specialist
-     - `23078`: Cloud architect | `23079`: Software developer
-   - **โครงสร้างคำถาม 30 ข้อ**:
+#### รายละเอียดการพัฒนาระบบที่เสร็จสมบูรณ์:
+1. **ชุดข้อมูลและกลไกการประเมินผล (`backend/quiz_data.py`)**:
+   - บรรจุชุดคำถามมาตรฐาน BCS ทั้งหมด **30 ข้อ** แบ่งเป็น 5 หมวดหมู่:
      - หมวด 1: Business Sector (Q1 - Q6)
      - หมวด 2: Skills (Q7 - Q12)
      - หมวด 3: Abilities (Q13 - Q21)
      - หมวด 4: Behaviours (Q22 - Q29)
      - หมวด 5: Interests (Q30 - เลือกได้หลายข้อ)
-2. **พัฒนากลไกคำนวณคะแนน (Scoring & Evaluation Algorithm)**:
-   - เมื่อผู้ใช้เลือกแต่ละคำตอบ ระบบจะบวก 1 คะแนนให้ทุก Role ID ที่ผูกอยู่กับตัวเลือกนั้น
-   - ตรวจสอบความครบถ้วนของคำตอบ (Validation: ต้องตอบครบทุกข้อตาม Test Case `TC_QZ_002`)
-   - คำนวณหา Role ID ที่มีคะแนนสูงสุด พร้อมกำหนดเกณฑ์ Tie-breaking Rule (เช่น กรณีคะแนนเท่ากัน ให้พิจารณาคะแนนจากหมวด Skills และ Abilities เป็นลำดับแรก)
-3. **การออกแบบ API Endpoints**:
-   - `GET /quiz/questions`: ดึงรายการคำถาม 30 ข้อ พร้อมตัวเลือก (เพื่อนำไปเรนเดอร์ในหน้า Frontend แบบไดนามิก)
-   - `POST /quiz/evaluate`: รับ Payload รายการคำตอบของผู้ใช้ คำนวณผลลัพธ์ และตอบกลับบทบาทอาชีพที่เหมาะสมอันดับ 1-3 พร้อมคำบรรยายลักษณะงานและทักษะที่เกี่ยวข้อง
+   - จัดทำฐานข้อมูลรายละเอียด **20 สายอาชีพไอที** ครบถ้วนทั้งชื่อภาษาอังกฤษ-ไทย, คำอธิบายลักษณะงาน, ทักษะจำเป็น (Core Competencies), รายวิชาวิศวกรรมคอมพิวเตอร์ KMITL ที่เกี่ยวข้อง, และเส้นทางการเติบโตในสายงาน (Career Progression)
+   - **กลไกคำนวณและเกณฑ์ Tie-Breaker**:
+     - บวก 1 คะแนนให้ทุก Role ID ที่ผูกอยู่กับตัวเลือกที่เลือก
+     - กรณีคะแนนรวมเท่ากัน (Tie): ให้พิจารณาผลรวมคะแนนจากหมวด Skills (Q7-Q12) และ Abilities (Q13-Q21) เป็นเกณฑ์ตัดสินลำดับแรก
+     - คำนวณร้อยละความสอดคล้อง (Match Percentage) จากคะแนนเต็มสูงสุดที่เป็นไปได้ของแต่ละอาชีพ
+2. **API Endpoints (`backend/main.py`)**:
+   - `GET /quiz/questions`: ดึงคำถาม 30 ข้อพร้อมตัวเลือก (ซ่อน Role IDs ป้องกันการแทรกแซงผลจากฝั่ง Client)
+   - `GET /quiz/roles`: ดึงรายละเอียดของทั้ง 20 สายอาชีพ
+   - `POST /quiz/evaluate`: ประมวลผลคำตอบ ส่งคืน 3 อันดับแรก (Top 3 Matches) พร้อมคะแนนของทุกอาชีพ
+3. **Frontend Interactive Page (`frontend/app/quiz/page.tsx` & `frontend/app/layout.tsx`)**:
+   - เพิ่มลิงก์ **Career Quiz** บน Navbar ด้านบน และ Footer ของเว็บไซต์
+   - หน้าจอทำแบบทดสอบแบบทีละข้อ (Step-by-Step Card) พร้อมแถบความคืบหน้า (Progress Bar)
+   - แผงเลือกข้อแบบด่วน (Quick Jump Navigator 1-30) แสดงสถานะข้อที่ตอบแล้ว (สีเขียว) และข้อปัจจุบัน (สีส้ม)
+   - **ปุ่ม "ทดสอบสุ่มคำตอบอัตโนมัติ (Demo Fill)"**: ช่วยให้ผู้ดูแลและอาจารย์สามารถทดสอบการประเมินผลได้ทันทีในคลิกเดียวโดยไม่ต้องกดเลือกทีละข้อ
+   - **หน้าแสดงผลลัพธ์ (Results View)**:
+     - อันดับที่ 1 (Top Match): กล่องทองขนาดใหญ่ แสดงสรุปทักษะ, รายวิชา CE แนะนำ, และเส้นทางอาชีพ
+     - อันดับที่ 2 & 3: การ์ดแสดงผลสรุปพร้อมแถบคะแนนความสอดคล้อง
+     - ตารางขยายดูคะแนนครบทั้ง 20 อาชีพ (Expandable All 20 Roles Table)
+     - ปุ่มทำแบบประเมินใหม่ และปุ่มพิมพ์ผลการประเมิน (Print/Save)
+   - ผ่านการทดสอบ Build บน Next.js 16 ด้วยคำสั่ง `npm run build` สำเร็จ 100% (0 Errors)
 
 ---
 
@@ -652,33 +655,36 @@ erDiagram
 
 เพื่อให้การทำงานใน Branch `fah-dev` มีประสิทธิภาพและส่งมอบงานได้ครบถ้วน แนะนำลำดับขั้นตอนการดำเนินงานดังนี้:
 
-### ระยะที่ 1: การจัดการฐานข้อมูลและสถาปัตยกรรมพื้นฐาน (Database & Foundation Fixes)
+### ระยะที่ 1: การจัดการฐานข้อมูลและสถาปัตยกรรมพื้นฐาน (Database & Foundation Fixes) - [COMPLETED]
 1. อัปเดต `docs/ce50_schema.txt` ให้มีตาราง `companys` และปรับปรุง Foreign Keys ให้ตรงกับ `seed.py`
 2. ปรับปรุงการเชื่อมต่อ SQLite ใน Backend ให้ใช้ Absolute Path (`Path(__file__).parent / "ce50.db"`) เพื่อให้รัน Uvicorn ได้จากทุกโฟลเดอร์โดยไม่พัง
 3. เพิ่มคำสั่ง `connection.execute("PRAGMA foreign_keys = ON;")` ในทุกฟังก์ชันที่เชื่อมต่อฐานข้อมูล
+4. รองรับการแก้ไข `student_id` แบบ Cascading Updates ไปยังตาราง `internships` และ `student_projects`
 
-### ระยะที่ 2: ดำเนินการภารกิจ GNews API (Task 1)
-1. แก้ไข `@app.get("/gnews")` ใน `backend/main.py`:
-   - ปรับใช้ HTTPS และกำหนด Query พารามิเตอร์เทคโนโลยีที่ถูกต้อง
-   - อ่าน `GNEWS_API_KEY` จากสภาพแวดล้อม
-   - เพิ่ม `try...except` ดักจับกรณี Rate Limit (HTTP 429) โดยส่งข้อมูลสำรอง (Fallback)
-2. อัปเดต `frontend/app/news/page.tsx` เพื่อเรียกใช้ Endpoint นี้และแสดงผลการ์ดข่าวจริง
+### ระยะที่ 2: ดำเนินการภารกิจ GNews API (Task 1) - [COMPLETED]
+1. แก้ไข `@app.get("/gnews")` ใน `backend/main.py` รองรับ HTTPS, In-Memory Caching (TTL 50 นาที), Keyword Scoring กรองเกม และ Fallback Pool
+2. เชื่อมต่อ `frontend/app/news/page.tsx` แสดงผล Section 2 (ข่าวสากล + ข่าวไทย), Section 3 (ข่าวโลก), Section 4 (หุ้นเทคโนโลยี)
 
-### ระยะที่ 3: พัฒนาระบบประเมินสายอาชีพ BCS Tech Career Quiz (Task 3)
-1. แปลงคำถาม 30 ข้อและ 20 บทบาทอาชีพจาก `docs/bcs-tech-career-quiz.md` เป็น Data Structure ใน Backend (JSON หรือ Database)
-2. พัฒนา Scoring Algorithm พร้อม Tie-breaker Logic
-3. สร้าง Endpoint:
-   - `GET /quiz/questions`
-   - `POST /quiz/evaluate`
-4. ประสานงานกับ Leo ในการเชื่อมต่อแบบฟอร์มหน้าเว็บและการแสดงผลกราฟ/การ์ดอาชีพ
+### ระยะที่ 3: พัฒนาระบบประเมินสายอาชีพ BCS Tech Career Quiz (Task 3) - [COMPLETED]
+1. จัดทำชุดข้อมูลคำถาม 30 ข้อ และ 20 สายอาชีพไอทีใน `backend/quiz_data.py`
+2. พัฒนากลไกคำนวณคะแนนและ Tie-breaker Rule (Skills + Abilities subscore)
+3. พัฒนา API: `GET /quiz/questions`, `GET /quiz/roles`, `POST /quiz/evaluate`
+4. พัฒนาหน้าเว็บ Interactive Quiz `/quiz` พร้อมปุ่ม Demo Auto-Fill, Progress Tracking, และการ์ดแสดงผล Top 3 Matches + ตาราง 20 อาชีพ
 
-### ระยะที่ 4: พัฒนาระบบหลังบ้าน Admin CRUD & Role Management (Task 2)
-1. ออกแบบและสร้าง Pydantic Models และ CRUD Endpoints (POST, PUT, DELETE) ให้ครบทุก Entity
-2. สร้าง Endpoint ยืนยันตัวตน `/auth/login` และระบบตรวจสอบสิทธิ์ (Superadmin, Admin, Writer)
-3. พัฒนาระบบอัปโหลดไฟล์ที่ปลอดภัย (Whitelist นามสกุลรูปภาพ และจำกัดขนาดไม่เกิน 5MB)
-4. ทำงานร่วมกับ Leo ในการสร้างหน้า UI จัดการข้อมูลแบบ Clean & Functional
+### ระยะที่ 4: พัฒนาระบบหลังบ้าน Admin CRUD & Role Management (Task 2) - [COMPLETED]
+1. สร้าง Pydantic Models และ REST APIs สำหรับ CRUD ครบทั้ง 8 ตาราง (Teachers, Students, News, Projects, Companys, Internships, Schedules, Rooms)
+2. สร้าง Endpoint ยืนยันตัวตน `POST /auth/login` (SHA-256 Hashing) และระบบ Token Session
+3. พัฒนาระบบอัปโหลดไฟล์ `POST /upload` รองรับรูปภาพ (<= 5MB) และเอกสาร PDF เล่มโปรเจกต์ (<= 25MB)
+4. พัฒนาหน้าเว็บ `/admin/login` และ `/admin` Dashboard ครบทั้ง 8 แท็บ พร้อม Modal ฟอร์ม Add/Edit/Delete
+5. จัดทำคู่มือ `backend/CRUD-Readme.md` ส่งมอบให้ Leo สำหรับนำไปตกแต่งสไตล์เพิ่มเติม
 
-### ระยะที่ 5: การทดสอบและการส่งมอบ (Testing & Handover)
-1. รันการทดสอบตามตาราง Test Cases ทั้ง 8 โมดูล (โดยเฉพาะส่วนที่ Fah รับผิดชอบ)
-2. ตรวจสอบโค้ดด้วย `npm run lint` และ `npm run build` ในฝั่ง Frontend
-3. ตรวจสอบความถูกต้องของการทำงานใน Branch `fah-dev` ก่อนแจ้งส่งงาน
+### ระยะที่ 5: แผนงานขั้นต่อไปและการส่งมอบ (Next Steps & Forward Roadmap)
+1. **งานร่วมกับ Leo**:
+   - หน้า Home Page ส่วนที่ 2 (ดึงข่าวจาก `/gnews` หรือ Section 2 ของหน้า News) และส่วนที่ 3 (อาจารย์ Card Carousel)
+   - ปรับแต่งดีไซน์เพิ่มเติมในหน้า Admin ตามที่ Leo ออกแบบ
+2. **งานร่วมกับ Riew**:
+   - ช่วยจัดเตรียม `Dockerfile` สำหรับ Backend (FastAPI + SQLite + Uvicorn) และ Frontend (Next.js Node Container)
+   - ช่วยจัดทำ `docker-compose.yml` สำหรับเชื่อมต่อทั้งระบบเข้าด้วยกันก่อนทำ Cloudflare Tunnel
+3. **การทดสอบขั้นสุดท้าย (Final Integration & Quality Assurance)**:
+   - ตรวจสอบความถูกต้องของทุกฟังก์ชันบน Production Build ก่อนส่งมอบงานให้ภาควิชา
+

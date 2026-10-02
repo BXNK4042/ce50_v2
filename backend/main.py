@@ -2,6 +2,7 @@ import hashlib
 import os
 import sqlite3
 import time
+import sys
 from pathlib import Path
 from typing import Optional, List, Any
 
@@ -15,6 +16,8 @@ from pydantic import BaseModel
 
 # Absolute paths to ensure backend works from any working directory
 BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 DB_PATH = BASE_DIR / "ce50.db"
 UPLOADS_DIR = BASE_DIR / "uploads"
 
@@ -861,4 +864,34 @@ def delete_room(room_id: int):
         conn.execute("DELETE FROM rooms WHERE room_id = ?", (room_id,))
         conn.commit()
         return {"success": True, "deleted_id": room_id}
+
+
+# ==========================================
+# BCS Tech Career Quiz Endpoints
+# ==========================================
+
+from quiz_data import get_public_questions, evaluate_quiz, ROLES_METADATA
+
+class QuizEvaluateRequest(BaseModel):
+    answers: dict[str, Any]
+
+@app.get("/quiz/questions")
+def get_quiz_questions_endpoint():
+    """Returns all 30 career quiz questions with options for client display"""
+    return {"questions": get_public_questions()}
+
+@app.get("/quiz/roles")
+def get_quiz_roles_endpoint():
+    """Returns all 20 tech roles with detailed descriptions and skills"""
+    return {"roles": list(ROLES_METADATA.values())}
+
+@app.post("/quiz/evaluate")
+def evaluate_quiz_endpoint(req: QuizEvaluateRequest):
+    """Evaluates student quiz answers and returns ranked career matches"""
+    try:
+        result = evaluate_quiz(req.answers)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to evaluate quiz: {str(e)}")
+
 
