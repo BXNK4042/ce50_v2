@@ -68,12 +68,19 @@ export default function Home() {
       <div className="row rows-cols-1 row-cols-md-6 g-4">
         {students.map((student) => {
           const modalId = `student-${student.student_id}-modal`;
+          const imageSrc = student.student_image
+            ? student.student_image.startsWith("http")
+              ? student.student_image
+              : student.student_image.includes("/")
+              ? `http://localhost:8000/${student.student_image.replace(/^\//, "")}`
+              : `http://localhost:8000/uploads/students/${student.student_image}`
+            : `http://localhost:8000/uploads/students/ce_04/${student.student_id}.png`;
 
           return (
             <div className="col" key={student.student_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`http://localhost:8000/uploads/students/ce_04/${student.student_id}.png`}
+                  src={imageSrc}
                   alt={student.student_firstname}
                   width={500}
                   height={500}
@@ -81,6 +88,7 @@ export default function Home() {
                   className="card-img-top hover:opacity-70 duration-150"
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
+                  unoptimized
                 />
               </div>
               <div

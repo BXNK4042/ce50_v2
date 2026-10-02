@@ -417,6 +417,7 @@ export default function AdminDashboardPage() {
                   <th>สายรหัส</th>
                   <th>อีเมล (Email)</th>
                   <th>Instagram</th>
+                  <th>รูปภาพ</th>
                   <th style={{ width: "160px" }}>จัดการ</th>
                 </tr>
               </thead>
@@ -428,6 +429,11 @@ export default function AdminDashboardPage() {
                     <td><span className="badge bg-info text-dark">T{s.student_lineage}</span></td>
                     <td><i className="bi bi-envelope me-1 text-secondary"></i>{s.student_email || s.student_contact || "-"}</td>
                     <td>{s.student_instagram ? `@${s.student_instagram}` : "-"}</td>
+                    <td>
+                      {s.student_image ? (
+                        <span className="badge bg-secondary text-truncate" style={{ maxWidth: "120px" }}>{s.student_image}</span>
+                      ) : "-"}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(s, "student_id")}>
@@ -825,6 +831,19 @@ export default function AdminDashboardPage() {
                           value={formData.student_instagram || ""}
                           onChange={(e) => setFormData({ ...formData, student_instagram: e.target.value })}
                         />
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">อัปโหลดรูปภาพนักศึกษา (Student Image)</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "students", "student_image")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
+                        {formData.student_image && (
+                          <span className="small text-success d-block mt-1">ไฟล์ปัจจุบัน: {formData.student_image}</span>
+                        )}
                       </div>
                     </div>
                   )}
