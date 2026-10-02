@@ -1,12 +1,14 @@
+import hashlib
 import os
 import sqlite3
 from webbrowser import get
 
 import httpx
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 app = FastAPI()
 client = httpx.Client()
@@ -30,6 +32,50 @@ app.add_middleware(
 )
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
+class LoginRequest(BaseModel):
+  username: str
+  password: str
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+  try:
+    parts = hashed_password.split('$')
+    if len(parts) != 4 or parts[0] != 'pbkdf2_sha256':
+      return False
+    rounds = int(parts[1])
+    salt = bytes.fromhex(parts[2])
+    original_hash = bytes.fromhex(parts[3])
+    new_hash = hashlib.pbkdf2_hmac('sha256', plain_password.encode('utf-8'), salt, rounds)
+    return new_hash == original_hash
+  except Exception:
+    return False
+
+@app.post("/admin/login")
+@app.post("/auth/login")
+def login(payload: LoginRequest):
+  conn = sqlite3.connect("ce50.db")
+  conn.row_factory = sqlite3.Row
+  cursor = conn.cursor()
+  cursor.execute(
+    "SELECT user_id, user_name, password_hash, user_email, user_role FROM users WHERE user_name = ? OR user_email = ?",
+    (payload.username, payload.username)
+  )
+  user = cursor.fetchone()
+  conn.close()
+
+  if not user or not verify_password(payload.password, user["password_hash"]):
+    raise HTTPException(
+      status_code=status.HTTP_401_UNAUTHORIZED,
+      detail="Incorrect username or password"
+    )
+
+  return {
+    "access_token": f"token_{user['user_name']}",
+    "token_type": "bearer",
+    "username": user["user_name"],
+    "email": user["user_email"],
+    "role": user["user_role"]
+  }
 
 @app.get("/", response_class=HTMLResponse)
 def home():
