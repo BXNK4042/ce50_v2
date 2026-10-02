@@ -272,25 +272,26 @@ graph TD
    - สร้าง Session Token ส่งกลับไปยัง Client เพื่อจัดเก็บใน `localStorage` (`ce50_admin_token`, `ce50_admin_user`)
    - ระบบ Route Guard: หากผู้ใช้ยังไม่เข้าสู่ระบบแล้วพยายามเข้าหน้า `/admin` หน้าเว็บจะ Redirect ไปยัง `/admin/login` ทันที
 
-2. **ระบบอัปโหลดไฟล์รูปภาพที่ปลอดภัย (Secure File Upload Handler - TC_TCH_003, TC_TCH_004)**:
+2. **ระบบอัปโหลดไฟล์รูปภาพและเอกสาร PDF (Secure File Upload Handler - TC_TCH_003, TC_TCH_004)**:
    - Endpoint: `POST /upload` รับ `file: UploadFile` และ `module: Form` (teachers, students, news, projects, companys, rooms)
-   - **Whitelist Validation (TC_TCH_003):** อนุญาตเฉพาะนามสกุล `.jpg`, `.jpeg`, `.png`, `.webp` หากเป็นไฟล์อื่นจะตอบกลับ HTTP 400
-   - **File Size Limit (TC_TCH_004):** จำกัดขนาดไฟล์ไม่เกิน **5MB** หากเกินจะปฏิเสธคำขอทันที
+   - **Whitelist Validation (TC_TCH_003):** อนุญาตเฉพาะนามสกุล `.jpg`, `.jpeg`, `.png`, `.webp` และ `.pdf`
+   - **File Size Limit (TC_TCH_004):** จำกัดขนาดไฟล์รูปภาพไม่เกิน **5MB** และไฟล์เอกสารเล่มโครงงาน PDF ได้สูงสุดถึง **25MB**
    - บันทึกไฟล์ลงในไดเรกทอรี `backend/uploads/{module}/` โดยใช้ Absolute Path และสร้าง Timestamp นำหน้าชื่อไฟล์ป้องกันชื่อซ้ำ
 
-3. **การปรับปรุงข้อมูลนักศึกษา (Student Privacy & Email Enhancement)**:
+3. **การปรับปรุงข้อมูลนักศึกษา (Student Privacy & Cascading Updates)**:
    - นำเบอร์โทรศัพท์ออกจากระบบ และเปลี่ยนมาใช้อีเมลสถาบัน (`@kmitl.ac.th`) แทน
    - เพิ่มคอลัมน์ `student_email` ในตาราง `students` และปรับปรุงข้อมูลเริ่มต้นใน `backend/seed.py` ให้เป็น `{student_id}@kmitl.ac.th`
-   - ปรับปรุงหน้าแสดงผลนักศึกษา (`frontend/app/students/page.tsx`) ให้แสดงไอคอนจดหมาย (`bi-envelope`) พร้อมลิงก์ `mailto:` แทนเบอร์โทรศัพท์
+   - ปลดล็อกให้แก้ไขรหัสนักศึกษา (`student_id`) ได้ พร้อมระบบ **Cascade Update** อัปเดตข้อมูลในตาราง `internships` และ `student_projects` ตามอัตโนมัติ
+   - เพิ่มระบบอัปโหลดรูปภาพนักศึกษาในหน้า Admin และแสดงผลรูปภาพแบบไดนามิกใน [frontend/app/students/page.tsx](file:///C:/Users/Asus/OneDrive/เดสก์ท็อป/CE50/ce50_v2/frontend/app/students/page.tsx)
 
 4. **RESTful CRUD Endpoints ครบทุก Entity (100% Parameterized Queries)**:
    
    | Entity | Endpoints | เมธอด HTTP | รายละเอียดและฟิลด์ที่รองรับ |
    |---|---|---|---|
    | **Teachers** | `/teachers`, `/teachers/{id}` | `POST`, `PUT`, `DELETE` | ชื่อ, นามสกุล, ชื่ออังกฤษ, อีเมลติดต่อ, รูปภาพ, ปีที่ปรึกษา |
-   | **Students** | `/students`, `/students/{id}` | `POST`, `PUT`, `DELETE` | รหัสนักศึกษา, ชื่อ, นามสกุล, สายรหัส, อีเมล, Instagram, รูปภาพ |
+   | **Students** | `/students`, `/students/{id}` | `POST`, `PUT`, `DELETE` | รหัสนักศึกษา (Cascade), ชื่อ, นามสกุล, สายรหัส, อีเมล, Instagram, รูปภาพ |
    | **News** | `/news`, `/news/{id}` | `POST`, `PUT`, `DELETE` | หัวข้อข่าว, คำอธิบาย, หมวดหมู่ข่าว, รูปภาพข่าว |
-   | **Projects** | `/projects`, `/projects/{id}` | `POST`, `PUT`, `DELETE` | ชื่อโครงงาน, คำอธิบาย, รูปภาพ, รหัสนักศึกษาผู้พัฒนา |
+   | **Projects** | `/projects`, `/projects/{id}` | `POST`, `PUT`, `DELETE` | ชื่อโครงงาน, คำอธิบาย, รูปภาพ, เล่มโครงงาน PDF (`project_pdf`), รหัสนักศึกษาผู้พัฒนา |
    | **Companies** | `/companys`, `/companys/{id}` | `POST`, `PUT`, `DELETE` | ชื่อบริษัท, โลโก้/รูปภาพบริษัท |
    | **Internships**| `/internship`, `/internship/{id}`| `POST`, `PUT`, `DELETE`| ตำแหน่งงาน, รหัสนักศึกษา, รหัสบริษัท, รายละเอียดการฝึกงาน |
    | **Class** | `/class`, `/class/{id}` | `POST`, `PUT`, `DELETE` | ชื่อวิชา, รหัสอาจารย์, รหัสห้อง, วันที่เรียน, เวลาเริ่ม-สิ้นสุด |
@@ -304,8 +305,9 @@ graph TD
      - แถบนำทางแยกตามตาราง (Tab Navigation)
      - แสดงจำนวนรายการในแต่ละตาราง พร้อมปุ่ม `+ เพิ่มข้อมูลใหม่ (Add New)`
      - แสดงตารางข้อมูลแบบเรียบง่าย พร้อมปุ่ม `[แก้ไข]` และ `[ลบ]` ในทุกแถว
-     - แบบฟอร์ม Modal สำหรับเพิ่ม/แก้ไขข้อมูล พร้อมปุ่มเลือกไฟล์รูปภาพที่เชื่อมต่อกับ `/upload` อัตโนมัติ
+     - แบบฟอร์ม Modal สำหรับเพิ่ม/แก้ไขข้อมูล พร้อมปุ่มเลือกไฟล์รูปภาพและไฟล์เล่ม PDF ที่เชื่อมต่อกับ `/upload` อัตโนมัติ
      - ยืนยันก่อนลบ (Delete Confirmation) ป้องกันการเผลอกดลบ
+   - **หน้าโครงงานสาธารณะ (`frontend/app/projects/page.tsx`):** แสดง Badge PDF บนการ์ด และปุ่ม "เปิดอ่านเล่มโครงงาน (PDF)" ในหน้าต่างรายละเอียดโครงงาน
 
 #### 4.2.2 ลำดับการทำงานของระบบ Admin CRUD (Sequence Diagram)
 
