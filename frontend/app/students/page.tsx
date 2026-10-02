@@ -102,8 +102,14 @@ export default function Home() {
                         <br />
                         สายรหัส: T{student.student_lineage}
                         <br />
-                        <i className="bi bi-telephone">
-                          : {student.student_contact}
+                        <i className="bi bi-envelope">
+                          :{" "}
+                          <a
+                            className="text-white link-offset-2 link-underline link-underline-opacity-0"
+                            href={`mailto:${student.student_email || student.student_contact}`}
+                          >
+                            {student.student_email || student.student_contact}
+                          </a>
                         </i>
                         <br />
                         <a

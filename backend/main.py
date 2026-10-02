@@ -1,15 +1,17 @@
+import hashlib
 import os
 import sqlite3
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Any
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Header, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 # Absolute paths to ensure backend works from any working directory
 BASE_DIR = Path(__file__).resolve().parent
@@ -363,3 +365,477 @@ def gnews_tech(
             "error": str(e),
             "message": "Connection to GNews API failed, serving fallback cache"
         }
+
+
+# ==========================================
+# Authentication & Access Control
+# ==========================================
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+@app.post("/auth/login")
+def auth_login(req: LoginRequest):
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT user_id, user_name, password_hash, user_email, user_role FROM users WHERE user_name = ?",
+            (req.username.strip(),)
+        ).fetchone()
+        if not row:
+            raise HTTPException(status_code=401, detail="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")
+        user = dict(row)
+        input_hash = hashlib.sha256(req.password.encode("utf-8")).hexdigest()
+        if input_hash != user["password_hash"] and req.password != user["password_hash"]:
+            raise HTTPException(status_code=401, detail="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")
+        
+        token = f"ce50-{user['user_name']}-{int(time.time())}"
+        return {
+            "success": True,
+            "token": token,
+            "user": {
+                "user_id": user["user_id"],
+                "user_name": user["user_name"],
+                "user_email": user["user_email"],
+                "user_role": user["user_role"]
+            }
+        }
+
+@app.get("/users")
+def get_users():
+    with get_db() as conn:
+        rows = conn.execute("SELECT user_id, user_name, user_email, user_role, created_at FROM users").fetchall()
+        return [dict(r) for r in rows]
+
+
+# ==========================================
+# Secure File Upload (TC_TCH_003, TC_TCH_004)
+# ==========================================
+
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
+
+@app.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    module: str = Form("general")
+):
+    ext = Path(file.filename or "").suffix.lower()
+    if ext not in ALLOWED_IMAGE_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"อนุญาตเฉพาะไฟล์รูปภาพ ({', '.join(ALLOWED_IMAGE_EXTENSIONS)}) เท่านั้น (TC_TCH_003)"
+        )
+    
+    content = await file.read()
+    if len(content) > MAX_IMAGE_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail="ขนาดไฟล์ภาพต้องไม่เกิน 5MB (TC_TCH_004)"
+        )
+    
+    target_dir = UPLOADS_DIR / module
+    target_dir.mkdir(parents=True, exist_ok=True)
+    
+    safe_name = f"{int(time.time())}_{Path(file.filename).name}"
+    file_path = target_dir / safe_name
+    file_path.write_bytes(content)
+    
+    return {
+        "success": True,
+        "filename": safe_name,
+        "url": f"/uploads/{module}/{safe_name}"
+    }
+
+
+# ==========================================
+# Teachers CRUD
+# ==========================================
+
+class TeacherCreate(BaseModel):
+    teacher_firstname: str
+    teacher_lastname: str
+    teacher_contact: str
+    teacher_name_en: Optional[str] = None
+    teacher_image: Optional[str] = None
+    teacher_advise_year: Optional[str] = None
+
+@app.post("/teachers")
+def create_teacher(data: TeacherCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO teachers 
+               (teacher_firstname, teacher_lastname, teacher_contact, teacher_name_en, teacher_image, teacher_advise_year)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (data.teacher_firstname, data.teacher_lastname, data.teacher_contact, data.teacher_name_en, data.teacher_image, data.teacher_advise_year)
+        )
+        conn.commit()
+        return {"success": True, "teacher_id": cursor.lastrowid}
+
+@app.put("/teachers/{teacher_id}")
+def update_teacher(teacher_id: int, data: TeacherCreate):
+    with get_db() as conn:
+        conn.execute(
+            """UPDATE teachers SET 
+               teacher_firstname = ?, teacher_lastname = ?, teacher_contact = ?,
+               teacher_name_en = ?, teacher_image = ?, teacher_advise_year = ?
+               WHERE teacher_id = ?""",
+            (data.teacher_firstname, data.teacher_lastname, data.teacher_contact, data.teacher_name_en, data.teacher_image, data.teacher_advise_year, teacher_id)
+        )
+        conn.commit()
+        return {"success": True, "teacher_id": teacher_id}
+
+@app.delete("/teachers/{teacher_id}")
+def delete_teacher(teacher_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM teachers WHERE teacher_id = ?", (teacher_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": teacher_id}
+
+
+# ==========================================
+# Students CRUD
+# ==========================================
+
+class StudentCreate(BaseModel):
+    student_id: Optional[int] = None
+    student_firstname: str
+    student_lastname: str
+    student_lineage: str
+    student_email: Optional[str] = None
+    student_contact: Optional[str] = None
+    student_instagram: Optional[str] = None
+    student_role: Optional[str] = None
+    student_image: Optional[str] = None
+
+@app.post("/students")
+def create_student(data: StudentCreate):
+    email = data.student_email or data.student_contact or f"{data.student_id}@kmitl.ac.th"
+    with get_db() as conn:
+        cursor = conn.cursor()
+        if data.student_id:
+            cursor.execute(
+                """INSERT INTO students 
+                   (student_id, student_firstname, student_lastname, student_lineage, student_email, student_contact, student_instagram, student_role, student_image)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (data.student_id, data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image)
+            )
+        else:
+            cursor.execute(
+                """INSERT INTO students 
+                   (student_firstname, student_lastname, student_lineage, student_email, student_contact, student_instagram, student_role, student_image)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                (data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image)
+            )
+        conn.commit()
+        return {"success": True, "student_id": data.student_id or cursor.lastrowid}
+
+@app.put("/students/{student_id}")
+def update_student(student_id: int, data: StudentCreate):
+    email = data.student_email or data.student_contact or f"{student_id}@kmitl.ac.th"
+    with get_db() as conn:
+        conn.execute(
+            """UPDATE students SET 
+               student_firstname = ?, student_lastname = ?, student_lineage = ?,
+               student_email = ?, student_contact = ?, student_instagram = ?,
+               student_role = ?, student_image = ?
+               WHERE student_id = ?""",
+            (data.student_firstname, data.student_lastname, data.student_lineage, email, email, data.student_instagram, data.student_role, data.student_image, student_id)
+        )
+        conn.commit()
+        return {"success": True, "student_id": student_id}
+
+@app.delete("/students/{student_id}")
+def delete_student(student_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": student_id}
+
+
+# ==========================================
+# News Item CRUD
+# ==========================================
+
+class NewsCreate(BaseModel):
+    news_title: str
+    news_description: str
+    news_category: Optional[str] = "ทั่วไป"
+    news_image: Optional[str] = None
+
+@app.post("/news")
+def create_news(data: NewsCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO news_item (news_title, news_description, news_category, news_image) VALUES (?, ?, ?, ?)",
+            (data.news_title, data.news_description, data.news_category, data.news_image)
+        )
+        conn.commit()
+        return {"success": True, "news_id": cursor.lastrowid}
+
+@app.put("/news/{news_id}")
+def update_news(news_id: int, data: NewsCreate):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE news_item SET news_title = ?, news_description = ?, news_category = ?, news_image = ? WHERE news_id = ?",
+            (data.news_title, data.news_description, data.news_category, data.news_image, news_id)
+        )
+        conn.commit()
+        return {"success": True, "news_id": news_id}
+
+@app.delete("/news/{news_id}")
+def delete_news(news_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM news_item WHERE news_id = ?", (news_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": news_id}
+
+
+# ==========================================
+# Projects CRUD
+# ==========================================
+
+class ProjectCreate(BaseModel):
+    project_name: str
+    project_description: str
+    project_image: Optional[str] = None
+    student_id: Optional[str] = None
+
+@app.post("/projects")
+def create_project(data: ProjectCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO projects (project_name, project_description, project_image) VALUES (?, ?, ?)",
+            (data.project_name, data.project_description, data.project_image)
+        )
+        pid = cursor.lastrowid
+        if data.student_id:
+            cursor.execute(
+                "INSERT INTO student_projects (student_id, project_id) VALUES (?, ?)",
+                (data.student_id, pid)
+            )
+        conn.commit()
+        return {"success": True, "project_id": pid}
+
+@app.put("/projects/{project_id}")
+def update_project(project_id: int, data: ProjectCreate):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE projects SET project_name = ?, project_description = ?, project_image = ? WHERE project_id = ?",
+            (data.project_name, data.project_description, data.project_image, project_id)
+        )
+        if data.student_id:
+            conn.execute("DELETE FROM student_projects WHERE project_id = ?", (project_id,))
+            conn.execute("INSERT INTO student_projects (student_id, project_id) VALUES (?, ?)", (data.student_id, project_id))
+        conn.commit()
+        return {"success": True, "project_id": project_id}
+
+@app.delete("/projects/{project_id}")
+def delete_project(project_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM student_projects WHERE project_id = ?", (project_id,))
+        conn.execute("DELETE FROM projects WHERE project_id = ?", (project_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": project_id}
+
+
+# ==========================================
+# Companies & Internships CRUD
+# ==========================================
+
+class CompanyCreate(BaseModel):
+    company_name: str
+    company_image: Optional[str] = None
+
+@app.post("/companys")
+def create_company(data: CompanyCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO companys (company_name, company_image) VALUES (?, ?)",
+            (data.company_name, data.company_image)
+        )
+        conn.commit()
+        return {"success": True, "company_id": cursor.lastrowid}
+
+@app.put("/companys/{company_id}")
+def update_company(company_id: int, data: CompanyCreate):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE companys SET company_name = ?, company_image = ? WHERE company_id = ?",
+            (data.company_name, data.company_image, company_id)
+        )
+        conn.commit()
+        return {"success": True, "company_id": company_id}
+
+@app.delete("/companys/{company_id}")
+def delete_company(company_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM companys WHERE company_id = ?", (company_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": company_id}
+
+class InternshipCreate(BaseModel):
+    student_id: str
+    internship_title: str
+    company_id: int
+    internship_description: str
+
+@app.post("/internship")
+def create_internship(data: InternshipCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO internships (student_id, internship_title, company_id, internship_description) VALUES (?, ?, ?, ?)",
+            (data.student_id, data.internship_title, data.company_id, data.internship_description)
+        )
+        conn.commit()
+        return {"success": True, "internship_id": cursor.lastrowid}
+
+@app.put("/internship/{internship_id}")
+def update_internship(internship_id: int, data: InternshipCreate):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE internships SET student_id = ?, internship_title = ?, company_id = ?, internship_description = ? WHERE internship_id = ?",
+            (data.student_id, data.internship_title, data.company_id, data.internship_description, internship_id)
+        )
+        conn.commit()
+        return {"success": True, "internship_id": internship_id}
+
+@app.delete("/internship/{internship_id}")
+def delete_internship(internship_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM internships WHERE internship_id = ?", (internship_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": internship_id}
+
+
+# ==========================================
+# Schedules CRUD (Class & Exam)
+# ==========================================
+
+class ClassScheduleCreate(BaseModel):
+    teacher_id: int
+    class_name: str
+    room_id: int
+    class_description: Optional[str] = None
+    class_day: str
+    class_start: str
+    class_end: str
+
+@app.post("/class")
+def create_class_schedule(data: ClassScheduleCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO class_schedules 
+               (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end)
+        )
+        conn.commit()
+        return {"success": True, "class_id": cursor.lastrowid}
+
+@app.put("/class/{class_id}")
+def update_class_schedule(class_id: int, data: ClassScheduleCreate):
+    with get_db() as conn:
+        conn.execute(
+            """UPDATE class_schedules SET 
+               teacher_id = ?, class_name = ?, room_id = ?, class_description = ?,
+               class_day = ?, class_start = ?, class_end = ?
+               WHERE class_id = ?""",
+            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end, class_id)
+        )
+        conn.commit()
+        return {"success": True, "class_id": class_id}
+
+@app.delete("/class/{class_id}")
+def delete_class_schedule(class_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM class_schedules WHERE class_id = ?", (class_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": class_id}
+
+class ExamScheduleCreate(BaseModel):
+    exam_code: str
+    exam_name: str
+    exam_final: int
+    exam_date: str
+    exam_start: str
+    exam_end: str
+    exam_room: str
+
+@app.post("/exam")
+def create_exam_schedule(data: ExamScheduleCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO exam_schedules 
+               (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room)
+        )
+        conn.commit()
+        return {"success": True, "exam_id": cursor.lastrowid}
+
+@app.put("/exam/{exam_id}")
+def update_exam_schedule(exam_id: int, data: ExamScheduleCreate):
+    with get_db() as conn:
+        conn.execute(
+            """UPDATE exam_schedules SET 
+               exam_code = ?, exam_name = ?, exam_final = ?, exam_date = ?,
+               exam_start = ?, exam_end = ?, exam_room = ?
+               WHERE exam_id = ?""",
+            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room, exam_id)
+        )
+        conn.commit()
+        return {"success": True, "exam_id": exam_id}
+
+@app.delete("/exam/{exam_id}")
+def delete_exam_schedule(exam_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM exam_schedules WHERE exam_id = ?", (exam_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": exam_id}
+
+
+# ==========================================
+# Rooms CRUD
+# ==========================================
+
+class RoomCreate(BaseModel):
+    room_name: str
+    room_description: str
+    room_image: Optional[str] = None
+
+@app.post("/rooms")
+def create_room(data: RoomCreate):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO rooms (room_name, room_description, room_image) VALUES (?, ?, ?)",
+            (data.room_name, data.room_description, data.room_image)
+        )
+        conn.commit()
+        return {"success": True, "room_id": cursor.lastrowid}
+
+@app.put("/rooms/{room_id}")
+def update_room(room_id: int, data: RoomCreate):
+    with get_db() as conn:
+        conn.execute(
+            "UPDATE rooms SET room_name = ?, room_description = ?, room_image = ? WHERE room_id = ?",
+            (data.room_name, data.room_description, data.room_image, room_id)
+        )
+        conn.commit()
+        return {"success": True, "room_id": room_id}
+
+@app.delete("/rooms/{room_id}")
+def delete_room(room_id: int):
+    with get_db() as conn:
+        conn.execute("DELETE FROM rooms WHERE room_id = ?", (room_id,))
+        conn.commit()
+        return {"success": True, "deleted_id": room_id}
+

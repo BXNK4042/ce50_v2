@@ -26,7 +26,8 @@ CREATE TABLE students (
     student_image TEXT,
     student_role TEXT,
     student_lineage TEXT NOT NULL,
-    student_contact TEXT NOT NULL,
+    student_email TEXT NOT NULL,
+    student_contact TEXT,
     student_instagram TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

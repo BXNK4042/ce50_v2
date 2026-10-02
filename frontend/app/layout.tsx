@@ -152,7 +152,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </div>
           <div className="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>© {currentYear} KMITL PCC All rights reserved.</p>
+            <div className="d-flex align-items-center gap-3">
+              <p className="mb-0">© {currentYear} KMITL PCC All rights reserved.</p>
+              <span className="text-secondary">|</span>
+              <Link href="/admin" className="text-secondary text-decoration-none small hover:text-white">
+                <i className="bi bi-shield-lock me-1"></i>Admin Portal
+              </Link>
+            </div>
             <ul className="list-unstyled d-flex">
               <li className="ms-3">
                 <a className="text-white" href="#" aria-label="Instagram">

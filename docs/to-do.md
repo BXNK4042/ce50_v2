@@ -5,7 +5,7 @@
   - [x] Integrate Gnews API to fetch news tech articles into news page (Fah)
   - [ ] Add 2nd and 3rd sections in home page, 2nd for news (2nd section from news page) and 3rd for teachers (card carousel) (Leo)
   - [ ] Teacher Easter Egg (Leo)
-  - [ ] Admin CRUD page (no decoration, just working) (Fah + Leo)
+  - [x] Admin CRUD page (no decoration, just working) (Fah + Leo)
   - [ ] Implement Career Quizzes (bcs-tech-career-quiz.md) (Fah + Leo)
   - [ ] Containerize (Docker) (Riew)
   - [ ] Deploy via cloudflare tunnel (Riew)

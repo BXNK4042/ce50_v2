@@ -96,7 +96,7 @@ flowchart TD
 | **Database Schema** | ไฟล์สคริปต์ `docs/ce50_schema.txt` (SQLite) | ขาดตาราง `companys` ในไฟล์ Schema (ทำให้เกิดความขัดแย้งกับ `seed.py`), ยังไม่มีตารางสำหรับ Quiz |
 | **Database Seeding** | สคริปต์ `backend/seed.py` สำหรับ Insert ข้อมูลเริ่มต้นครบทุกตาราง | - ยังไม่เป็น Idempotent (รันซ้ำแล้วข้อมูลเบิ้ลหรือติด Unique Constraint)<br>- ไม่ได้เปิด `PRAGMA foreign_keys = ON;` ในการเชื่อมต่อของ Python |
 | **GNews Integration** | ฟังก์ชัน `@app.get("/gnews")` + Next.js UI | **[x] เสร็จสมบูรณ์ 100%**: Multi-Key In-Memory Cache (TTL 50 นาที), จัดลำดับความสำคัญหัวข้อ CE (AI/Quantum/Network/Web) คัดกรองข่าวเกมออก, ข่าวไทย/ข่าวโลก/หุ้นเทค, ระบบ Fallback สำรองครบถ้วนตาม TC_NWS_002, TC_NWS_003 |
-| **Admin CRUD** | ตาราง `users` ในฐานข้อมูล | ยังไม่มี API สำหรับ POST, PUT, DELETE และยังไม่มีหน้า UI สำหรับแอดมิน |
+| **Admin CRUD** | FastAPI REST Endpoints + Next.js Admin Panel | **[x] เสร็จสมบูรณ์ 100%**: Authentication (`/auth/login`) รองรับ SHA-256, จัดการสิทธิ์ RBAC (superadmin/admin/writer), Secure File Upload (`/upload`) จำกัด 5MB/Whitelist, CRUD ครบทุกตาราง (Teachers, Students [ใช้อีเมลแทนเบอร์โทร], News, Projects, Companies, Internships, Schedules, Rooms) พร้อมปุ่ม Footer และหน้า `/admin`, `/admin/login` |
 | **Tech Career Quiz** | เอกสารข้อกำหนด `docs/bcs-tech-career-quiz.md` | ยังไม่ได้เริ่มเขียนทั้ง Logic ฝั่ง Backend และแบบฟอร์มฝั่ง Frontend |
 | **เอกสารทดสอบ** | สคริปต์ `scripts/generate_test_cases_excel.py` (32 Test Cases) | เอกสารระบุชุดทดสอบ 8 โมดูลอย่างละเอียดมาก ใช้เป็นเกณฑ์ในการส่งมอบงาน |
 
@@ -108,7 +108,7 @@ flowchart TD
 
 ```markdown
 - [x] Integrate Gnews API to fetch news tech articles into news page (Fah) [COMPLETED]
-- [ ] Admin CRUD page (no decoration, just working) (Fah + Leo)
+- [x] Admin CRUD page (no decoration, just working) (Fah + Leo) [COMPLETED]
 - [ ] Implement Career Quizzes (bcs-tech-career-quiz.md) (Fah + Leo)
 ```
 
@@ -256,36 +256,100 @@ graph TD
 
 ---
 
-### 4.2 ภารกิจที่ 2: ระบบจัดการหลังบ้าน Admin CRUD และระบบสิทธิ์ (RBAC)
-*เป้าหมายร่วมกับ Leo: พัฒนา API สำหรับ Create, Read, Update, Delete ข้อมูลในระบบ พร้อมหน้า Admin สำหรับจัดการข้อมูล*
+### 4.2 ภารกิจที่ 2: ระบบจัดการหลังบ้าน Admin CRUD และระบบสิทธิ์ (RBAC) - [สถานะ: เสร็จสมบูรณ์ (COMPLETED)]
+*เป้าหมาย: พัฒนา RESTful API และ Dashboard สำหรับ Create, Read, Update, Delete ข้อมูลในระบบ พร้อมระบบยืนยันตัวตน, สิทธิ์ผู้ใช้งาน, และระบบอัปโหลดไฟล์รูปภาพ*
 
-#### สิ่งที่ Fah ต้องดำเนินการ (Backend & Database Spec):
-1. **การสร้าง RESTful API Endpoints (CRUD) สำหรับทุก Entity**:
+#### 4.2.1 สรุปผลการพัฒนาระบบหลังบ้าน (Architecture & Implementation Overview)
+ระบบ Admin CRUD ได้รับการออกแบบตามแนวทาง **Modular REST API + Next.js Tabbed Dashboard** เพื่อความเสถียร ความปลอดภัย และตอบโจทย์ "no decoration, just working":
+
+1. **ระบบยืนยันตัวตนและความปลอดภัย (Authentication & Security)**:
+   - Endpoint: `POST /auth/login` ตรวจสอบชื่อผู้ใช้และรหัสผ่านจากตาราง `users`
+   - รหัสผ่านถูกเข้ารหัสด้วย **SHA-256** (`hashlib.sha256(password.encode()).hexdigest()`) พร้อมรองรับ Backward Compatibility
+   - เพิ่มผู้ดูแลระบบหลัก:
+     - **Username:** `adminFah`
+     - **Password:** `admince04` (บันทึกแบบ SHA-256)
+     - **Role:** `superadmin` (สิทธิ์เต็มทุกระบบ)
+   - สร้าง Session Token ส่งกลับไปยัง Client เพื่อจัดเก็บใน `localStorage` (`ce50_admin_token`, `ce50_admin_user`)
+   - ระบบ Route Guard: หากผู้ใช้ยังไม่เข้าสู่ระบบแล้วพยายามเข้าหน้า `/admin` หน้าเว็บจะ Redirect ไปยัง `/admin/login` ทันที
+
+2. **ระบบอัปโหลดไฟล์รูปภาพที่ปลอดภัย (Secure File Upload Handler - TC_TCH_003, TC_TCH_004)**:
+   - Endpoint: `POST /upload` รับ `file: UploadFile` และ `module: Form` (teachers, students, news, projects, companys, rooms)
+   - **Whitelist Validation (TC_TCH_003):** อนุญาตเฉพาะนามสกุล `.jpg`, `.jpeg`, `.png`, `.webp` หากเป็นไฟล์อื่นจะตอบกลับ HTTP 400
+   - **File Size Limit (TC_TCH_004):** จำกัดขนาดไฟล์ไม่เกิน **5MB** หากเกินจะปฏิเสธคำขอทันที
+   - บันทึกไฟล์ลงในไดเรกทอรี `backend/uploads/{module}/` โดยใช้ Absolute Path และสร้าง Timestamp นำหน้าชื่อไฟล์ป้องกันชื่อซ้ำ
+
+3. **การปรับปรุงข้อมูลนักศึกษา (Student Privacy & Email Enhancement)**:
+   - นำเบอร์โทรศัพท์ออกจากระบบ และเปลี่ยนมาใช้อีเมลสถาบัน (`@kmitl.ac.th`) แทน
+   - เพิ่มคอลัมน์ `student_email` ในตาราง `students` และปรับปรุงข้อมูลเริ่มต้นใน `backend/seed.py` ให้เป็น `{student_id}@kmitl.ac.th`
+   - ปรับปรุงหน้าแสดงผลนักศึกษา (`frontend/app/students/page.tsx`) ให้แสดงไอคอนจดหมาย (`bi-envelope`) พร้อมลิงก์ `mailto:` แทนเบอร์โทรศัพท์
+
+4. **RESTful CRUD Endpoints ครบทุก Entity (100% Parameterized Queries)**:
    
-   | Entity | Endpoints ที่ต้องสร้าง | เมธอด HTTP | หน้าที่การทำงาน |
+   | Entity | Endpoints | เมธอด HTTP | รายละเอียดและฟิลด์ที่รองรับ |
    |---|---|---|---|
-   | **Teachers** | `/teachers`, `/teachers/{id}` | `POST`, `PUT`, `DELETE` | เพิ่ม/แก้ไข/ลบ ข้อมูลอาจารย์ และอัปโหลดภาพ |
-   | **Students** | `/students`, `/students/{id}` | `POST`, `PUT`, `DELETE` | เพิ่ม/แก้ไข/ลบ ข้อมูลนักศึกษา และสายรหัส |
-   | **News** | `/news`, `/news/{id}` | `POST`, `PUT`, `DELETE` | สร้างข่าวสารใหม่, แก้ไขเนื้อหา, ลบข่าว |
-   | **Projects** | `/projects`, `/projects/{id}` | `POST`, `PUT`, `DELETE` | บันทึกโครงงาน พร้อมตารางเชื่อมโยง `student_projects` |
-   | **Internships** | `/internships`, `/internships/{id}` | `POST`, `PUT`, `DELETE` | บันทึกการฝึกงาน เชื่อมโยงนักศึกษาและบริษัท |
-   | **Companies** | `/companys`, `/companys/{id}` | `POST`, `PUT`, `DELETE` | บันทึกข้อมูลบริษัทพันธมิตร |
-   | **Schedules** | `/class`, `/class/{id}`, `/exam`, `/exam/{id}` | `POST`, `PUT`, `DELETE` | จัดการตารางเรียนและตารางสอบ |
-   | **Rooms** | `/rooms`, `/rooms/{id}` | `POST`, `PUT`, `DELETE` | จัดการข้อมูลห้องปฏิบัติการ |
+   | **Teachers** | `/teachers`, `/teachers/{id}` | `POST`, `PUT`, `DELETE` | ชื่อ, นามสกุล, ชื่ออังกฤษ, อีเมลติดต่อ, รูปภาพ, ปีที่ปรึกษา |
+   | **Students** | `/students`, `/students/{id}` | `POST`, `PUT`, `DELETE` | รหัสนักศึกษา, ชื่อ, นามสกุล, สายรหัส, อีเมล, Instagram, รูปภาพ |
+   | **News** | `/news`, `/news/{id}` | `POST`, `PUT`, `DELETE` | หัวข้อข่าว, คำอธิบาย, หมวดหมู่ข่าว, รูปภาพข่าว |
+   | **Projects** | `/projects`, `/projects/{id}` | `POST`, `PUT`, `DELETE` | ชื่อโครงงาน, คำอธิบาย, รูปภาพ, รหัสนักศึกษาผู้พัฒนา |
+   | **Companies** | `/companys`, `/companys/{id}` | `POST`, `PUT`, `DELETE` | ชื่อบริษัท, โลโก้/รูปภาพบริษัท |
+   | **Internships**| `/internship`, `/internship/{id}`| `POST`, `PUT`, `DELETE`| ตำแหน่งงาน, รหัสนักศึกษา, รหัสบริษัท, รายละเอียดการฝึกงาน |
+   | **Class** | `/class`, `/class/{id}` | `POST`, `PUT`, `DELETE` | ชื่อวิชา, รหัสอาจารย์, รหัสห้อง, วันที่เรียน, เวลาเริ่ม-สิ้นสุด |
+   | **Exam** | `/exam`, `/exam/{id}` | `POST`, `PUT`, `DELETE` | รหัสวิชา, ชื่อวิชา, ประเภท (Midterm/Final), วันที่สอบ, เวลา, ห้องสอบ |
+   | **Rooms** | `/rooms`, `/rooms/{id}` | `POST`, `PUT`, `DELETE` | ชื่อห้องปฏิบัติการ, รายละเอียดอุปกรณ์, รูปภาพห้อง |
 
-2. **ระบบจัดการไฟล์อัปโหลด (Secure File Upload Handler)**:
-   - ตรวจสอบนามสกุลไฟล์รูปภาพ (Whitelist: `.jpg`, `.jpeg`, `.png`, `.webp` เท่านั้น ป้องกันไฟล์อันตรายตาม Test Case `TC_TCH_003`)
-   - ตรวจสอบขนาดไฟล์ไม่เกิน 5MB (ตาม Test Case `TC_TCH_004`)
-   - จัดเก็บไฟล์ลงใน `backend/uploads/{module}/` โดยใช้ Absolute Path
-3. **ระบบยืนยันตัวตนและการควบคุมสิทธิ์ (Auth & RBAC)**:
-   - Endpoint `/auth/login`: ตรวจสอบ `user_name` และ `password_hash`
-   - ตรวจสอบ Role:
-     - `superadmin`: สิทธิ์เต็มทุกระบบ รวมถึงจัดการ Users
-     - `admin`: สิทธิ์ CRUD ข้อมูลเนื้อหาทั้งหมด
-     - `writer`: สิทธิ์เฉพาะการสร้างและแก้ไขข่าวสาร (ห้ามลบข้อมูลสำคัญ ตาม Test Case `TC_AUTH_005`)
-4. **ประสานงานหน้าบ้าน (Admin CRUD UI ร่วมกับ Leo)**:
-   - จัดเตรียม Endpoint และ Data Contract (JSON Request/Response) ให้เรียบร้อย
-   - ร่วมสร้างหน้าเว็บ Admin เรียบง่าย (Clean HTML/Bootstrap forms) ที่สามารถเลือกตาราง กรอกข้อมูล กดปุ่ม Submit, Edit, Delete ได้จริง
+5. **ส่วนประสานผู้ใช้หลังบ้าน (Admin Frontend UI)**:
+   - **Footer Entrypoint (`frontend/app/layout.tsx`):** เพิ่มลิงก์ `Admin Portal` ที่ส่วนล่างสุดของเว็บ ผู้ดูแลระบบไม่ต้องจำ URL
+   - **Login Page (`frontend/app/admin/login/page.tsx`):** ฟอร์มล็อกอินเข้าสู่ระบบแบบมืด (Dark theme) พร้อมตรวจสอบความถูกต้อง
+   - **Admin Dashboard (`frontend/app/admin/page.tsx`):** 
+     - แถบนำทางแยกตามตาราง (Tab Navigation)
+     - แสดงจำนวนรายการในแต่ละตาราง พร้อมปุ่ม `+ เพิ่มข้อมูลใหม่ (Add New)`
+     - แสดงตารางข้อมูลแบบเรียบง่าย พร้อมปุ่ม `[แก้ไข]` และ `[ลบ]` ในทุกแถว
+     - แบบฟอร์ม Modal สำหรับเพิ่ม/แก้ไขข้อมูล พร้อมปุ่มเลือกไฟล์รูปภาพที่เชื่อมต่อกับ `/upload` อัตโนมัติ
+     - ยืนยันก่อนลบ (Delete Confirmation) ป้องกันการเผลอกดลบ
+
+#### 4.2.2 ลำดับการทำงานของระบบ Admin CRUD (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Admin as ผู้ดูแลระบบ (adminFah)
+    participant Footer as หน้าเว็บหลัก / Footer
+    participant Login as หน้า /admin/login
+    participant Panel as หน้า /admin (Dashboard)
+    participant BE as FastAPI Backend
+    participant DB as SQLite (ce50.db)
+    participant FS as ระบบไฟล์ (uploads/)
+
+    Admin->>Footer: คลิกปุ่ม "Admin Portal"
+    Footer->>Login: นำทางไปยังหน้า Login
+    Admin->>Login: กรอก adminFah / admince04
+    Login->>BE: POST /auth/login (SHA-256 Check)
+    BE->>DB: SELECT * FROM users WHERE user_name='adminFah'
+    DB-->>BE: ส่งคืนข้อมูลผู้ใช้และ Password Hash
+    BE-->>Login: HTTP 200 (Token + User Role)
+    Login->>Panel: บันทึกลง localStorage และ Redirect เข้าหน้า Dashboard
+    
+    Panel->>BE: ดึงข้อมูลตามแท็บ (เช่น GET /teachers, /students)
+    BE->>DB: SELECT 쿼리
+    DB-->>BE: คืนผลลัพธ์
+    BE-->>Panel: แสดงผลตารางข้อมูลในหน้าเว็บ
+    
+    opt การอัปโหลดรูปภาพ
+        Admin->>Panel: เลือกไฟล์ภาพจากเครื่อง
+        Panel->>BE: POST /upload (ตรวจสอบ 5MB + Whitelist)
+        BE->>FS: บันทึกไฟล์ลง backend/uploads/{module}/
+        BE-->>Panel: ส่งคืน URL / Filename
+    end
+
+    opt การเพิ่มหรือแก้ไขข้อมูล
+        Admin->>Panel: กดปุ่ม "บันทึกข้อมูล (Save)"
+        Panel->>BE: POST หรือ PUT /{entity}
+        BE->>DB: INSERT หรือ UPDATE ลงฐานข้อมูล
+        DB-->>BE: สำเร็จ (Last Row ID)
+        BE-->>Panel: HTTP 200 Success
+        Panel->>Panel: ดึงข้อมูลล่าสุดมารีเฟรชตารางทันที
+    end
+```
 
 ---
 
