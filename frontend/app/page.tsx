@@ -85,7 +85,7 @@ export default function Home() {
                 >
                   <Image
                     src={featured?.image || "/404.png"}
-                    className="img-fluid w-100 opacity-75 hover:opacity-100 transition duration-200"
+                    className="img-fluid w-100 opacity-50 hover:opacity-100 transition duration-200"
                     style={{
                       width: "100%",
                       height: "440px",
@@ -124,7 +124,7 @@ export default function Home() {
                         >
                           <Image
                             src={art?.image || "/404.png"}
-                            className="img-fluid w-100 opacity-75 hover:opacity-100 transition duration-200"
+                            className="img-fluid w-100 opacity-50 hover:opacity-100 transition duration-200"
                             style={{
                               width: "100%",
                               height: "200px",
@@ -164,7 +164,7 @@ export default function Home() {
                         >
                           <Image
                             src={art?.image || "/404.png"}
-                            className="img-fluid w-100 opacity-75 hover:opacity-100 transition duration-200"
+                            className="img-fluid w-100 opacity-50 hover:opacity-100 transition duration-200"
                             style={{
                               width: "100%",
                               height: "200px",
