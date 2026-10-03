@@ -1,9 +1,14 @@
-@import "tailwindcss";
+@import "tailwindcss/utilities";
 
 html,
 body {
   min-height: 100%;
   background-color: #000;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 .template-container {

@@ -9,7 +9,7 @@ export default function RoomsPage() {
 
   useEffect(() => {
     async function getRooms() {
-      const response = await fetch("http://localhost:8000/rooms");
+      const response = await fetch("/api/rooms");
       setRooms(await response.json());
     }
 
@@ -51,7 +51,7 @@ export default function RoomsPage() {
             <div className="col" key={room.room_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`http://localhost:8000/uploads/rooms/${room.room_name}.png`}
+                  src={`/uploads/rooms/${room.room_name}.png`}
                   alt={room.room_name}
                   width={1000}
                   height={1000}

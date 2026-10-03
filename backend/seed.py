@@ -6,6 +6,7 @@ DB_PATH = Path(__file__).with_name("ce50.db")
 
 def insertMany(query, data):
   with sqlite3.connect(DB_PATH) as connection:
+    connection.execute("PRAGMA foreign_keys = ON;")
     connection.executemany(query, data)
 
 

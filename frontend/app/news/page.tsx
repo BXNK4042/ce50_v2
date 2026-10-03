@@ -9,7 +9,7 @@ export default function NewsPage() {
 
   useEffect(() => {
     async function getNews() {
-      const response = await fetch("http://localhost:8000/news");
+      const response = await fetch("/api/news");
       setNews(await response.json());
     }
 
@@ -48,7 +48,7 @@ export default function NewsPage() {
           {news.map((item) => (
             <div className="carousel-item active" key={item.news_id}>
               <Image
-                src={`http://localhost:8000/uploads/news/${item.news_image}`}
+                src={`/uploads/news/${item.news_image}`}
                 alt={item.news_title}
                 width={2000}
                 height={2000}

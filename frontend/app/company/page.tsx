@@ -24,7 +24,7 @@ export default function CompanyPage() {
 
   useEffect(() => {
     async function getCompanys() {
-      const response = await fetch("http://localhost:8000/companys");
+      const response = await fetch("/api/companys");
       setCompanys(await response.json());
     }
 
@@ -64,7 +64,7 @@ export default function CompanyPage() {
             <div className="card bg-black ">
               <Link href={`/internship/${company.company_id}`}>
                 <Image
-                  src={`http://localhost:8000/uploads/companys/${company.company_image}.jpg`}
+                  src={`/uploads/companys/${company.company_image}.jpg`}
                   alt={company.company_name}
                   width={1000}
                   height={1000}

@@ -32,8 +32,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   }, []);
 
   return (
-    <html lang="en">
-      <body className={outfit.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={outfit.className} suppressHydrationWarning>
         <ul className="nav justify-content-center bg-black align-items-center">
           <li className="nav-item dropdown">
             <a
@@ -129,12 +129,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </ul>
             </div>
             <div className="col-md-5 offset-md-1 mb-3">
-              <form>
+              <form suppressHydrationWarning>
                 <h5>Contact us</h5>
                 <p>
                   If you want more information about our computer engineering
                 </p>
-                <div className="d-flex flex-column flex-sm-row w-100 gap-2">
+                <div
+                  className="d-flex flex-column flex-sm-row w-100 gap-2"
+                  suppressHydrationWarning
+                >
                   <label htmlFor="newsletter1" className="visually-hidden">
                     Email address
                   </label>
@@ -143,6 +146,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                     type="email"
                     className="form-control"
                     placeholder="Email address"
+                    data-lpignore="true"
+                    autoComplete="off"
+                    suppressHydrationWarning
                   />
                   <button className="btn btn-primary" type="button">
                     Send

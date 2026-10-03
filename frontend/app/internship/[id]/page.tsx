@@ -14,7 +14,7 @@ export default function InternshipPage() {
 
   useEffect(() => {
     async function getInternship() {
-      const response = await fetch("http://localhost:8000/internship");
+      const response = await fetch("/api/internship");
       setInternships(await response.json());
     }
 
@@ -23,7 +23,7 @@ export default function InternshipPage() {
 
   useEffect(() => {
     async function getStudent() {
-      const response = await fetch("http://localhost:8000/students");
+      const response = await fetch("/api/students");
       setStudents(await response.json());
     }
 
@@ -86,7 +86,7 @@ export default function InternshipPage() {
             <div className="col" key={student.student_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`http://localhost:8000/uploads/students/ce_04/${student.student_id}.png`}
+                  src={`/uploads/students/ce_04/${student.student_id}.png`}
                   alt={student.student_firstname}
                   width={500}
                   height={500}
