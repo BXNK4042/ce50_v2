@@ -155,17 +155,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                     </button>
                   </div>
                 ) : (
-                  <div className="d-flex flex-column flex-sm-row w-100 gap-2">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Email address"
-                      disabled
-                    />
-                    <button className="btn btn-primary" type="button" disabled>
-                      Send
-                    </button>
-                  </div>
+                  <div style={{ minHeight: "38px" }} />
                 )}
               </form>
             </div>
