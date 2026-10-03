@@ -25,8 +25,8 @@ export default function NewsPage() {
     async function getGNews() {
       try {
         const [latestRes, worldRes] = await Promise.all([
-          fetch("/api/gnews?max=5"),
-          fetch("/api/gnews?country=th&max=4"),
+          fetch("/api/gnews?country=th&max=5"),
+          fetch("/api/gnews?country=us&max=4"),
         ]);
         if (latestRes.ok) {
           const data = await latestRes.json();
