@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
     "chess-panhandle-oxidize.ngrok-free.dev",
     "localhost:3000",
   ],
+  images: {
+    dangerouslyAllowLocalIP: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
+    ],
+  },
   async rewrites() {
     return [
       {
