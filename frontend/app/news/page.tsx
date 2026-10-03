@@ -132,7 +132,7 @@ export default function NewsPage() {
                 <Image
                   src={featured?.image || "/404.png"}
                   className="img-fluid w-100"
-                  style={{ width: "100%", height: "380px", objectFit: "cover" }}
+                  style={{ width: "100%", height: "440px", objectFit: "cover" }}
                   alt={featured?.title || "ce50-news"}
                   width={1200}
                   height={800}
@@ -166,7 +166,7 @@ export default function NewsPage() {
                         <Image
                           src={art?.image || "/404.png"}
                           className="img-fluid w-100"
-                          style={{ width: "100%", height: "135px", objectFit: "cover" }}
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
                           alt={art?.title || "ce50-news"}
                           width={700}
                           height={500}
@@ -204,7 +204,7 @@ export default function NewsPage() {
                         <Image
                           src={art?.image || "/404.png"}
                           className="img-fluid w-100"
-                          style={{ width: "100%", height: "135px", objectFit: "cover" }}
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
                           alt={art?.title || "ce50-news"}
                           width={700}
                           height={500}
@@ -262,7 +262,7 @@ export default function NewsPage() {
                     <Image
                       src={art?.image || "/404.png"}
                       className="img-fluid w-100"
-                      style={{ width: "100%", height: "180px", objectFit: "cover" }}
+                      style={{ width: "100%", height: "240px", objectFit: "cover" }}
                       alt={art?.title || "ce50-news"}
                       width={700}
                       height={500}
