@@ -1,11 +1,51 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { GNewsArticle } from "@/types/gnews";
+import { Teachers } from "@/types/teacher";
 
 export default function Home() {
+  const [latestTech, setLatestTech] = useState<GNewsArticle[]>([]);
+  const [teachers, setTeachers] = useState<Teachers[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [newsRes, teachersRes] = await Promise.all([
+          fetch("/api/gnews?country=th&max=5"),
+          fetch("/api/teachers"),
+        ]);
+        if (newsRes.ok) {
+          const newsData = await newsRes.json();
+          if (Array.isArray(newsData.articles)) setLatestTech(newsData.articles);
+        }
+        if (teachersRes.ok) {
+          setTeachers(await teachersRes.json());
+        }
+      } catch (err) {
+        console.error("Failed to load home page data", err);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  const featured = latestTech[0];
+  const sideArticles = latestTech.slice(1, 5);
+
+  // Group teachers into slides of 3 cards each
+  const chunkSize = 3;
+  const teacherSlides: Teachers[][] = [];
+  for (let i = 0; i < teachers.length; i += chunkSize) {
+    teacherSlides.push(teachers.slice(i, i + chunkSize));
+  }
+
   return (
     <div>
-      <div className="bg-black flex justify-center items-center">
+      {/* Section 1: Hero Video */}
+      <div className="bg-black flex justify-center items-center position-relative">
         <Image
           src="/ce_logo.webp"
           alt="CE_LOGO"
@@ -17,6 +57,234 @@ export default function Home() {
         <video className="w-100 opacity-50 z-0" muted autoPlay loop>
           <source src="/ce_hero_footage_zoomed.mp4" type="video/mp4" />
         </video>
+      </div>
+
+      <div className="template-container">
+        {/* Section 2: ข่าวสารล่าสุด (Latest News จากหน้า News) */}
+        <div className="editors-news text-light mt-5">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
+              <h1 className="text-primary">ข่าวสารล่าสุด</h1>
+              <div className="bg-blue-500 w-24 h-1"></div>
+            </div>
+            <Link href="/news" className="btn btn-outline-primary btn-sm">
+              ดูข่าวสารทั้งหมด &rarr;
+            </Link>
+          </div>
+
+          <div className="row">
+            {/* รูปใหญ่ฝั่งซ้าย */}
+            <div className="col-lg-6 mb-5 mb-sm-2">
+              <div className="position-relative image-hover">
+                <a
+                  href={featured?.url || "#"}
+                  target={featured?.url ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="text-white text-decoration-none"
+                >
+                  <Image
+                    src={featured?.image || "/404.png"}
+                    className="img-fluid w-100"
+                    style={{
+                      width: "100%",
+                      height: "440px",
+                      objectFit: "cover",
+                    }}
+                    alt={featured?.title || "ce50-news"}
+                    width={1200}
+                    height={800}
+                    unoptimized
+                  />
+                  <h1 className="font-weight-600 mt-3">
+                    {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
+                  </h1>
+                  {featured?.description && (
+                    <p className="fs-15 font-weight-normal text-secondary mt-2">
+                      {featured.description}
+                    </p>
+                  )}
+                </a>
+              </div>
+            </div>
+
+            {/* 4 รูปย่อยฝั่งขวา */}
+            <div className="col-lg-6 mb-5 mb-sm-2">
+              <div className="row">
+                {[0, 1].map((idx) => {
+                  const art = sideArticles[idx];
+                  return (
+                    <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
+                      <div className="position-relative image-hover">
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none"
+                        >
+                          <Image
+                            src={art?.image || "/404.png"}
+                            className="img-fluid w-100"
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                            alt={art?.title || "ce50-news"}
+                            width={700}
+                            height={500}
+                            unoptimized
+                          />
+                          <h5 className="font-weight-600 mt-3">
+                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                          </h5>
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="row mt-3">
+                {[2, 3].map((idx) => {
+                  const art = sideArticles[idx];
+                  return (
+                    <div
+                      className={
+                        idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
+                      }
+                      key={idx}
+                    >
+                      <div className="position-relative image-hover">
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none"
+                        >
+                          <Image
+                            src={art?.image || "/404.png"}
+                            className="img-fluid w-100"
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                            alt={art?.title || "ce50-news"}
+                            width={700}
+                            height={500}
+                            unoptimized
+                          />
+                          <h5 className="font-weight-600 mt-3">
+                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                          </h5>
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 3: คณาจารย์ (Teacher Card Carousel) */}
+        <div className="teachers-section text-light mt-5 mb-5">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
+              <h1 className="text-primary">คณาจารย์</h1>
+              <div className="bg-blue-500 w-24 h-1"></div>
+            </div>
+            <Link href="/teachers" className="btn btn-outline-primary btn-sm">
+              ดูคณาจารย์ทั้งหมด &rarr;
+            </Link>
+          </div>
+
+          {teacherSlides.length > 0 && (
+            <div
+              id="teachersCarousel"
+              className="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div className="carousel-inner">
+                {teacherSlides.map((slide, slideIdx) => (
+                  <div
+                    className={`carousel-item ${slideIdx === 0 ? "active" : ""}`}
+                    key={slideIdx}
+                  >
+                    <div className="row row-cols-1 row-cols-md-3 g-4">
+                      {slide.map((teacher) => (
+                        <div className="col" key={teacher.teacher_id}>
+                          <Link
+                            href="/teachers"
+                            className="text-decoration-none"
+                          >
+                            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150 h-100 border-secondary">
+                              <Image
+                                src={`/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
+                                alt={teacher.teacher_firstname}
+                                width={1000}
+                                height={1000}
+                                className="img-fluid w-100"
+                                style={{
+                                  width: "100%",
+                                  height: "320px",
+                                  objectFit: "cover",
+                                }}
+                                draggable="false"
+                              />
+                              <div className="card-body text-center">
+                                <h5 className="card-title text-light fw-bold">
+                                  {teacher.teacher_firstname}{" "}
+                                  {teacher.teacher_lastname}
+                                </h5>
+                                <p className="card-text text-secondary small">
+                                  {teacher.teacher_contact}
+                                </p>
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {teacherSlides.length > 1 && (
+                <>
+                  <button
+                    className="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#teachersCarousel"
+                    data-bs-slide="prev"
+                    style={{ width: "5%", left: "-2rem" }}
+                  >
+                    <span
+                      className="carousel-control-prev-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span className="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    className="carousel-control-next"
+                    type="button"
+                    data-bs-target="#teachersCarousel"
+                    data-bs-slide="next"
+                    style={{ width: "5%", right: "-2rem" }}
+                  >
+                    <span
+                      className="carousel-control-next-icon"
+                      aria-hidden="true"
+                    ></span>
+                    <span className="visually-hidden">Next</span>
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
