@@ -44,25 +44,25 @@ def seedTeachers():
 
 def seedStudents():
   students_data = [
-    ("67200412", "นายรุจิณัฐ", "อาศิรเมธี", "006", "0800479886", "Rujinat_Fah"),
-    ("67200014", "นางสาวกัณฐมณี", "กอบการ", "339", "0875732080", "kwin_mhy"),
-    ("67200099", "นายทัชภูมิ", "ใจดี", "787", "0986782950", "pipe2bot"),
-    ("67200049", "นายเจษฎา", "ศรีสง่า", "538", "0626253837", "p_Jetsada_p"),
-    ("67200102", "นายทีปกิติ์", "พรหมสัตยพรต", "444", "0973016465", "lil_weirx"),
-    ("67200350", "นางสาวณัฏฐ์ชยา", "จำปา", "123", "0985364534", "Waa_.zz"),
-    ("67200235", "นางสาวรินรดา", "บุญมี", "800", "0937764085", "nnoey.rb"),
-    ("67200079", "นางสาวณัฐธิดา", "เกื้อประจง", "007", "0801585306", "ntd.axn"),
-    ("67200223", "นายมีสุข", "เอกพงษ์", "800", "0831508487", "Messily ekkaphong"),
-    ("67200369", "นายธีรศาสนต์", "คงเกิด", "800", "0656709042", "Teeuytee"),
-    ("67200030", "นายคณพัฒน์", "รุ่งรพีพรพงษ์", "224", "0810247384", "pooh_2134"),
-    ("67200093", "นายตระกูลชัย", "เเซ่ติ้ง", "006", "0980850838", None),
-    ("67200324", "นายกนกพัฒน์", "โพธิ", "444", "0926577824", "lxo_xelxeoo"),
-    ("67200348", "นายณรงค์รักษ์", "เรืองศักดิ์", "999", "0929744516", "ainxri"),
-    ("67200380", "นายปรินทร", "คงทอง", "339", "0631102883", "bank.parinthon")
+    ("67200412", "นายรุจิณัฐ", "อาศิรเมธี", "006", "67200412@kmitl.ac.th", "Rujinat_Fah"),
+    ("67200014", "นางสาวกัณฐมณี", "กอบการ", "339", "67200014@kmitl.ac.th", "kwin_mhy"),
+    ("67200099", "นายทัชภูมิ", "ใจดี", "787", "67200099@kmitl.ac.th", "pipe2bot"),
+    ("67200049", "นายเจษฎา", "ศรีสง่า", "538", "67200049@kmitl.ac.th", "p_Jetsada_p"),
+    ("67200102", "นายทีปกิติ์", "พรหมสัตยพรต", "444", "67200102@kmitl.ac.th", "lil_weirx"),
+    ("67200350", "นางสาวณัฏฐ์ชยา", "จำปา", "123", "67200350@kmitl.ac.th", "Waa_.zz"),
+    ("67200235", "นางสาวรินรดา", "บุญมี", "800", "67200235@kmitl.ac.th", "nnoey.rb"),
+    ("67200079", "นางสาวณัฐธิดา", "เกื้อประจง", "007", "67200079@kmitl.ac.th", "ntd.axn"),
+    ("67200223", "นายมีสุข", "เอกพงษ์", "800", "67200223@kmitl.ac.th", "Messily ekkaphong"),
+    ("67200369", "นายธีรศาสนต์", "คงเกิด", "800", "67200369@kmitl.ac.th", "Teeuytee"),
+    ("67200030", "นายคณพัฒน์", "รุ่งรพีพรพงษ์", "224", "67200030@kmitl.ac.th", "pooh_2134"),
+    ("67200093", "นายตระกูลชัย", "เเซ่ติ้ง", "006", "67200093@kmitl.ac.th", None),
+    ("67200324", "นายกนกพัฒน์", "โพธิ", "444", "67200324@kmitl.ac.th", "lxo_xelxeoo"),
+    ("67200348", "นายณรงค์รักษ์", "เรืองศักดิ์", "999", "67200348@kmitl.ac.th", "ainxri"),
+    ("67200380", "นายปรินทร", "คงทอง", "339", "67200380@kmitl.ac.th", "bank.parinthon")
   ]
 
   insertMany(
-    "INSERT INTO students (student_id, student_firstname, student_lastname, student_lineage, student_contact, student_instagram) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO students (student_id, student_firstname, student_lastname, student_lineage, student_email, student_instagram) VALUES (?, ?, ?, ?, ?, ?)",
     students_data,
   )
 
@@ -71,7 +71,8 @@ def seedUsers():
   users_data = [
     ("superadmin", "hash_password(super_pw)", "superadmin@ce.ac.th", "superadmin"),
     ("admin_y1", "hash_password(admin_pw)", "admin_y1@ce.ac.th", "admin"),
-    ("writer_y1", "hash_password(writer_pw)", "writer_y1@ce.ac.th", "writer")
+    ("writer_y1", "hash_password(writer_pw)", "writer_y1@ce.ac.th", "writer"),
+    ("adminFah", "0bfd52e76bd1395e11b9b0d4b354ccf02f1718143f1229bb43c2bc1eddea7a9b", "fah@ce.ac.th", "superadmin")
   ]
 
   insertMany(
