@@ -53,7 +53,10 @@ export default function TeachersPage() {
         <div className="row row-cols-1 row-cols-md-4 g-4">
           {teachers.map((teacher) => (
             <div className="col" key={teacher.teacher_id}>
-              <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
+              <div
+                className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150 user-select-none"
+                draggable="false"
+              >
                 <Image
                   src={`/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                   alt={teacher.teacher_firstname}

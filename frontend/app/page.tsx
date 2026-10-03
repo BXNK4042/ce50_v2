@@ -218,9 +218,13 @@ export default function Home() {
                         <div className="col" key={teacher.teacher_id}>
                           <Link
                             href="/teachers"
-                            className="text-decoration-none"
+                            className="text-decoration-none user-select-none"
+                            draggable="false"
                           >
-                            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
+                            <div
+                              className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150 user-select-none"
+                              draggable="false"
+                            >
                               <Image
                                 src={`/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                                 alt={teacher.teacher_firstname}
