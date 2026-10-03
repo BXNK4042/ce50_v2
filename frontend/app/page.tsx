@@ -68,7 +68,7 @@ export default function Home() {
               <h1 className="text-primary">ข่าวสารล่าสุด</h1>
               <div className="bg-blue-500 w-24 h-1"></div>
             </div>
-            <Link href="/news" className="btn btn-outline-primary btn-sm">
+            <Link href="/news" className="btn btn-primary">
               ดูข่าวสารทั้งหมด &rarr;
             </Link>
           </div>
@@ -196,7 +196,7 @@ export default function Home() {
               <h1 className="text-primary">คณาจารย์</h1>
               <div className="bg-blue-500 w-24 h-1"></div>
             </div>
-            <Link href="/teachers" className="btn btn-outline-primary btn-sm">
+            <Link href="/teachers" className="btn btn-primary">
               ดูคณาจารย์ทั้งหมด &rarr;
             </Link>
           </div>
@@ -250,7 +250,6 @@ export default function Home() {
                     type="button"
                     data-bs-target="#teachersCarousel"
                     data-bs-slide="prev"
-                    style={{ width: "5%", left: "-2rem" }}
                   >
                     <span
                       className="carousel-control-prev-icon"
@@ -263,7 +262,6 @@ export default function Home() {
                     type="button"
                     data-bs-target="#teachersCarousel"
                     data-bs-slide="next"
-                    style={{ width: "5%", right: "-2rem" }}
                   >
                     <span
                       className="carousel-control-next-icon"
