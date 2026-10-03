@@ -35,8 +35,8 @@ export default function Home() {
   const featured = latestTech[0];
   const sideArticles = latestTech.slice(1, 5);
 
-  // Group teachers into slides of 3 cards each
-  const chunkSize = 3;
+  // Group teachers into slides of 4 cards each (matching /teachers page)
+  const chunkSize = 4;
   const teacherSlides: Teachers[][] = [];
   for (let i = 0; i < teachers.length; i += chunkSize) {
     teacherSlides.push(teachers.slice(i, i + chunkSize));
@@ -213,35 +213,26 @@ export default function Home() {
                     className={`carousel-item ${slideIdx === 0 ? "active" : ""}`}
                     key={slideIdx}
                   >
-                    <div className="row row-cols-1 row-cols-md-3 g-4">
+                    <div className="row row-cols-1 row-cols-md-4 g-4">
                       {slide.map((teacher) => (
                         <div className="col" key={teacher.teacher_id}>
                           <Link
                             href="/teachers"
                             className="text-decoration-none"
                           >
-                            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150 h-100 border-secondary">
+                            <div className="card text-bg-dark justify-content-center align-items-center hover:opacity-75 duration-150">
                               <Image
                                 src={`/uploads/teachers/${teacher.teacher_name_en}_bg.webp`}
                                 alt={teacher.teacher_firstname}
                                 width={1000}
                                 height={1000}
-                                className="img-fluid w-100"
-                                style={{
-                                  width: "100%",
-                                  height: "320px",
-                                  objectFit: "cover",
-                                }}
                                 draggable="false"
                               />
                               <div className="card-body text-center">
-                                <h5 className="card-title text-light fw-bold">
+                                <h5 className="card-title">
                                   {teacher.teacher_firstname}{" "}
                                   {teacher.teacher_lastname}
                                 </h5>
-                                <p className="card-text text-secondary small">
-                                  {teacher.teacher_contact}
-                                </p>
                               </div>
                             </div>
                           </Link>
