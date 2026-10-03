@@ -61,7 +61,7 @@ export default function Home() {
 
       <div className="template-container">
         {/* Section 2: ข่าวสารล่าสุด (Latest News จากหน้า News) */}
-        <div className="editors-news text-light mt-5">
+        <div className="editors-news text-light my-5 py-4">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
@@ -189,7 +189,7 @@ export default function Home() {
         </div>
 
         {/* Section 3: คณาจารย์ (Teacher Card Carousel) */}
-        <div className="teachers-section text-light mt-5 mb-5">
+        <div className="teachers-section text-light my-5 py-4">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
