@@ -131,16 +131,22 @@ export default function NewsPage() {
               >
                 <Image
                   src={featured?.image || "/404.png"}
-                  className="img-fluid"
+                  className="img-fluid w-100"
+                  style={{ width: "100%", height: "380px", objectFit: "cover" }}
                   alt={featured?.title || "ce50-news"}
-                  width={700}
-                  height={700}
+                  width={1200}
+                  height={800}
                   unoptimized
                 />
                 <h1 className="font-weight-600 mt-3">
                   {featured?.title ||
                     "Melania Trump speaks about courage at State Department"}
                 </h1>
+                {featured?.description && (
+                  <p className="fs-15 font-weight-normal text-secondary mt-2">
+                    {featured.description}
+                  </p>
+                )}
               </a>
             </div>
           </div>
@@ -159,10 +165,11 @@ export default function NewsPage() {
                       >
                         <Image
                           src={art?.image || "/404.png"}
-                          className="img-fluid"
+                          className="img-fluid w-100"
+                          style={{ width: "100%", height: "135px", objectFit: "cover" }}
                           alt={art?.title || "ce50-news"}
                           width={700}
-                          height={700}
+                          height={500}
                           unoptimized
                         />
                         <h5 className="font-weight-600 mt-3">
@@ -196,10 +203,11 @@ export default function NewsPage() {
                       >
                         <Image
                           src={art?.image || "/404.png"}
-                          className="img-fluid"
+                          className="img-fluid w-100"
+                          style={{ width: "100%", height: "135px", objectFit: "cover" }}
                           alt={art?.title || "ce50-news"}
                           width={700}
-                          height={700}
+                          height={500}
                           unoptimized
                         />
                         <h5 className="font-weight-600 mt-3">
@@ -253,10 +261,11 @@ export default function NewsPage() {
                   >
                     <Image
                       src={art?.image || "/404.png"}
-                      className="img-fluid"
+                      className="img-fluid w-100"
+                      style={{ width: "100%", height: "180px", objectFit: "cover" }}
                       alt={art?.title || "ce50-news"}
                       width={700}
-                      height={700}
+                      height={500}
                       unoptimized
                     />
                     <h5 className="font-weight-bold mt-3">

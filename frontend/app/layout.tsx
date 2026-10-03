@@ -3,7 +3,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import ce_logo from "../public/ce_logo.webp";
 import { Outfit } from "next/font/google";
@@ -26,7 +26,10 @@ const footerRoutes = [
 const currentYear = new Date().getFullYear();
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     // @ts-expect-error Bootstrap bundle has no TypeScript declarations.
     void import("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
@@ -129,31 +132,41 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </ul>
             </div>
             <div className="col-md-5 offset-md-1 mb-3">
-              <form suppressHydrationWarning>
+              <form onSubmit={(e) => e.preventDefault()}>
                 <h5>Contact us</h5>
                 <p>
                   If you want more information about our computer engineering
                 </p>
-                <div
-                  className="d-flex flex-column flex-sm-row w-100 gap-2"
-                  suppressHydrationWarning
-                >
-                  <label htmlFor="newsletter1" className="visually-hidden">
-                    Email address
-                  </label>
-                  <input
-                    id="newsletter1"
-                    type="email"
-                    className="form-control"
-                    placeholder="Email address"
-                    data-lpignore="true"
-                    autoComplete="off"
-                    suppressHydrationWarning
-                  />
-                  <button className="btn btn-primary" type="button">
-                    Send
-                  </button>
-                </div>
+                {mounted ? (
+                  <div className="d-flex flex-column flex-sm-row w-100 gap-2">
+                    <label htmlFor="newsletter1" className="visually-hidden">
+                      Email address
+                    </label>
+                    <input
+                      id="newsletter1"
+                      type="email"
+                      className="form-control"
+                      placeholder="Email address"
+                      data-lpignore="true"
+                      autoComplete="off"
+                    />
+                    <button className="btn btn-primary" type="button">
+                      Send
+                    </button>
+                  </div>
+                ) : (
+                  <div className="d-flex flex-column flex-sm-row w-100 gap-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Email address"
+                      disabled
+                    />
+                    <button className="btn btn-primary" type="button" disabled>
+                      Send
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </div>
