@@ -129,15 +129,17 @@ export default function NewsPage() {
                 rel="noopener noreferrer"
                 className="text-white text-decoration-none"
               >
-                <Image
-                  src={featured?.image || "/404.png"}
-                  className="img-fluid w-100"
-                  style={{ width: "100%", height: "440px", objectFit: "cover" }}
-                  alt={featured?.title || "ce50-news"}
-                  width={1200}
-                  height={800}
-                  unoptimized
-                />
+                  <Image
+                    src={featured?.image || "/404.png"}
+                    className="img-fluid w-100"
+                    style={{ width: "100%", height: "440px", objectFit: "cover" }}
+                    alt={featured?.title || "ce50-news"}
+                    width={1200}
+                    height={800}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/404.png";
+                    }}
+                  />
                 <h1 className="font-weight-600 mt-3">
                   {featured?.title ||
                     "Melania Trump speaks about courage at State Department"}
@@ -163,15 +165,17 @@ export default function NewsPage() {
                         rel="noopener noreferrer"
                         className="text-white text-decoration-none"
                       >
-                        <Image
-                          src={art?.image || "/404.png"}
-                          className="img-fluid w-100"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                          alt={art?.title || "ce50-news"}
-                          width={700}
-                          height={500}
-                          unoptimized
-                        />
+                          <Image
+                            src={art?.image || "/404.png"}
+                            className="img-fluid w-100"
+                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                            alt={art?.title || "ce50-news"}
+                            width={700}
+                            height={500}
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = "/404.png";
+                            }}
+                          />
                         <h5 className="font-weight-600 mt-3">
                           {art?.title ||
                             (idx === 0
@@ -201,15 +205,17 @@ export default function NewsPage() {
                         rel="noopener noreferrer"
                         className="text-white text-decoration-none"
                       >
-                        <Image
-                          src={art?.image || "/404.png"}
-                          className="img-fluid w-100"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                          alt={art?.title || "ce50-news"}
-                          width={700}
-                          height={500}
-                          unoptimized
-                        />
+                          <Image
+                            src={art?.image || "/404.png"}
+                            className="img-fluid w-100"
+                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                            alt={art?.title || "ce50-news"}
+                            width={700}
+                            height={500}
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = "/404.png";
+                            }}
+                          />
                         <h5 className="font-weight-600 mt-3">
                           {art?.title ||
                             (idx === 2
@@ -266,7 +272,9 @@ export default function NewsPage() {
                       alt={art?.title || "ce50-news"}
                       width={700}
                       height={500}
-                      unoptimized
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/404.png";
+                      }}
                     />
                     <h5 className="font-weight-bold mt-3">
                       {art?.title || defaultTitles[idx]}

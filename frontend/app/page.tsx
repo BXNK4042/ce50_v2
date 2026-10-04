@@ -94,7 +94,9 @@ export default function Home() {
                     alt={featured?.title || "ce50-news"}
                     width={1200}
                     height={800}
-                    unoptimized
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/404.png";
+                    }}
                   />
                   <h1 className="font-weight-600 mt-3">
                     {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
@@ -133,7 +135,9 @@ export default function Home() {
                             alt={art?.title || "ce50-news"}
                             width={700}
                             height={500}
-                            unoptimized
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = "/404.png";
+                            }}
                           />
                           <h5 className="font-weight-600 mt-3">
                             {art?.title || "หัวข้อข่าวเทคโนโลยี"}
@@ -173,7 +177,9 @@ export default function Home() {
                             alt={art?.title || "ce50-news"}
                             width={700}
                             height={500}
-                            unoptimized
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = "/404.png";
+                            }}
                           />
                           <h5 className="font-weight-600 mt-3">
                             {art?.title || "หัวข้อข่าวเทคโนโลยี"}
