@@ -29,6 +29,7 @@ frontend/.vercel/
 *.pem
 *.tsbuildinfo
 frontend/next-env.d.ts
+frontend/AGENTS.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
