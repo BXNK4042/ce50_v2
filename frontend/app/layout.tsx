@@ -143,28 +143,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
           </li>
           <li className="nav-item">
-            <Link href="/quiz" className="nav nav-link text-warning fw-semibold">
-              <i className="bi bi-stars me-1"></i>Quiz
+            <Link href="/quiz" className="nav nav-link text-light">
+              Quiz
             </Link>
           </li>
         </ul>
 
         {mounted && isAdminLoggedIn && (
-          <div className="position-absolute top-50 end-0 translate-middle-y me-3 d-flex align-items-center gap-2">
-            <Link
-              href="/admin"
-              className="btn btn-sm btn-outline-warning d-flex align-items-center gap-1 shadow-sm rounded-pill px-3"
-            >
-              <i className="bi bi-shield-lock-fill"></i>
-              <span>Admin</span>
-              {adminUser?.user_role && (
-                <span
-                  className="badge bg-warning text-dark ms-1"
-                  style={{ fontSize: "0.65rem" }}
-                >
-                  {adminUser.user_role}
-                </span>
-              )}
+          <div className="position-absolute top-50 end-0 translate-middle-y me-4">
+            <Link href="/admin" className="btn btn-primary btn-sm">
+              Admin
             </Link>
           </div>
         )}
