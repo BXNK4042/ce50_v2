@@ -9,10 +9,12 @@ import { Teachers } from "@/types/teacher";
 export default function Home() {
   const [latestTech, setLatestTech] = useState<GNewsArticle[]>([]);
   const [teachers, setTeachers] = useState<Teachers[]>([]);
+  const [loadingNews, setLoadingNews] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
+        setLoadingNews(true);
         const [newsRes, teachersRes] = await Promise.all([
           fetch("/api/gnews?country=th&max=5"),
           fetch("/api/teachers"),
@@ -26,6 +28,8 @@ export default function Home() {
         }
       } catch (err) {
         console.error("Failed to load home page data", err);
+      } finally {
+        setLoadingNews(false);
       }
     }
 
@@ -73,125 +77,172 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="row">
-            {/* รูปใหญ่ฝั่งซ้าย */}
-            <div className="col-lg-6 mb-5 mb-sm-2">
-              <div className="position-relative image-hover">
-                <a
-                  href={featured?.url || "#"}
-                  target={featured?.url ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="text-white text-decoration-none"
-                >
-                  <Image
-                    src={featured?.image || "/404.png"}
-                    className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
-                    style={{
-                      width: "100%",
-                      height: "440px",
-                      objectFit: "cover",
-                    }}
-                    alt={featured?.title || "ce50-news"}
-                    width={1200}
-                    height={800}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/404.png";
-                    }}
-                  />
-                  <h1 className="font-weight-600 mt-3">
-                    {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
-                  </h1>
-                  {featured?.description && (
-                    <p className="fs-15 font-weight-normal text-secondary mt-2">
-                      {featured.description}
-                    </p>
-                  )}
-                </a>
+          {loadingNews ? (
+            <div className="row placeholder-glow">
+              {/* Skeleton รูปใหญ่ซ้าย */}
+              <div className="col-lg-6 mb-5 mb-sm-2">
+                <span
+                  className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                  style={{ height: "440px" }}
+                ></span>
+                <span className="placeholder col-8 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
+                <span className="placeholder col-12 bg-secondary bg-opacity-25 mt-2 d-block py-1"></span>
               </div>
-            </div>
 
-            {/* 4 รูปย่อยฝั่งขวา */}
-            <div className="col-lg-6 mb-5 mb-sm-2">
-              <div className="row">
-                {[0, 1].map((idx) => {
-                  const art = sideArticles[idx];
-                  return (
+              {/* Skeleton 4 รูปย่อยขวา */}
+              <div className="col-lg-6 mb-5 mb-sm-2">
+                <div className="row">
+                  {[0, 1].map((idx) => (
                     <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
-                      <div className="position-relative image-hover">
-                        <a
-                          href={art?.url || "#"}
-                          target={art?.url ? "_blank" : undefined}
-                          rel="noopener noreferrer"
-                          className="text-white text-decoration-none"
-                        >
-                          <Image
-                            src={art?.image || "/404.png"}
-                            className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
-                            style={{
-                              width: "100%",
-                              height: "200px",
-                              objectFit: "cover",
-                            }}
-                            alt={art?.title || "ce50-news"}
-                            width={700}
-                            height={500}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = "/404.png";
-                            }}
-                          />
-                          <h5 className="font-weight-600 mt-3">
-                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
-                          </h5>
-                        </a>
-                      </div>
+                      <span
+                        className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                        style={{ height: "200px" }}
+                      ></span>
+                      <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
                     </div>
-                  );
-                })}
-              </div>
-
-              <div className="row mt-3">
-                {[2, 3].map((idx) => {
-                  const art = sideArticles[idx];
-                  return (
+                  ))}
+                </div>
+                <div className="row mt-3">
+                  {[2, 3].map((idx) => (
                     <div
                       className={
                         idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
                       }
                       key={idx}
                     >
-                      <div className="position-relative image-hover">
-                        <a
-                          href={art?.url || "#"}
-                          target={art?.url ? "_blank" : undefined}
-                          rel="noopener noreferrer"
-                          className="text-white text-decoration-none"
-                        >
-                          <Image
-                            src={art?.image || "/404.png"}
-                            className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
-                            style={{
-                              width: "100%",
-                              height: "200px",
-                              objectFit: "cover",
-                            }}
-                            alt={art?.title || "ce50-news"}
-                            width={700}
-                            height={500}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = "/404.png";
-                            }}
-                          />
-                          <h5 className="font-weight-600 mt-3">
-                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
-                          </h5>
-                        </a>
-                      </div>
+                      <span
+                        className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                        style={{ height: "200px" }}
+                      ></span>
+                      <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="row">
+              {/* รูปใหญ่ฝั่งซ้าย */}
+              <div className="col-lg-6 mb-5 mb-sm-2">
+                <div className="position-relative image-hover">
+                  <a
+                    href={featured?.url || "#"}
+                    target={featured?.url ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    className="text-white text-decoration-none"
+                  >
+                    <Image
+                      src={featured?.image || "/404.png"}
+                      className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
+                      style={{
+                        width: "100%",
+                        height: "440px",
+                        objectFit: "cover",
+                      }}
+                      alt={featured?.title || "ce50-news"}
+                      width={1200}
+                      height={800}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/404.png";
+                      }}
+                    />
+                    <h1 className="font-weight-600 mt-3">
+                      {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
+                    </h1>
+                    {featured?.description && (
+                      <p className="fs-15 font-weight-normal text-secondary mt-2">
+                        {featured.description}
+                      </p>
+                    )}
+                  </a>
+                </div>
+              </div>
+
+              {/* 4 รูปย่อยฝั่งขวา */}
+              <div className="col-lg-6 mb-5 mb-sm-2">
+                <div className="row">
+                  {[0, 1].map((idx) => {
+                    const art = sideArticles[idx];
+                    return (
+                      <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
+                        <div className="position-relative image-hover">
+                          <a
+                            href={art?.url || "#"}
+                            target={art?.url ? "_blank" : undefined}
+                            rel="noopener noreferrer"
+                            className="text-white text-decoration-none"
+                          >
+                            <Image
+                              src={art?.image || "/404.png"}
+                              className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
+                              style={{
+                                width: "100%",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                              alt={art?.title || "ce50-news"}
+                              width={700}
+                              height={500}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src =
+                                  "/404.png";
+                              }}
+                            />
+                            <h5 className="font-weight-600 mt-3">
+                              {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                            </h5>
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="row mt-3">
+                  {[2, 3].map((idx) => {
+                    const art = sideArticles[idx];
+                    return (
+                      <div
+                        className={
+                          idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
+                        }
+                        key={idx}
+                      >
+                        <div className="position-relative image-hover">
+                          <a
+                            href={art?.url || "#"}
+                            target={art?.url ? "_blank" : undefined}
+                            rel="noopener noreferrer"
+                            className="text-white text-decoration-none"
+                          >
+                            <Image
+                              src={art?.image || "/404.png"}
+                              className="img-fluid w-100 opacity-65 hover:opacity-100 transition duration-200"
+                              style={{
+                                width: "100%",
+                                height: "200px",
+                                objectFit: "cover",
+                              }}
+                              alt={art?.title || "ce50-news"}
+                              width={700}
+                              height={500}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src =
+                                  "/404.png";
+                              }}
+                            />
+                            <h5 className="font-weight-600 mt-3">
+                              {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                            </h5>
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Section 3: คณาจารย์ (Teacher Card Carousel) */}

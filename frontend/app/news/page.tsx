@@ -9,6 +9,7 @@ export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [latestTech, setLatestTech] = useState<GNewsArticle[]>([]);
   const [worldTech, setWorldTech] = useState<GNewsArticle[]>([]);
+  const [loadingGNews, setLoadingGNews] = useState(true);
 
   useEffect(() => {
     async function getNews() {
@@ -24,6 +25,7 @@ export default function NewsPage() {
 
     async function getGNews() {
       try {
+        setLoadingGNews(true);
         const [latestRes, worldRes] = await Promise.all([
           fetch("/api/gnews?country=th&max=5"),
           fetch("/api/gnews?country=us&max=4"),
@@ -38,6 +40,8 @@ export default function NewsPage() {
         }
       } catch (err) {
         console.error("Failed to load external news", err);
+      } finally {
+        setLoadingGNews(false);
       }
     }
 
@@ -120,7 +124,48 @@ export default function NewsPage() {
             </div>
           </div>
         </div>
-        <div className="row">
+        {loadingGNews ? (
+          <div className="row placeholder-glow">
+            <div className="col-lg-6 mb-5 mb-sm-2">
+              <span
+                className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                style={{ height: "440px" }}
+              ></span>
+              <span className="placeholder col-8 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
+              <span className="placeholder col-12 bg-secondary bg-opacity-25 mt-2 d-block py-1"></span>
+            </div>
+            <div className="col-lg-6 mb-5 mb-sm-2">
+              <div className="row">
+                {[0, 1].map((idx) => (
+                  <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
+                    <span
+                      className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                      style={{ height: "200px" }}
+                    ></span>
+                    <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
+                  </div>
+                ))}
+              </div>
+              <div className="row mt-3">
+                {[2, 3].map((idx) => (
+                  <div
+                    className={
+                      idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
+                    }
+                    key={idx}
+                  >
+                    <span
+                      className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                      style={{ height: "200px" }}
+                    ></span>
+                    <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="row">
           <div className="col-lg-6 mb-5 mb-sm-2">
             <div className="position-relative image-hover">
               <a
@@ -230,6 +275,7 @@ export default function NewsPage() {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       {/* ข่าวสารต่างประเทศ: Template 4 คอลัมน์ด้านล่าง */}
@@ -244,7 +290,24 @@ export default function NewsPage() {
             </div>
           </div>
         </div>
-        <div className="row">
+        {loadingGNews ? (
+          <div className="row placeholder-glow">
+            {[0, 1, 2, 3].map((idx) => (
+              <div
+                className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2"
+                key={idx}
+              >
+                <span
+                  className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                  style={{ height: "240px" }}
+                ></span>
+                <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-3 d-block py-1"></span>
+                <span className="placeholder col-12 bg-secondary bg-opacity-25 mt-2 d-block py-1"></span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="row">
           {[0, 1, 2, 3].map((idx) => {
             const art = worldTech[idx];
             const defaultTitles = [
@@ -289,6 +352,7 @@ export default function NewsPage() {
             );
           })}
         </div>
+        )}
       </div>
     </div>
   );
