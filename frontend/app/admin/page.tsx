@@ -30,6 +30,7 @@ interface AdminUser {
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"teachers" | "students" | "news" | "projects" | "companies" | "internships" | "class" | "exam" | "rooms">("teachers");
   
   // Data states
@@ -53,22 +54,29 @@ export default function AdminDashboardPage() {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [uploadingFile, setUploadingFile] = useState(false);
 
-  // Check auth
+  // Check auth immediately
   useEffect(() => {
     const token = localStorage.getItem("ce50_admin_token");
     const userStr = localStorage.getItem("ce50_admin_user");
     if (!token || !userStr) {
-      router.push("/admin/login");
+      router.replace("/admin/login");
     } else {
       try {
-        setCurrentUser(JSON.parse(userStr));
+        const user = JSON.parse(userStr);
+        if (user && user.user_id) {
+          setCurrentUser(user);
+          setIsAuthorized(true);
+        } else {
+          router.replace("/admin/login");
+        }
       } catch {
-        router.push("/admin/login");
+        router.replace("/admin/login");
       }
     }
   }, [router]);
 
   const loadData = useCallback(async () => {
+    if (!isAuthorized) return;
     setLoading(true);
     try {
       if (activeTab === "teachers") {
@@ -107,8 +115,10 @@ export default function AdminDashboardPage() {
   }, [activeTab]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (isAuthorized) {
+      loadData();
+    }
+  }, [isAuthorized, loadData]);
 
   const handleLogout = () => {
     localStorage.removeItem("ce50_admin_token");
@@ -245,6 +255,20 @@ export default function AdminDashboardPage() {
       setLoading(false);
     }
   };
+
+  if (!isAuthorized) {
+    return (
+      <div
+        className="template-container py-5 text-center text-white d-flex flex-column align-items-center justify-content-center"
+        style={{ minHeight: "75vh" }}
+      >
+        <div className="spinner-border text-primary mb-3" role="status">
+          <span className="visually-hidden">Checking authorization...</span>
+        </div>
+        <p className="text-secondary small">กำลังตรวจสอบสิทธิ์การเข้าใช้งาน...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="template-container py-4 text-white">
