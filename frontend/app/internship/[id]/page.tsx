@@ -42,12 +42,21 @@ export default function InternshipPage() {
 
   return (
     <div className="template-container">
-      <Link href="/company">
-        <div className="flex text-decoration-none">
-          <ArrowLeft />
-          <p className="text-decoration-none">Back to Company</p>
-        </div>
-      </Link>
+      <div className="mb-4 pt-2">
+        <Link
+          href="/company"
+          className="btn btn-outline-light d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
+        >
+          <ArrowLeft size={18} />
+          <span>Back to Company</span>
+        </Link>
+      </div>
+
+      <div className="mt-3 mb-5">
+        <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
+        <h1 className="text-primary">นักศึกษาฝึกงาน</h1>
+        <div className="bg-blue-500 w-20 h-1"></div>
+      </div>
       {/*
         <table className="table table-striped">
           <thead>
