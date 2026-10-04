@@ -42,6 +42,7 @@ interface RoleResult {
   title: string;
   title_th: string;
   category: string;
+  category_th?: string;
   icon: string;
   badge_color: string;
   score: number;
@@ -214,8 +215,8 @@ export default function CareerQuizPage() {
             <span className="badge bg-primary px-3 py-2 rounded-pill fw-semibold mb-2">
               อาชีพที่เหมาะสมที่สุดสำหรับคุณ (Rank #1)
             </span>
-            <h1 className="fw-bold text-white mb-1 mt-2">{topRole.title}</h1>
-            <h4 className="text-secondary fw-normal mb-3">{topRole.title_th}</h4>
+            <h1 className="fw-bold text-white mb-1 mt-2">{topRole.title_th}</h1>
+            <h5 className="text-secondary fw-normal mb-3">{topRole.title} ({topRole.category_th || topRole.category})</h5>
 
             <div className="display-4 fw-bold text-primary mb-2">{topRole.match_percentage}% Match</div>
             <p className="lead text-light mb-4 mx-auto" style={{ maxWidth: "700px" }}>
@@ -278,8 +279,8 @@ export default function CareerQuizPage() {
                   <span className="badge bg-secondary mb-2 align-self-center px-3 py-1">
                     {idx === 0 ? "อันดับที่ 2" : "อันดับที่ 3"}
                   </span>
-                  <h5 className="fw-bold text-white mb-1">{role.title}</h5>
-                  <p className="text-secondary small mb-2">{role.title_th}</p>
+                  <h5 className="fw-bold text-white mb-1">{role.title_th}</h5>
+                  <p className="text-secondary small mb-2">{role.title} ({role.category_th || role.category})</p>
                   <div className="text-primary fw-bold fs-5 mt-auto">{role.match_percentage}% Match</div>
                 </div>
               </div>
