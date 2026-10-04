@@ -196,8 +196,14 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+class CachedStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=604800"
+        return response
+
 if UPLOADS_DIR.exists():
-    app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
+    app.mount("/uploads", CachedStaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 
 
 def get_db():
