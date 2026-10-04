@@ -167,35 +167,35 @@ export default function NewsPage() {
         ) : (
           <div className="row">
           <div className="col-lg-6 mb-5 mb-sm-2">
-            <div className="position-relative image-hover">
-              <a
-                href={featured?.url || "#"}
-                target={featured?.url ? "_blank" : undefined}
-                rel="noopener noreferrer"
-                className="text-white text-decoration-none"
-              >
-                  <Image
-                    src={featured?.image || "/404.png"}
-                    className="img-fluid w-100"
-                    style={{ width: "100%", height: "440px", objectFit: "cover" }}
-                    alt={featured?.title || "ce50-news"}
-                    width={1200}
-                    height={800}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/404.png";
-                    }}
-                  />
-                <h1 className="font-weight-600 mt-3">
-                  {featured?.title ||
-                    "Melania Trump speaks about courage at State Department"}
-                </h1>
-                {featured?.description && (
-                  <p className="fs-15 font-weight-normal text-secondary mt-2">
-                    {featured.description}
-                  </p>
-                )}
-              </a>
-            </div>
+            <a
+              href={featured?.url || "#"}
+              target={featured?.url ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              className="text-white text-decoration-none d-block"
+            >
+              <div className="position-relative image-hover">
+                <Image
+                  src={featured?.image || "/404.png"}
+                  className="img-fluid w-100"
+                  style={{ width: "100%", height: "440px", objectFit: "cover" }}
+                  alt={featured?.title || "ce50-news"}
+                  width={1200}
+                  height={800}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "/404.png";
+                  }}
+                />
+              </div>
+              <h1 className="font-weight-600 mt-3">
+                {featured?.title ||
+                  "Melania Trump speaks about courage at State Department"}
+              </h1>
+              {featured?.description && (
+                <p className="fs-15 font-weight-normal text-secondary mt-2">
+                  {featured.description}
+                </p>
+              )}
+            </a>
           </div>
           <div className="col-lg-6 mb-5 mb-sm-2">
             <div className="row">
@@ -203,32 +203,32 @@ export default function NewsPage() {
                 const art = sideArticles[idx];
                 return (
                   <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
-                    <div className="position-relative image-hover">
-                      <a
-                        href={art?.url || "#"}
-                        target={art?.url ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        className="text-white text-decoration-none"
-                      >
-                          <Image
-                            src={art?.image || "/404.png"}
-                            className="img-fluid w-100"
-                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                            alt={art?.title || "ce50-news"}
-                            width={700}
-                            height={500}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = "/404.png";
-                            }}
-                          />
-                        <h5 className="font-weight-600 mt-3">
-                          {art?.title ||
-                            (idx === 0
-                              ? "A look at California's eerie plane graveyards"
-                              : "The world's most beautiful racecourses")}
-                        </h5>
-                      </a>
-                    </div>
+                    <a
+                      href={art?.url || "#"}
+                      target={art?.url ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      className="text-white text-decoration-none d-block"
+                    >
+                      <div className="position-relative image-hover">
+                        <Image
+                          src={art?.image || "/404.png"}
+                          className="img-fluid w-100"
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                          alt={art?.title || "ce50-news"}
+                          width={700}
+                          height={500}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = "/404.png";
+                          }}
+                        />
+                      </div>
+                      <h5 className="font-weight-600 mt-3">
+                        {art?.title ||
+                          (idx === 0
+                            ? "A look at California's eerie plane graveyards"
+                            : "The world's most beautiful racecourses")}
+                      </h5>
+                    </a>
                   </div>
                 );
               })}
@@ -243,32 +243,32 @@ export default function NewsPage() {
                     }
                     key={idx}
                   >
-                    <div className="position-relative image-hover">
-                      <a
-                        href={art?.url || "#"}
-                        target={art?.url ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        className="text-white text-decoration-none"
-                      >
-                          <Image
-                            src={art?.image || "/404.png"}
-                            className="img-fluid w-100"
-                            style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                            alt={art?.title || "ce50-news"}
-                            width={700}
-                            height={500}
-                            onError={(e) => {
-                              (e.currentTarget as HTMLImageElement).src = "/404.png";
-                            }}
-                          />
-                        <h5 className="font-weight-600 mt-3">
-                          {art?.title ||
-                            (idx === 2
-                              ? "Japan cancels cherry blossom festivals over virus fears"
-                              : "Classic cars reborn as electric vehicles")}
-                        </h5>
-                      </a>
-                    </div>
+                    <a
+                      href={art?.url || "#"}
+                      target={art?.url ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      className="text-white text-decoration-none d-block"
+                    >
+                      <div className="position-relative image-hover">
+                        <Image
+                          src={art?.image || "/404.png"}
+                          className="img-fluid w-100"
+                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
+                          alt={art?.title || "ce50-news"}
+                          width={700}
+                          height={500}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = "/404.png";
+                          }}
+                        />
+                      </div>
+                      <h5 className="font-weight-600 mt-3">
+                        {art?.title ||
+                          (idx === 2
+                            ? "Japan cancels cherry blossom festivals over virus fears"
+                            : "Classic cars reborn as electric vehicles")}
+                      </h5>
+                    </a>
                   </div>
                 );
               })}
@@ -321,13 +321,13 @@ export default function NewsPage() {
                 className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2"
                 key={idx}
               >
-                <div className="position-relative image-hover">
-                  <a
-                    href={art?.url || "#"}
-                    target={art?.url ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className="text-white text-decoration-none"
-                  >
+                <a
+                  href={art?.url || "#"}
+                  target={art?.url ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="text-white text-decoration-none d-block"
+                >
+                  <div className="position-relative image-hover">
                     <Image
                       src={art?.image || "/404.png"}
                       className="img-fluid w-100"
@@ -339,15 +339,15 @@ export default function NewsPage() {
                         (e.currentTarget as HTMLImageElement).src = "/404.png";
                       }}
                     />
-                    <h5 className="font-weight-bold mt-3">
-                      {art?.title || defaultTitles[idx]}
-                    </h5>
-                    <p className="fs-15 font-weight-normal text-secondary">
-                      {art?.description ||
-                        "Lorem Ipsum has been the industry's standard dummy text"}
-                    </p>
-                  </a>
-                </div>
+                  </div>
+                  <h5 className="font-weight-bold mt-3">
+                    {art?.title || defaultTitles[idx]}
+                  </h5>
+                  <p className="fs-15 font-weight-normal text-secondary">
+                    {art?.description ||
+                      "Lorem Ipsum has been the industry's standard dummy text"}
+                  </p>
+                </a>
               </div>
             );
           })}

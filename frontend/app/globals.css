@@ -30,13 +30,15 @@ img {
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.image-hover:hover img {
-  transform: scale(1.06);
+.image-hover:hover img,
+a:hover .image-hover img {
+  transform: scale(1.05);
   opacity: 1 !important;
 }
 
-.image-hover:hover h1,
-.image-hover:hover h5 {
-  color: #0d6efd !important;
-  transition: color 0.25s ease;
+a:hover .news-headline,
+a:hover h1,
+a:hover h5 {
+  color: #0d6efd;
+  transition: color 0.2s ease;
 }

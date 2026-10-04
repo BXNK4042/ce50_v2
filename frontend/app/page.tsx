@@ -124,13 +124,13 @@ export default function Home() {
             <div className="row">
               {/* รูปใหญ่ฝั่งซ้าย */}
               <div className="col-lg-6 mb-5 mb-sm-2">
-                <div className="position-relative image-hover">
-                  <a
-                    href={featured?.url || "#"}
-                    target={featured?.url ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className="text-white text-decoration-none"
-                  >
+                <a
+                  href={featured?.url || "#"}
+                  target={featured?.url ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="text-white text-decoration-none d-block"
+                >
+                  <div className="position-relative image-hover">
                     <Image
                       src={featured?.image || "/404.png"}
                       className="img-fluid w-100"
@@ -146,16 +146,16 @@ export default function Home() {
                         (e.currentTarget as HTMLImageElement).src = "/404.png";
                       }}
                     />
-                    <h1 className="font-weight-600 mt-3">
-                      {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
-                    </h1>
-                    {featured?.description && (
-                      <p className="fs-15 font-weight-normal text-secondary mt-2">
-                        {featured.description}
-                      </p>
-                    )}
-                  </a>
-                </div>
+                  </div>
+                  <h1 className="font-weight-600 mt-3">
+                    {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
+                  </h1>
+                  {featured?.description && (
+                    <p className="fs-15 font-weight-normal text-secondary mt-2">
+                      {featured.description}
+                    </p>
+                  )}
+                </a>
               </div>
 
               {/* 4 รูปย่อยฝั่งขวา */}
@@ -165,13 +165,13 @@ export default function Home() {
                     const art = sideArticles[idx];
                     return (
                       <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
-                        <div className="position-relative image-hover">
-                          <a
-                            href={art?.url || "#"}
-                            target={art?.url ? "_blank" : undefined}
-                            rel="noopener noreferrer"
-                            className="text-white text-decoration-none"
-                          >
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none d-block"
+                        >
+                          <div className="position-relative image-hover">
                             <Image
                               src={art?.image || "/404.png"}
                               className="img-fluid w-100"
@@ -188,11 +188,11 @@ export default function Home() {
                                   "/404.png";
                               }}
                             />
-                            <h5 className="font-weight-600 mt-3">
-                              {art?.title || "หัวข้อข่าวเทคโนโลยี"}
-                            </h5>
-                          </a>
-                        </div>
+                          </div>
+                          <h5 className="font-weight-600 mt-3">
+                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                          </h5>
+                        </a>
                       </div>
                     );
                   })}
@@ -208,13 +208,13 @@ export default function Home() {
                         }
                         key={idx}
                       >
-                        <div className="position-relative image-hover">
-                          <a
-                            href={art?.url || "#"}
-                            target={art?.url ? "_blank" : undefined}
-                            rel="noopener noreferrer"
-                            className="text-white text-decoration-none"
-                          >
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none d-block"
+                        >
+                          <div className="position-relative image-hover">
                             <Image
                               src={art?.image || "/404.png"}
                               className="img-fluid w-100"
@@ -231,11 +231,11 @@ export default function Home() {
                                   "/404.png";
                               }}
                             />
-                            <h5 className="font-weight-600 mt-3">
-                              {art?.title || "หัวข้อข่าวเทคโนโลยี"}
-                            </h5>
-                          </a>
-                        </div>
+                          </div>
+                          <h5 className="font-weight-600 mt-3">
+                            {art?.title || "หัวข้อข่าวเทคโนโลยี"}
+                          </h5>
+                        </a>
                       </div>
                     );
                   })}

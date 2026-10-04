@@ -68,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="position-absolute top-50 start-0 translate-middle-y ms-4">
             <Link
               href="/quiz"
-              className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold text-primary"
+              className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold"
             >
               <Compass size={16} />
               <span>Career Quiz</span>
