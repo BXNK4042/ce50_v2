@@ -266,80 +266,71 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Tab Navigation */}
-      <ul className="nav nav-pills mb-4 flex-wrap gap-2 border-bottom border-secondary pb-3">
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "teachers" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("teachers")}
-          >
-            <i className="bi bi-person-badge me-1"></i> อาจารย์ (Teachers)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "students" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("students")}
-          >
-            <i className="bi bi-people me-1"></i> นักศึกษา (Students)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "news" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("news")}
-          >
-            <i className="bi bi-newspaper me-1"></i> ข่าวสาร (News)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "projects" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("projects")}
-          >
-            <i className="bi bi-laptop me-1"></i> โครงงาน (Projects)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "companies" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("companies")}
-          >
-            <i className="bi bi-building me-1"></i> บริษัท (Companies)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "internships" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("internships")}
-          >
-            <i className="bi bi-briefcase me-1"></i> ฝึกงาน (Internships)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "class" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("class")}
-          >
-            <i className="bi bi-calendar3 me-1"></i> ตารางเรียน (Class)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "exam" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("exam")}
-          >
-            <i className="bi bi-file-earmark-text me-1"></i> ตารางสอบ (Exam)
-          </button>
-        </li>
-        <li className="nav-item">
-          <button
-            className={`nav-link ${activeTab === "rooms" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
-            onClick={() => setActiveTab("rooms")}
-          >
-            <i className="bi bi-door-open me-1"></i> ห้องปฏิบัติการ (Rooms)
-          </button>
-        </li>
-      </ul>
+      <div className="d-flex flex-wrap gap-2 mb-4 border-bottom border-secondary pb-3">
+        <button
+          type="button"
+          className={`btn ${activeTab === "teachers" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("teachers")}
+        >
+          <i className="bi bi-person-badge me-1"></i> อาจารย์ (Teachers)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "students" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("students")}
+        >
+          <i className="bi bi-people me-1"></i> นักศึกษา (Students)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "news" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("news")}
+        >
+          <i className="bi bi-newspaper me-1"></i> ข่าวสาร (News)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "projects" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("projects")}
+        >
+          <i className="bi bi-laptop me-1"></i> โครงงาน (Projects)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "companies" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("companies")}
+        >
+          <i className="bi bi-building me-1"></i> บริษัท (Companies)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "internships" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("internships")}
+        >
+          <i className="bi bi-briefcase me-1"></i> ฝึกงาน (Internships)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "class" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("class")}
+        >
+          <i className="bi bi-calendar3 me-1"></i> ตารางเรียน (Class)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "exam" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("exam")}
+        >
+          <i className="bi bi-file-earmark-text me-1"></i> ตารางสอบ (Exam)
+        </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "rooms" ? "btn-primary" : "btn-dark"}`}
+          onClick={() => setActiveTab("rooms")}
+        >
+          <i className="bi bi-door-open me-1"></i> ห้องปฏิบัติการ (Rooms)
+        </button>
+      </div>
 
       {/* Action Header for Selected Tab */}
       <div className="d-flex justify-content-between align-items-center mb-3">
