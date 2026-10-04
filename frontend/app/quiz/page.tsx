@@ -205,7 +205,7 @@ export default function CareerQuizPage() {
     const thirdRole = result.top_roles[2];
 
     return (
-      <div className="template-container py-5 text-white">
+      <div className="template-container my-5 py-5 text-white">
         <div className="mx-auto" style={{ maxWidth: "880px" }}>
           {/* Top Hero Card */}
           <div className="card bg-dark border-primary p-4 p-md-5 rounded-4 shadow-lg text-center mb-5 border-2">
@@ -311,10 +311,10 @@ export default function CareerQuizPage() {
   // VIEW: QUIZ QUESTION (Style 3 Interactive Card Deck)
   // ==========================================
   return (
-    <div className="template-container py-5 text-white">
+    <div className="template-container my-5 py-5 text-white">
       <div className="mx-auto" style={{ maxWidth: "820px" }}>
         {/* Top Header Progress */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-5">
           <div className="d-flex justify-content-between align-items-center mb-2 px-1">
             <span className="badge bg-secondary text-white px-3 py-1 rounded-pill small">
               {currentQ ? currentQ.section_th : "แบบประเมินสายอาชีพ"}
@@ -413,7 +413,7 @@ export default function CareerQuizPage() {
         )}
 
         {/* Navigation Footer */}
-        <div className="d-flex justify-content-between align-items-center mt-4">
+        <div className="d-flex justify-content-between align-items-center mt-5 mb-5">
           <button
             type="button"
             onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
