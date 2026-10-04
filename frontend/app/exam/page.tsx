@@ -70,60 +70,62 @@ export default function ExamPage() {
 
       {!loading && !error && (
         <>
-          {/* Dual Filter: Generation + Semester Selector */}
-          <div className="bg-dark p-3 rounded border border-secondary mb-4">
-            <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-3 border-bottom border-secondary">
-              <div className="d-flex align-items-center gap-2">
-                <span className="text-secondary small fw-bold text-uppercase">เลือกรุ่น:</span>
-                <ul className="nav nav-pills gap-1">
+          {/* Dual Filter: Generation + Semester Selector (Matching Style 1 Clean Light) */}
+          <div className="card shadow-sm border-0 rounded-3 mb-4 bg-white text-dark p-3">
+            <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 border-bottom">
+              <div className="d-flex flex-wrap align-items-center gap-2">
+                <span className="text-secondary small fw-bold text-uppercase me-1">เลือกรุ่น:</span>
+                <div className="btn-group btn-group-sm" role="group">
                   {availableGens.map((gen) => (
-                    <li className="nav-item" key={gen}>
-                      <button
-                        type="button"
-                        className={`nav-link py-1 px-3 small ${
-                          selectedGen === gen
-                            ? "active bg-primary text-white"
-                            : "text-light bg-black border border-secondary"
-                        }`}
-                        onClick={() => setSelectedGen(gen)}
-                      >
-                        {gen === "All" ? "ทุกรุ่น (All)" : `รุ่น ${gen}`}
-                      </button>
-                    </li>
+                    <button
+                      key={gen}
+                      type="button"
+                      className={`btn ${
+                        selectedGen === gen
+                          ? "btn-primary text-white fw-semibold"
+                          : "btn-outline-secondary"
+                      }`}
+                      onClick={() => setSelectedGen(gen)}
+                    >
+                      {gen === "All" ? "ทุกรุ่น (All)" : `รุ่น ${gen}`}
+                    </button>
                   ))}
-                </ul>
+                </div>
               </div>
 
-              <div className="d-flex align-items-center gap-2">
-                <span className="text-secondary small fw-bold text-uppercase">ภาคเรียน:</span>
-                <ul className="nav nav-pills gap-1">
+              <div className="d-flex flex-wrap align-items-center gap-2">
+                <span className="text-secondary small fw-bold text-uppercase me-1">ภาคเรียน:</span>
+                <div className="btn-group btn-group-sm" role="group">
                   {[1, 2, "All"].map((sem) => (
-                    <li className="nav-item" key={sem}>
-                      <button
-                        type="button"
-                        className={`nav-link py-1 px-3 small ${
-                          selectedSemester === sem
-                            ? "active bg-primary text-white"
-                            : "text-light bg-black border border-secondary"
-                        }`}
-                        onClick={() => setSelectedSemester(sem as number | "All")}
-                      >
-                        {sem === "All"
-                          ? "ทุกเทอม"
-                          : `เทอม ${sem}`}
-                      </button>
-                    </li>
+                    <button
+                      key={sem}
+                      type="button"
+                      className={`btn ${
+                        selectedSemester === sem
+                          ? "btn-primary text-white fw-semibold"
+                          : "btn-outline-secondary"
+                      }`}
+                      onClick={() => setSelectedSemester(sem as number | "All")}
+                    >
+                      {sem === "All" ? "ทุกเทอม" : `เทอม ${sem}`}
+                    </button>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center text-secondary small">
+            <div className="d-flex justify-content-between align-items-center text-muted small pt-2">
               <span>
-                กำลังแสดง: <strong>{selectedGen === "All" ? "ทุกรุ่น" : selectedGen}</strong> |{" "}
-                <strong>{selectedSemester === "All" ? "ทุกภาคการศึกษา" : `ภาคการศึกษาที่ ${selectedSemester}`}</strong>
+                กำลังแสดง: <strong className="text-dark">{selectedGen === "All" ? "ทุกรุ่น" : selectedGen}</strong> |{" "}
+                <strong className="text-dark">
+                  {selectedSemester === "All"
+                    ? "ทุกภาคการศึกษา"
+                    : `ภาคการศึกษาที่ ${selectedSemester}`}
+                </strong>
               </span>
-              <span>พบ {filteredExams.length} รายการ</span>
+              <span className="badge bg-light text-dark border">
+                พบ {filteredExams.length} รายการ
+              </span>
             </div>
           </div>
 
