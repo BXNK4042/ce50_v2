@@ -128,7 +128,7 @@ export default function NewsPage() {
           <div className="row placeholder-glow">
             <div className="col-lg-6 mb-5 mb-sm-2">
               <span
-                className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                 style={{ height: "440px" }}
               ></span>
               <span className="placeholder col-8 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
@@ -139,7 +139,7 @@ export default function NewsPage() {
                 {[0, 1].map((idx) => (
                   <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
                     <span
-                      className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                      className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                       style={{ height: "200px" }}
                     ></span>
                     <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
@@ -155,7 +155,7 @@ export default function NewsPage() {
                     key={idx}
                   >
                     <span
-                      className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                      className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                       style={{ height: "200px" }}
                     ></span>
                     <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
@@ -190,11 +190,6 @@ export default function NewsPage() {
                 {featured?.title ||
                   "Melania Trump speaks about courage at State Department"}
               </h1>
-              {featured?.description && (
-                <p className="fs-15 font-weight-normal text-secondary mt-2">
-                  {featured.description}
-                </p>
-              )}
             </a>
           </div>
           <div className="col-lg-6 mb-5 mb-sm-2">
@@ -298,7 +293,7 @@ export default function NewsPage() {
                 key={idx}
               >
                 <span
-                  className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                  className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                   style={{ height: "240px" }}
                 ></span>
                 <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-3 d-block py-1"></span>

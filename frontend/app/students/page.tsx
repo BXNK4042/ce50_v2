@@ -116,7 +116,7 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="row rows-cols-1 row-cols-md-6 g-4">
+          <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 g-md-4">
             {filteredStudents.map((student) => {
               const modalId = `student-${student.student_id}-modal`;
               const gen = getStudentGeneration(student.student_id);
@@ -144,7 +144,7 @@ export default function Home() {
                     aria-labelledby="exampleModalLabel"
                     aria-hidden="true"
                   >
-                    <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                       <div className="modal-content bg-dark text-white border-secondary">
                         <div className="modal-header border-secondary">
                           <div className="d-flex align-items-center gap-2">

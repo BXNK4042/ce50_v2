@@ -64,7 +64,7 @@ export default function TeachersPage() {
       )}
 
       {!loading && !error && (
-        <div className="row row-cols-1 row-cols-md-4 g-4">
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {teachers.map((teacher) => (
             <div className="col" key={teacher.teacher_id}>
               <div
@@ -95,7 +95,7 @@ export default function TeachersPage() {
           tabIndex={-1}
           style={{ backgroundColor: "rgba(0,0,0,0.85)", backdropFilter: "blur(4px)" }}
         >
-          <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div className="modal-content bg-dark text-white border-warning shadow-lg">
               <div className="modal-header border-secondary">
                 <h5 className="modal-title text-warning d-flex align-items-center gap-2">

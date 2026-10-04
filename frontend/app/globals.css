@@ -1,5 +1,9 @@
 @import "tailwindcss/utilities";
 
+.navbar-collapse.collapse {
+  visibility: visible !important;
+}
+
 html,
 body {
   min-height: 100%;
@@ -22,7 +26,6 @@ img {
 /* World Vision Template: Image Hover Zoom & Opacity Effect */
 .image-hover {
   overflow: hidden;
-  border-radius: 0.375rem;
 }
 
 .image-hover img {

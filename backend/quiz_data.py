@@ -73,14 +73,18 @@ def evaluate_quiz(user_answers: Dict[str, Any]) -> Dict[str, Any]:
                 for r in q["options"][chosen]["role_ids"]:
                     scores[r] += 1
 
-    ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-    results = []
-    for rank, (role_id, raw_score) in enumerate(ranked, 1):
+    candidate_roles = []
+    for role_id, raw_score in scores.items():
         meta = ROLES_METADATA[role_id]
         max_s = ROLE_MAX_SCORES.get(role_id, 30)
         match_pct = round((raw_score / max_s) * 100) if max_s > 0 else 0
+        candidate_roles.append((match_pct, raw_score, role_id, meta, max_s))
 
+    # Sort descending by (match_percentage, raw_score)
+    candidate_roles.sort(key=lambda x: (x[0], x[1]), reverse=True)
+
+    results = []
+    for rank, (match_pct, raw_score, role_id, meta, max_s) in enumerate(candidate_roles, 1):
         results.append({
             "rank": rank,
             "role_id": role_id,

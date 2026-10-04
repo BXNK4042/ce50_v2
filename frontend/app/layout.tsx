@@ -70,7 +70,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={outfit.className} suppressHydrationWarning>
-        <div className="bg-black position-relative border-bottom border-secondary border-opacity-25">
+        {/* Desktop Navbar */}
+        <div className="d-none d-lg-block bg-black position-relative border-bottom border-secondary border-opacity-25">
           {/* Left: Career Quiz Button */}
           <div className="position-absolute top-50 start-0 translate-middle-y ms-4">
             <Link
@@ -83,97 +84,212 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </div>
 
           <ul className="nav justify-content-center align-items-center py-2">
-          <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle text-light"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              People
-            </a>
-            <ul className="dropdown-menu">
-              <li className="nav-item">
-                <Link href="/teachers" className="dropdown-item">
-                  Teachers
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/students" className="dropdown-item">
-                  Students
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li className="nav-item">
-            <Link href="/news" className="nav nav-link text-light">
-              News
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/projects" className="nav nav-link text-light">
-              Projects
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/" className="nav nav-link">
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle text-light"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                People
+              </a>
+              <ul className="dropdown-menu">
+                <li className="nav-item">
+                  <Link href="/teachers" className="dropdown-item">
+                    Teachers
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/students" className="dropdown-item">
+                    Students
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <Link href="/news" className="nav nav-link text-light">
+                News
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link href="/projects" className="nav nav-link text-light">
+                Projects
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link href="/" className="nav nav-link">
+                <Image
+                  src={ce_logo}
+                  alt="CE_LOGO"
+                  width="50"
+                  height="50"
+                  draggable="false"
+                />
+              </Link>
+            </li>
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle text-light"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Schedule
+              </a>
+              <ul className="dropdown-menu">
+                <li className="nav-item">
+                  <Link href="/exam" className="dropdown-item">
+                    Exam
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/class" className="dropdown-item">
+                    Class
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <Link href="/rooms" className="nav nav-link text-light">
+                Rooms
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link href="/company" className="nav nav-link text-light">
+                Internship
+              </Link>
+            </li>
+          </ul>
+
+          {mounted && isAdminLoggedIn && !pathname.startsWith("/admin") && (
+            <div className="position-absolute top-50 end-0 translate-middle-y me-4">
+              <Link href="/admin" className="btn btn-primary btn-sm">
+                Admin
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Navbar */}
+        <nav className="navbar navbar-dark bg-black border-bottom border-secondary border-opacity-25 px-3 d-lg-none">
+          <div className="container-fluid px-0">
+            <Link href="/" className="navbar-brand d-flex align-items-center">
               <Image
                 src={ce_logo}
                 alt="CE_LOGO"
-                width="50"
-                height="50"
+                width="45"
+                height="45"
                 draggable="false"
               />
             </Link>
-          </li>
-          <li className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle text-light"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Schedule
-            </a>
-            <ul className="dropdown-menu">
-              <li className="nav-item">
-                <Link href="/exam" className="dropdown-item">
-                  Exam
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/class" className="dropdown-item">
-                  Class
-                </Link>
-              </li>
-            </ul>
-          </li>
-          <li className="nav-item">
-            <Link href="/rooms" className="nav nav-link text-light">
-              Rooms
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/company" className="nav nav-link text-light">
-              Internship
-            </Link>
-          </li>
-        </ul>
 
-        {mounted && isAdminLoggedIn && !pathname.startsWith("/admin") && (
-          <div className="position-absolute top-50 end-0 translate-middle-y me-4">
-            <Link href="/admin" className="btn btn-primary btn-sm">
-              Admin
-            </Link>
+            <div className="d-flex align-items-center gap-2">
+              <Link
+                href="/quiz"
+                className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold"
+              >
+                <Compass size={16} />
+                <span>Career Quiz</span>
+              </Link>
+
+              <button
+                className="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mobileNavbarNav"
+                aria-controls="mobileNavbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span className="navbar-toggler-icon"></span>
+              </button>
+            </div>
+
+            <div className="collapse navbar-collapse" id="mobileNavbarNav">
+              <ul className="navbar-nav pt-2">
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-light"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    People
+                  </a>
+                  <ul className="dropdown-menu dropdown-menu-dark">
+                    <li>
+                      <Link href="/teachers" className="dropdown-item">
+                        Teachers
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/students" className="dropdown-item">
+                        Students
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+                <li className="nav-item">
+                  <Link href="/news" className="nav-link text-light">
+                    News
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/projects" className="nav-link text-light">
+                    Projects
+                  </Link>
+                </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-light"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Schedule
+                  </a>
+                  <ul className="dropdown-menu dropdown-menu-dark">
+                    <li>
+                      <Link href="/exam" className="dropdown-item">
+                        Exam
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/class" className="dropdown-item">
+                        Class
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+                <li className="nav-item">
+                  <Link href="/rooms" className="nav-link text-light">
+                    Rooms
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link href="/company" className="nav-link text-light">
+                    Internship
+                  </Link>
+                </li>
+                {mounted && isAdminLoggedIn && !pathname.startsWith("/admin") && (
+                  <li className="nav-item pt-2 border-top border-secondary border-opacity-25 mt-2">
+                    <Link href="/admin" className="btn btn-primary btn-sm w-100">
+                      Admin
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
-        )}
-      </div>
+        </nav>
         {children}
         <footer className="template-container text-white">
           <div className="row">
-            <div className="col-2 col-md-6 mb-3">
+            <div className="col-12 col-md-6 mb-3">
               <h5 className="p-2">Section</h5>
               <ul className="nav flex-row">
                 {footerRoutes.map((route) => (

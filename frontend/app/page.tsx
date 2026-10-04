@@ -55,7 +55,8 @@ export default function Home() {
           alt="CE_LOGO"
           width="500"
           height="500"
-          className="absolute z-1 transition-transform duration-300 ease-in-out hover:scale-110"
+          className="absolute z-1 transition-transform duration-300 ease-in-out hover:scale-110 user-select-none"
+          style={{ width: "min(50vw, 500px)", height: "auto" }}
           draggable="false"
         />
         <video className="w-100 opacity-50 z-0" muted autoPlay loop>
@@ -82,7 +83,7 @@ export default function Home() {
               {/* Skeleton รูปใหญ่ซ้าย */}
               <div className="col-lg-6 mb-5 mb-sm-2">
                 <span
-                  className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                  className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                   style={{ height: "440px" }}
                 ></span>
                 <span className="placeholder col-8 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
@@ -95,7 +96,7 @@ export default function Home() {
                   {[0, 1].map((idx) => (
                     <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
                       <span
-                        className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                        className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                         style={{ height: "200px" }}
                       ></span>
                       <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
@@ -111,7 +112,7 @@ export default function Home() {
                       key={idx}
                     >
                       <span
-                        className="placeholder col-12 bg-secondary bg-opacity-25 rounded d-block"
+                        className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
                         style={{ height: "200px" }}
                       ></span>
                       <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
@@ -150,11 +151,6 @@ export default function Home() {
                   <h1 className="font-weight-600 mt-3">
                     {featured?.title || "ข่าวเทคโนโลยีล่าสุด"}
                   </h1>
-                  {featured?.description && (
-                    <p className="fs-15 font-weight-normal text-secondary mt-2">
-                      {featured.description}
-                    </p>
-                  )}
                 </a>
               </div>
 

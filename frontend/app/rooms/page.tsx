@@ -43,7 +43,7 @@ export default function RoomsPage() {
         <h1 className="text-primary">ห้องเรียนและอื่นๆ</h1>
         <div className="bg-blue-500 w-20 h-1"></div>
       </div>
-      <div className="row rows-cols-1 row-cols-md-3 g-4">
+      <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
         {rooms.map((room) => {
           const modalId = `room-${room.room_id}-modal`;
 
@@ -67,7 +67,7 @@ export default function RoomsPage() {
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
               >
-                <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                   <div className="modal-content">
                     <div className="modal-header">
                       <p className="modal-title fs-5" id="exampleModalLabel">
