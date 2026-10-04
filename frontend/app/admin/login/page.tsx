@@ -33,6 +33,9 @@ export default function AdminLoginPage() {
       // Save token and user details to localStorage
       localStorage.setItem("ce50_admin_token", data.token);
       localStorage.setItem("ce50_admin_user", JSON.stringify(data.user));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("ce50_auth_change"));
+      }
 
       // Redirect to admin dashboard
       router.push("/admin");

@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import ce_logo from "../public/ce_logo.webp";
 import { Outfit } from "next/font/google";
@@ -22,43 +23,49 @@ const footerRoutes = [
   { href: "/rooms", label: "Rooms" },
   { href: "/company", label: "Company" },
   { href: "/quiz", label: "Career Quiz" },
-  { href: "/admin/login", label: "Admin" },
 ];
 
 const currentYear = new Date().getFullYear();
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const [adminUser, setAdminUser] = useState<{ user_name: string; user_role: string } | null>(null);
+  const [, setAdminUser] = useState<{ user_name: string; user_role: string } | null>(null);
 
   useEffect(() => {
     setMounted(true);
     const checkAuth = () => {
-      const token = localStorage.getItem("ce50_admin_token");
-      const userStr = localStorage.getItem("ce50_admin_user");
+      const token = typeof window !== "undefined" ? localStorage.getItem("ce50_admin_token") : null;
+      const userStr = typeof window !== "undefined" ? localStorage.getItem("ce50_admin_user") : null;
       if (token && userStr) {
         try {
-          setIsAdminLoggedIn(true);
-          setAdminUser(JSON.parse(userStr));
+          const user = JSON.parse(userStr);
+          if (user && user.user_id) {
+            setIsAdminLoggedIn(true);
+            setAdminUser(user);
+            return;
+          }
         } catch {
-          setIsAdminLoggedIn(false);
-          setAdminUser(null);
+          // ignore
         }
-      } else {
-        setIsAdminLoggedIn(false);
-        setAdminUser(null);
       }
+      setIsAdminLoggedIn(false);
+      setAdminUser(null);
     };
 
     checkAuth();
     window.addEventListener("storage", checkAuth);
+    window.addEventListener("ce50_auth_change", checkAuth);
 
     // @ts-expect-error Bootstrap bundle has no TypeScript declarations.
     void import("bootstrap/dist/js/bootstrap.bundle.min.js");
 
-    return () => window.removeEventListener("storage", checkAuth);
-  }, []);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("ce50_auth_change", checkAuth);
+    };
+  }, [pathname]);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -155,7 +162,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </li>
         </ul>
 
-        {mounted && isAdminLoggedIn && (
+        {mounted && isAdminLoggedIn && !pathname.startsWith("/admin") && (
           <div className="position-absolute top-50 end-0 translate-middle-y me-4">
             <Link href="/admin" className="btn btn-primary btn-sm">
               Admin

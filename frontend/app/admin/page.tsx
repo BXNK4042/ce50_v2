@@ -123,7 +123,10 @@ export default function AdminDashboardPage() {
   const handleLogout = () => {
     localStorage.removeItem("ce50_admin_token");
     localStorage.removeItem("ce50_admin_user");
-    router.push("/admin/login");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("ce50_auth_change"));
+    }
+    router.replace("/admin/login");
   };
 
   // Open Form for Adding New Record
