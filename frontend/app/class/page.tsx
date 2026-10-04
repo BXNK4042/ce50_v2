@@ -134,51 +134,51 @@ export default function ClassPage() {
               <p className="small mb-0">ลองเลือกเปลี่ยนรุ่นหรือภาคการศึกษาอื่น</p>
             </div>
           ) : (
-            <div className="table-responsive mb-5">
-              <table className="table table-dark table-striped table-hover align-middle border-secondary">
-                <thead>
-                  <tr className="table-primary text-dark">
-                    <th>ID</th>
-                    <th>รุ่น</th>
-                    <th>เทอม</th>
-                    <th>วิชา</th>
-                    <th>คำอธิบาย</th>
-                    <th>รหัสอาจารย์</th>
-                    <th>ห้อง</th>
-                    <th>วัน</th>
-                    <th>เวลา</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredClasses.map((classSchedule) => (
-                    <tr key={classSchedule.class_id}>
-                      <td>{classSchedule.class_id}</td>
-                      <td>
-                        <span className="badge bg-primary">
-                          {classSchedule.generation || "CE04"}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge bg-secondary">
-                          เทอม {classSchedule.semester || 1}
-                        </span>
-                      </td>
-                      <td className="fw-semibold text-light">{classSchedule.class_name}</td>
-                      <td className="text-secondary small">{classSchedule.class_description}</td>
-                      <td>{classSchedule.teacher_id}</td>
-                      <td>
-                        <span className="badge bg-dark border border-secondary">
-                          ห้อง {classSchedule.room_id}
-                        </span>
-                      </td>
-                      <td className="text-capitalize">{classSchedule.class_day}</td>
-                      <td className="font-monospace text-info small">
-                        {classSchedule.class_start} - {classSchedule.class_end}
-                      </td>
+            <div className="card shadow-lg border-0 overflow-hidden rounded-3 mb-5">
+              <div className="table-responsive">
+                <table className="table table-hover table-striped mb-0 align-middle">
+                  <thead className="table-light border-bottom">
+                    <tr>
+                      <th className="py-3 px-3">ID</th>
+                      <th className="py-3 text-center">รุ่น</th>
+                      <th className="py-3 text-center">เทอม</th>
+                      <th className="py-3">ชื่อวิชา</th>
+                      <th className="py-3">คำอธิบาย</th>
+                      <th className="py-3 text-center">รหัสอาจารย์</th>
+                      <th className="py-3 text-center">ห้อง</th>
+                      <th className="py-3">วัน</th>
+                      <th className="py-3">เวลาเรียน</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredClasses.map((classSchedule) => (
+                      <tr key={classSchedule.class_id}>
+                        <td className="px-3 font-monospace text-muted">{classSchedule.class_id}</td>
+                        <td className="text-center">
+                          <span className="badge bg-primary text-white">
+                            {classSchedule.generation || "CE04"}
+                          </span>
+                        </td>
+                        <td className="text-center text-muted small">
+                          เทอม {classSchedule.semester || 1}
+                        </td>
+                        <td className="fw-semibold text-dark">{classSchedule.class_name}</td>
+                        <td className="text-muted small">{classSchedule.class_description}</td>
+                        <td className="text-center font-monospace">{classSchedule.teacher_id}</td>
+                        <td className="text-center">
+                          <span className="badge bg-secondary text-white">
+                            Room #{classSchedule.room_id}
+                          </span>
+                        </td>
+                        <td className="text-capitalize text-dark fw-medium">{classSchedule.class_day}</td>
+                        <td className="font-monospace text-dark small fw-semibold">
+                          {classSchedule.class_start} - {classSchedule.class_end}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </>

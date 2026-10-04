@@ -367,10 +367,11 @@ export default function AdminDashboardPage() {
           <p className="mt-2 text-secondary small">กำลังดึงข้อมูลจาก Database...</p>
         </div>
       ) : (
-        <div className="table-responsive bg-dark rounded border border-secondary">
+        <div className="card shadow-lg border-0 overflow-hidden rounded-3 mb-5">
+          <div className="table-responsive">
           {activeTab === "teachers" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ชื่อ-นามสกุล</th>
@@ -409,8 +410,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "students" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th>รหัสนักศึกษา</th>
                   <th>ชื่อ-นามสกุล</th>
@@ -451,8 +452,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "news" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>หัวข้อข่าว</th>
@@ -485,8 +486,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "projects" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ชื่อโครงงาน</th>
@@ -534,8 +535,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "companies" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ชื่อบริษัท</th>
@@ -566,8 +567,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "internships" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ตำแหน่งฝึกงาน</th>
@@ -602,8 +603,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "class" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>รุ่น</th>
@@ -642,8 +643,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "exam" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>รุ่น</th>
@@ -690,8 +691,8 @@ export default function AdminDashboardPage() {
           )}
 
           {activeTab === "rooms" && (
-            <table className="table table-dark table-striped table-hover mb-0 align-middle">
-              <thead>
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ชื่อห้อง</th>
@@ -722,6 +723,7 @@ export default function AdminDashboardPage() {
               </tbody>
             </table>
           )}
+          </div>
         </div>
       )}
 

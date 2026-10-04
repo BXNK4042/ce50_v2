@@ -134,59 +134,59 @@ export default function ExamPage() {
               <p className="small mb-0">ลองเลือกเปลี่ยนรุ่นหรือภาคการศึกษาอื่น</p>
             </div>
           ) : (
-            <div className="table-responsive mb-5">
-              <table className="table table-dark table-striped table-hover align-middle border-secondary">
-                <thead>
-                  <tr className="table-primary text-dark">
-                    <th>ID</th>
-                    <th>รุ่น</th>
-                    <th>เทอม</th>
-                    <th>รหัสวิชา</th>
-                    <th>ชื่อวิชา</th>
-                    <th>ประเภทสอบ</th>
-                    <th>วันที่สอบ</th>
-                    <th>เวลาสอบ</th>
-                    <th>ห้องสอบ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredExams.map((exam) => (
-                    <tr key={exam.exam_id}>
-                      <td>{exam.exam_id}</td>
-                      <td>
-                        <span className="badge bg-primary">
-                          {exam.generation || "CE04"}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge bg-secondary">
-                          เทอม {exam.semester || 1}
-                        </span>
-                      </td>
-                      <td className="font-monospace text-warning small">{exam.exam_code}</td>
-                      <td className="fw-semibold text-light">{exam.exam_name}</td>
-                      <td>
-                        <span
-                          className={`badge ${
-                            exam.exam_final ? "bg-danger" : "bg-info text-dark"
-                          }`}
-                        >
-                          {exam.exam_final ? "Final" : "Midterm"}
-                        </span>
-                      </td>
-                      <td>{exam.exam_date}</td>
-                      <td className="font-monospace text-info small">
-                        {exam.exam_start} - {exam.exam_end}
-                      </td>
-                      <td>
-                        <span className="badge bg-dark border border-secondary">
-                          {exam.exam_room}
-                        </span>
-                      </td>
+            <div className="card shadow-lg border-0 overflow-hidden rounded-3 mb-5">
+              <div className="table-responsive">
+                <table className="table table-hover table-striped mb-0 align-middle">
+                  <thead className="table-light border-bottom">
+                    <tr>
+                      <th className="py-3 px-3">ID</th>
+                      <th className="py-3 text-center">รุ่น</th>
+                      <th className="py-3 text-center">เทอม</th>
+                      <th className="py-3">รหัสวิชา</th>
+                      <th className="py-3">ชื่อวิชา</th>
+                      <th className="py-3 text-center">ประเภทสอบ</th>
+                      <th className="py-3">วันที่สอบ</th>
+                      <th className="py-3">เวลาสอบ</th>
+                      <th className="py-3 text-center">ห้องสอบ</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredExams.map((exam) => (
+                      <tr key={exam.exam_id}>
+                        <td className="px-3 font-monospace text-muted">{exam.exam_id}</td>
+                        <td className="text-center">
+                          <span className="badge bg-primary text-white">
+                            {exam.generation || "CE04"}
+                          </span>
+                        </td>
+                        <td className="text-center text-muted small">
+                          เทอม {exam.semester || 1}
+                        </td>
+                        <td className="font-monospace text-dark fw-bold">{exam.exam_code}</td>
+                        <td className="fw-semibold text-dark">{exam.exam_name}</td>
+                        <td className="text-center">
+                          <span
+                            className={`badge ${
+                              exam.exam_final ? "bg-danger text-white" : "bg-warning text-dark"
+                            }`}
+                          >
+                            {exam.exam_final ? "FINAL" : "MIDTERM"}
+                          </span>
+                        </td>
+                        <td className="text-muted small">{exam.exam_date}</td>
+                        <td className="font-monospace text-dark small fw-semibold">
+                          {exam.exam_start} - {exam.exam_end}
+                        </td>
+                        <td className="text-center">
+                          <span className="badge bg-secondary text-white">
+                            {exam.exam_room}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </>
