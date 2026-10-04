@@ -18,3 +18,25 @@ img {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
+
+/* World Vision Template: Image Hover Zoom & Opacity Effect */
+.image-hover {
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.image-hover img {
+  opacity: 0.75;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-hover:hover img {
+  transform: scale(1.06);
+  opacity: 1 !important;
+}
+
+.image-hover:hover h1,
+.image-hover:hover h5 {
+  color: #0d6efd !important;
+  transition: color 0.25s ease;
+}
