@@ -731,26 +731,38 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Modal Dialog Form for Add & Edit */}
+      {/* Modal Dialog Form for Add & Edit (Style 1 Clean Light) */}
       {isModalOpen && (
-        <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: "rgba(0,0,0,0.75)" }}>
+        <div
+          className="modal fade show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.75)", backdropFilter: "blur(6px)" }}
+        >
           <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content bg-dark border-secondary text-white">
-              <div className="modal-header border-secondary">
-                <h5 className="modal-title fw-bold">
-                  {editingId ? `แก้ไขข้อมูล (${activeTab}) ID: ${editingId}` : `เพิ่มข้อมูลใหม่ (${activeTab})`}
-                </h5>
-                <button type="button" className="btn-close btn-close-white" onClick={() => setIsModalOpen(false)}></button>
+            <div className="modal-content bg-white text-dark border-0 rounded-4 shadow-2xl overflow-hidden">
+              <div className="modal-header border-bottom px-4 py-3 bg-light bg-opacity-50">
+                <div>
+                  <h5 className="modal-title fw-bold text-dark mb-0">
+                    {editingId ? `แก้ไขข้อมูล (${activeTab}) ID: ${editingId}` : `เพิ่มข้อมูลใหม่ (${activeTab})`}
+                  </h5>
+                  <small className="text-secondary">กรอกรายละเอียดข้อมูลในตาราง {activeTab}</small>
+                </div>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setIsModalOpen(false)}
+                  aria-label="Close"
+                ></button>
               </div>
               <form onSubmit={handleSave}>
-                <div className="modal-body">
+                <div className="modal-body p-4">
                   {activeTab === "teachers" && (
                     <div className="row g-3">
                       <div className="col-md-6">
                         <label className="form-label small">ชื่อจริง (ไทย)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.teacher_firstname || ""}
                           onChange={(e) => setFormData({ ...formData, teacher_firstname: e.target.value })}
                           required
@@ -760,7 +772,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">นามสกุล (ไทย)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.teacher_lastname || ""}
                           onChange={(e) => setFormData({ ...formData, teacher_lastname: e.target.value })}
                           required
@@ -770,7 +782,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อภาษาอังกฤษ</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.teacher_name_en || ""}
                           onChange={(e) => setFormData({ ...formData, teacher_name_en: e.target.value })}
                         />
@@ -779,7 +791,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">อีเมล / ช่องทางติดต่อ</label>
                         <input
                           type="email"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.teacher_contact || ""}
                           onChange={(e) => setFormData({ ...formData, teacher_contact: e.target.value })}
                           required
@@ -790,7 +802,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "teachers", "teacher_image")}
                         />
                         {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
@@ -805,7 +817,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสนักศึกษา (Student ID)</label>
                         <input
                           type="number"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_id || ""}
                           onChange={(e) => setFormData({ ...formData, student_id: Number(e.target.value) })}
                           required
@@ -815,7 +827,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">สายรหัส (เช่น 006, 800)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_lineage || ""}
                           onChange={(e) => setFormData({ ...formData, student_lineage: e.target.value })}
                           required
@@ -825,7 +837,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อจริง</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_firstname || ""}
                           onChange={(e) => setFormData({ ...formData, student_firstname: e.target.value })}
                           required
@@ -835,7 +847,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">นามสกุล</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_lastname || ""}
                           onChange={(e) => setFormData({ ...formData, student_lastname: e.target.value })}
                           required
@@ -845,7 +857,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small text-info fw-bold">อีเมลนักศึกษา (Email)</label>
                         <input
                           type="email"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           placeholder="เช่น 67200412@kmitl.ac.th"
                           value={formData.student_email || formData.student_contact || ""}
                           onChange={(e) => setFormData({ ...formData, student_email: e.target.value, student_contact: e.target.value })}
@@ -856,7 +868,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">Instagram (ไม่ต้องใส่ @)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_instagram || ""}
                           onChange={(e) => setFormData({ ...formData, student_instagram: e.target.value })}
                         />
@@ -866,7 +878,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "students", "student_image")}
                         />
                         {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
@@ -883,7 +895,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">หัวข้อข่าว</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.news_title || ""}
                           onChange={(e) => setFormData({ ...formData, news_title: e.target.value })}
                           required
@@ -893,7 +905,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">หมวดหมู่ข่าว</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.news_category || ""}
                           onChange={(e) => setFormData({ ...formData, news_category: e.target.value })}
                           placeholder="เช่น กิจกรรม, งานแข่งขัน, สัมมนา"
@@ -905,7 +917,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "news", "news_image")}
                         />
                         {formData.news_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.news_image}</span>}
@@ -914,7 +926,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">เนื้อหาข่าว / คำอธิบาย</label>
                         <textarea
                           rows={4}
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.news_description || ""}
                           onChange={(e) => setFormData({ ...formData, news_description: e.target.value })}
                           required
@@ -929,7 +941,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อโครงงาน (Project Name)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.project_name || ""}
                           onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
                           required
@@ -939,7 +951,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสนักศึกษาเจ้าของโปรเจกต์</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           placeholder="เช่น 67200099"
                           value={formData.student_id || ""}
                           onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
@@ -950,7 +962,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "projects", "project_image")}
                         />
                         {formData.project_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.project_image}</span>}
@@ -959,7 +971,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">คำอธิบายโครงงาน</label>
                         <textarea
                           rows={3}
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.project_description || ""}
                           onChange={(e) => setFormData({ ...formData, project_description: e.target.value })}
                           required
@@ -970,7 +982,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".pdf"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "projects", "project_pdf")}
                         />
                         {uploadingFile && <span className="small text-warning">กำลังอัปโหลดเอกสาร PDF...</span>}
@@ -989,7 +1001,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อบริษัท</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.company_name || ""}
                           onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
                           required
@@ -1000,7 +1012,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "companys", "company_image")}
                         />
                         {formData.company_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.company_image}</span>}
@@ -1014,7 +1026,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ตำแหน่งฝึกงาน</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.internship_title || ""}
                           onChange={(e) => setFormData({ ...formData, internship_title: e.target.value })}
                           required
@@ -1024,7 +1036,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสนักศึกษา</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.student_id || ""}
                           onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
                           required
@@ -1034,7 +1046,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสบริษัท (Company ID)</label>
                         <input
                           type="number"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.company_id || ""}
                           onChange={(e) => setFormData({ ...formData, company_id: Number(e.target.value) })}
                           required
@@ -1044,7 +1056,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รายละเอียดประสบการณ์ฝึกงาน</label>
                         <textarea
                           rows={3}
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.internship_description || ""}
                           onChange={(e) => setFormData({ ...formData, internship_description: e.target.value })}
                           required
@@ -1059,7 +1071,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อวิชา</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.class_name || ""}
                           onChange={(e) => setFormData({ ...formData, class_name: e.target.value })}
                           required
@@ -1068,7 +1080,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-3">
                         <label className="form-label small">รุ่น (Generation)</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.generation || "CE04"}
                           onChange={(e) => setFormData({ ...formData, generation: e.target.value })}
                           required
@@ -1082,7 +1094,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-3">
                         <label className="form-label small">ภาคเรียน (Semester)</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.semester || 1}
                           onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
                           required
@@ -1095,7 +1107,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสอาจารย์ (Teacher ID)</label>
                         <input
                           type="number"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.teacher_id || ""}
                           onChange={(e) => setFormData({ ...formData, teacher_id: Number(e.target.value) })}
                           required
@@ -1105,7 +1117,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสห้อง (Room ID)</label>
                         <input
                           type="number"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.room_id || ""}
                           onChange={(e) => setFormData({ ...formData, room_id: Number(e.target.value) })}
                           required
@@ -1114,7 +1126,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-4">
                         <label className="form-label small">วัน</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.class_day || "monday"}
                           onChange={(e) => setFormData({ ...formData, class_day: e.target.value })}
                           required
@@ -1132,7 +1144,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">เวลาเริ่ม (เช่น 10:00)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.class_start || ""}
                           onChange={(e) => setFormData({ ...formData, class_start: e.target.value })}
                           required
@@ -1142,7 +1154,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">เวลาสิ้นสุด (เช่น 12:00)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.class_end || ""}
                           onChange={(e) => setFormData({ ...formData, class_end: e.target.value })}
                           required
@@ -1157,7 +1169,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">รหัสวิชา</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_code || ""}
                           onChange={(e) => setFormData({ ...formData, exam_code: e.target.value })}
                           required
@@ -1167,7 +1179,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อวิชา</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_name || ""}
                           onChange={(e) => setFormData({ ...formData, exam_name: e.target.value })}
                           required
@@ -1176,7 +1188,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-2">
                         <label className="form-label small">รุ่น</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.generation || "CE04"}
                           onChange={(e) => setFormData({ ...formData, generation: e.target.value })}
                           required
@@ -1190,7 +1202,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-2">
                         <label className="form-label small">เทอม</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.semester || 1}
                           onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
                           required
@@ -1202,7 +1214,7 @@ export default function AdminDashboardPage() {
                       <div className="col-md-3">
                         <label className="form-label small">ประเภทการสอบ</label>
                         <select
-                          className="form-select bg-black border-secondary text-white"
+                          className="form-select py-2"
                           value={formData.exam_final ?? 0}
                           onChange={(e) => setFormData({ ...formData, exam_final: Number(e.target.value) })}
                           required
@@ -1215,7 +1227,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">วันที่สอบ (YYYY-MM-DD)</label>
                         <input
                           type="date"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_date || ""}
                           onChange={(e) => setFormData({ ...formData, exam_date: e.target.value })}
                           required
@@ -1225,7 +1237,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">เวลาเริ่ม (เช่น 13:30)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_start || ""}
                           onChange={(e) => setFormData({ ...formData, exam_start: e.target.value })}
                           required
@@ -1235,7 +1247,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">เวลาสิ้นสุด (เช่น 16:30)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_end || ""}
                           onChange={(e) => setFormData({ ...formData, exam_end: e.target.value })}
                           required
@@ -1245,7 +1257,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ห้องสอบ (เช่น E113)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.exam_room || ""}
                           onChange={(e) => setFormData({ ...formData, exam_room: e.target.value })}
                           required
@@ -1260,7 +1272,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">ชื่อห้อง (เช่น E107)</label>
                         <input
                           type="text"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.room_name || ""}
                           onChange={(e) => setFormData({ ...formData, room_name: e.target.value })}
                           required
@@ -1271,7 +1283,7 @@ export default function AdminDashboardPage() {
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png,.webp"
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           onChange={(e) => handleFileUpload(e, "rooms", "room_image")}
                         />
                         {formData.room_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.room_image}</span>}
@@ -1280,7 +1292,7 @@ export default function AdminDashboardPage() {
                         <label className="form-label small">คำอธิบายห้องปฏิบัติการ / อุปกรณ์</label>
                         <textarea
                           rows={3}
-                          className="form-control bg-black border-secondary text-white"
+                          className="form-control py-2"
                           value={formData.room_description || ""}
                           onChange={(e) => setFormData({ ...formData, room_description: e.target.value })}
                           required
@@ -1290,11 +1302,11 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
 
-                <div className="modal-footer border-secondary">
-                  <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+                <div className="modal-footer border-top px-4 py-3 bg-light bg-opacity-50 d-flex justify-content-between">
+                  <button type="button" className="btn btn-light border px-4" onClick={() => setIsModalOpen(false)}>
                     ยกเลิก (Cancel)
                   </button>
-                  <button type="submit" className="btn btn-primary d-flex align-items-center gap-1" disabled={loading}>
+                  <button type="submit" className="btn btn-primary px-4 fw-semibold d-flex align-items-center gap-2" disabled={loading}>
                     <CheckCircle size={16} /> บันทึกข้อมูล (Save)
                   </button>
                 </div>
