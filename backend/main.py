@@ -270,16 +270,32 @@ def companys():
 
 
 @app.get("/exam")
-def exam_schedule():
+def exam_schedule(generation: Optional[str] = None, semester: Optional[int] = None):
     with get_db() as conn:
-        rows = conn.execute("SELECT * FROM exam_schedules").fetchall()
+        query = "SELECT * FROM exam_schedules WHERE 1=1"
+        params = []
+        if generation and generation != "All":
+            query += " AND generation = ?"
+            params.append(generation)
+        if semester:
+            query += " AND semester = ?"
+            params.append(semester)
+        rows = conn.execute(query, params).fetchall()
         return [dict(row) for row in rows]
 
 
 @app.get("/class")
-def class_schedule():
+def class_schedule(generation: Optional[str] = None, semester: Optional[int] = None):
     with get_db() as conn:
-        rows = conn.execute("SELECT * FROM class_schedules").fetchall()
+        query = "SELECT * FROM class_schedules WHERE 1=1"
+        params = []
+        if generation and generation != "All":
+            query += " AND generation = ?"
+            params.append(generation)
+        if semester:
+            query += " AND semester = ?"
+            params.append(semester)
+        rows = conn.execute(query, params).fetchall()
         return [dict(row) for row in rows]
 
 
@@ -759,6 +775,8 @@ class ClassScheduleCreate(BaseModel):
     class_day: str
     class_start: str
     class_end: str
+    generation: str = "CE04"
+    semester: int = 1
 
 @app.post("/class")
 def create_class_schedule(data: ClassScheduleCreate):
@@ -766,9 +784,9 @@ def create_class_schedule(data: ClassScheduleCreate):
         cursor = conn.cursor()
         cursor.execute(
             """INSERT INTO class_schedules 
-               (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end)
+               (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end, generation, semester)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end, data.generation, data.semester)
         )
         conn.commit()
         return {"success": True, "class_id": cursor.lastrowid}
@@ -779,9 +797,9 @@ def update_class_schedule(class_id: int, data: ClassScheduleCreate):
         conn.execute(
             """UPDATE class_schedules SET 
                teacher_id = ?, class_name = ?, room_id = ?, class_description = ?,
-               class_day = ?, class_start = ?, class_end = ?
+               class_day = ?, class_start = ?, class_end = ?, generation = ?, semester = ?
                WHERE class_id = ?""",
-            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end, class_id)
+            (data.teacher_id, data.class_name, data.room_id, data.class_description, data.class_day, data.class_start, data.class_end, data.generation, data.semester, class_id)
         )
         conn.commit()
         return {"success": True, "class_id": class_id}
@@ -801,6 +819,8 @@ class ExamScheduleCreate(BaseModel):
     exam_start: str
     exam_end: str
     exam_room: str
+    generation: str = "CE04"
+    semester: int = 1
 
 @app.post("/exam")
 def create_exam_schedule(data: ExamScheduleCreate):
@@ -808,9 +828,9 @@ def create_exam_schedule(data: ExamScheduleCreate):
         cursor = conn.cursor()
         cursor.execute(
             """INSERT INTO exam_schedules 
-               (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room)
+               (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room, generation, semester)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room, data.generation, data.semester)
         )
         conn.commit()
         return {"success": True, "exam_id": cursor.lastrowid}
@@ -821,9 +841,9 @@ def update_exam_schedule(exam_id: int, data: ExamScheduleCreate):
         conn.execute(
             """UPDATE exam_schedules SET 
                exam_code = ?, exam_name = ?, exam_final = ?, exam_date = ?,
-               exam_start = ?, exam_end = ?, exam_room = ?
+               exam_start = ?, exam_end = ?, exam_room = ?, generation = ?, semester = ?
                WHERE exam_id = ?""",
-            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room, exam_id)
+            (data.exam_code, data.exam_name, data.exam_final, data.exam_date, data.exam_start, data.exam_end, data.exam_room, data.generation, data.semester, exam_id)
         )
         conn.commit()
         return {"success": True, "exam_id": exam_id}

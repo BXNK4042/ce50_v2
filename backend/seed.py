@@ -134,39 +134,72 @@ def seedInternships():
 
 def seedClassSchedules():
   class_schedules_data = [
-    (2, "Software Development Processes (ทฤษฎี)", 4, "หลักการและกระบวนการพัฒนาซอฟต์แวร์", "monday", "10:00", "12:00"),
-    (2, "Software Development Processes ปฏิบัติ)", 5, "ฝึกปฏิบัติกระบวนการพัฒนาซอฟต์แวร์", "monday", "13:00", "16:00"),
-    (3, "Team-Project 2 ปฏิบัติ)", 1, "ฝึกพัฒนาโครงงานเป็นทีม", "monday", "18:00", "20:00"),
-    (2, "Database Systems (ทฤษฎี)", 5, "หลักการออกแบบและจัดการฐานข้อมูล", "tuesday", "10:00", "12:00"),
-    (2, "Database Systems ปฏิบัติ)", 5, "ฝึกออกแบบและใช้งานฐานข้อมูล", "tuesday", "13:00", "16:00"),
-    (4, "Computer Hardware Design (ทฤษฎี)", 6, "หลักการออกแบบฮาร์ดแวร์คอมพิวเตอร์", "wednesday", "10:00", "12:00"),
-    (1, "Information and Computer Security ปฏิบัติ)", 5, "ฝึกปฏิบัติด้านความมั่นคงปลอดภัยคอมพิวเตอร์", "wednesday", "13:00", "16:00"),
-    (1, "Information and Computer Security (ทฤษฎี)", 5, "พื้นฐานความมั่นคงปลอดภัยสารสนเทศ", "wednesday", "16:00", "18:00"),
-    (4, "Computer Hardware Design ปฏิบัติ)", 6, "ฝึกออกแบบวงจรและฮาร์ดแวร์คอมพิวเตอร์", "thursday", "09:00", "12:00"),
-    (2, "Computer Architecture ปฏิบัติ)", 4, "ฝึกวิเคราะห์โครงสร้างและสถาปัตยกรรมคอมพิวเตอร์", "thursday", "17:00", "20:00"),
-    (2, "Computer Architecture (ทฤษฎี)", 1, "หลักการสถาปัตยกรรมคอมพิวเตอร์", "friday", "10:00", "12:00")
+    # CE04 (ปี 1) - Semester 1
+    (2, "Software Development Processes (ทฤษฎี)", 4, "หลักการและกระบวนการพัฒนาซอฟต์แวร์", "monday", "10:00", "12:00", "CE04", 1),
+    (2, "Software Development Processes ปฏิบัติ)", 5, "ฝึกปฏิบัติกระบวนการพัฒนาซอฟต์แวร์", "monday", "13:00", "16:00", "CE04", 1),
+    (3, "Team-Project 2 ปฏิบัติ)", 1, "ฝึกพัฒนาโครงงานเป็นทีม", "monday", "18:00", "20:00", "CE04", 1),
+    (2, "Database Systems (ทฤษฎี)", 5, "หลักการออกแบบและจัดการฐานข้อมูล", "tuesday", "10:00", "12:00", "CE04", 1),
+    (2, "Database Systems ปฏิบัติ)", 5, "ฝึกออกแบบและใช้งานฐานข้อมูล", "tuesday", "13:00", "16:00", "CE04", 1),
+    (4, "Computer Hardware Design (ทฤษฎี)", 6, "หลักการออกแบบฮาร์ดแวร์คอมพิวเตอร์", "wednesday", "10:00", "12:00", "CE04", 1),
+    (1, "Information and Computer Security ปฏิบัติ)", 5, "ฝึกปฏิบัติด้านความมั่นคงปลอดภัยคอมพิวเตอร์", "wednesday", "13:00", "16:00", "CE04", 1),
+    (1, "Information and Computer Security (ทฤษฎี)", 5, "พื้นฐานความมั่นคงปลอดภัยสารสนเทศ", "wednesday", "16:00", "18:00", "CE04", 1),
+    (4, "Computer Hardware Design ปฏิบัติ)", 6, "ฝึกออกแบบวงจรและฮาร์ดแวร์คอมพิวเตอร์", "thursday", "09:00", "12:00", "CE04", 1),
+    (2, "Computer Architecture ปฏิบัติ)", 4, "ฝึกวิเคราะห์โครงสร้างและสถาปัตยกรรมคอมพิวเตอร์", "thursday", "17:00", "20:00", "CE04", 1),
+    (2, "Computer Architecture (ทฤษฎี)", 1, "หลักการสถาปัตยกรรมคอมพิวเตอร์", "friday", "10:00", "12:00", "CE04", 1),
+
+    # CE04 - Semester 2
+    (2, "Data Structures & Algorithms (ทฤษฎี)", 4, "โครงสร้างข้อมูลและขั้นตอนวิธี", "monday", "09:00", "12:00", "CE04", 2),
+    (2, "Data Structures & Algorithms ปฏิบัติ)", 5, "ฝึกปฏิบัติการเขียนโปรแกรมโครงสร้างข้อมูล", "monday", "13:00", "16:00", "CE04", 2),
+    (4, "Digital Logic & Microprocessors (ทฤษฎี)", 6, "วงจรดิจิทัลและไมโครโปรเซสเซอร์", "tuesday", "10:00", "12:00", "CE04", 2),
+    (1, "Computer Networks & Protocols (ทฤษฎี)", 4, "ระบบเครือข่ายและเกณฑ์วิธีคอมพิวเตอร์", "wednesday", "09:00", "12:00", "CE04", 2),
+
+    # CE03 (ปี 2) - Semester 1 & 2
+    (3, "Operating Systems & Kernels (ทฤษฎี)", 4, "ระบบปฏิบัติการและการจัดการทรัพยากร", "tuesday", "09:00", "12:00", "CE03", 1),
+    (1, "Cloud Architecture & DevOps ปฏิบัติ)", 5, "การจัดการสถาปัตยกรรมคลาวด์", "thursday", "13:00", "16:00", "CE03", 1),
+    (5, "Artificial Intelligence Systems (ทฤษฎี)", 6, "ระบบปัญญาประดิษฐ์และแมชชีนเลิร์นนิง", "wednesday", "10:00", "12:00", "CE03", 2),
+    (2, "Web & Distributed Applications ปฏิบัติ)", 4, "การพัฒนาเว็บแอปพลิเคชันแบบกระจาย", "friday", "13:00", "17:00", "CE03", 2),
+
+    # CE02 (ปี 3) - Semester 1 & 2
+    (6, "Computer Engineering Capstone Project I", 2, "โครงงานวิศวกรรมคอมพิวเตอร์ขั้นสูง 1", "friday", "09:00", "12:00", "CE02", 1),
+    (6, "Computer Engineering Capstone Project II", 2, "โครงงานวิศวกรรมคอมพิวเตอร์ขั้นสูง 2", "friday", "09:00", "12:00", "CE02", 2),
   ]
 
   insertMany(
-    "INSERT INTO class_schedules (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO class_schedules (teacher_id, class_name, room_id, class_description, class_day, class_start, class_end, generation, semester) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     class_schedules_data,
   )
 
 
 def seedExamSchedules():
   exam_schedules_data = [
-    ("11256011", "Software Development Processes (MIDTERM)", 0, "2026-08-23", "13:30", "16:30", "E113"),
-    ("11256011", "Software Development Processes (FINAL)", 1, "2026-11-03", "13:30", "16:30", "E113"),
-    ("11256016", "Database Systems (MIDTERM)", 0, "2026-08-21", "13:30", "16:30", "E113"),
-    ("11256016", "Database Systems (FINAL)", 1, "2026-10-30", "13:30", "16:30", "E113"),
-    ("11256022", "Information and Computer Security (FINAL)", 1, "2026-10-26", "13:30", "16:30", "E113"),
-    ("11256025", "Computer Architecture (MIDTERM)", 0, "2026-08-19", "13:30", "16:30", "E113"),
-    ("11256025", "Computer Architecture (FINAL)", 1, "2026-10-28", "13:30", "16:30", "E113"),
-    ("11256027", "Computer Hardware Design (FINAL)", 1, "2026-11-04", "13:30", "16:30", "E113")
+    # CE04 - Semester 1
+    ("11256011", "Software Development Processes (MIDTERM)", 0, "2026-08-23", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256011", "Software Development Processes (FINAL)", 1, "2026-11-03", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256016", "Database Systems (MIDTERM)", 0, "2026-08-21", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256016", "Database Systems (FINAL)", 1, "2026-10-30", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256022", "Information and Computer Security (FINAL)", 1, "2026-10-26", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256025", "Computer Architecture (MIDTERM)", 0, "2026-08-19", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256025", "Computer Architecture (FINAL)", 1, "2026-10-28", "13:30", "16:30", "E113", "CE04", 1),
+    ("11256027", "Computer Hardware Design (FINAL)", 1, "2026-11-04", "13:30", "16:30", "E113", "CE04", 1),
+
+    # CE04 - Semester 2
+    ("11256031", "Data Structures & Algorithms (MIDTERM)", 0, "2027-01-15", "09:30", "12:30", "E111", "CE04", 2),
+    ("11256031", "Data Structures & Algorithms (FINAL)", 1, "2027-03-22", "09:30", "12:30", "E111", "CE04", 2),
+    ("11256035", "Digital Logic & Microprocessors (FINAL)", 1, "2027-03-24", "13:30", "16:30", "E107", "CE04", 2),
+    ("11256040", "Computer Networks & Protocols (FINAL)", 1, "2027-03-26", "09:30", "12:30", "E113", "CE04", 2),
+
+    # CE03 - Semester 1 & 2
+    ("11256050", "Operating Systems & Kernels (FINAL)", 1, "2026-10-29", "13:30", "16:30", "E112", "CE03", 1),
+    ("11256055", "Cloud Architecture & DevOps (FINAL)", 1, "2026-11-02", "09:30", "12:30", "E107", "CE03", 1),
+    ("11256060", "Artificial Intelligence Systems (FINAL)", 1, "2027-03-25", "13:30", "16:30", "E113", "CE03", 2),
+
+    # CE02 - Semester 1 & 2
+    ("11256070", "Capstone Project I Presentation", 1, "2026-11-06", "09:00", "16:00", "E112", "CE02", 1),
+    ("11256071", "Capstone Project II Presentation", 1, "2027-03-29", "09:00", "16:00", "E112", "CE02", 2),
   ]
 
   insertMany(
-    "INSERT INTO exam_schedules (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO exam_schedules (exam_code, exam_name, exam_final, exam_date, exam_start, exam_end, exam_room, generation, semester) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
     exam_schedules_data,
   )
 

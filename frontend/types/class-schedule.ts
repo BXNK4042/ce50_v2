@@ -7,5 +7,7 @@ export type ClassSchedules = {
   class_day: string;
   class_start: string;
   class_end: string;
+  generation?: string;
+  semester?: number;
   created_at: string;
 };

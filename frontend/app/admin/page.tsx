@@ -606,6 +606,8 @@ export default function AdminDashboardPage() {
               <thead>
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
+                  <th>รุ่น</th>
+                  <th>เทอม</th>
                   <th>ชื่อวิชา</th>
                   <th>วัน</th>
                   <th>เวลา</th>
@@ -617,6 +619,8 @@ export default function AdminDashboardPage() {
                 {classSchedules.map((cs) => (
                   <tr key={cs.class_id}>
                     <td>{cs.class_id}</td>
+                    <td><span className="badge bg-primary">{cs.generation || "CE04"}</span></td>
+                    <td><span className="badge bg-secondary">เทอม {cs.semester || 1}</span></td>
                     <td className="fw-semibold">{cs.class_name}</td>
                     <td><span className="badge bg-secondary text-uppercase">{cs.class_day}</span></td>
                     <td>{cs.class_start} - {cs.class_end}</td>
@@ -642,6 +646,8 @@ export default function AdminDashboardPage() {
               <thead>
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
+                  <th>รุ่น</th>
+                  <th>เทอม</th>
                   <th>รหัสวิชา</th>
                   <th>ชื่อวิชา</th>
                   <th>ประเภท</th>
@@ -655,6 +661,8 @@ export default function AdminDashboardPage() {
                 {examSchedules.map((es) => (
                   <tr key={es.exam_id}>
                     <td>{es.exam_id}</td>
+                    <td><span className="badge bg-primary">{es.generation || "CE04"}</span></td>
+                    <td><span className="badge bg-secondary">เทอม {es.semester || 1}</span></td>
                     <td className="fw-bold">{es.exam_code}</td>
                     <td>{es.exam_name}</td>
                     <td>
@@ -1052,6 +1060,32 @@ export default function AdminDashboardPage() {
                         />
                       </div>
                       <div className="col-md-3">
+                        <label className="form-label small">รุ่น (Generation)</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.generation || "CE04"}
+                          onChange={(e) => setFormData({ ...formData, generation: e.target.value })}
+                          required
+                        >
+                          <option value="CE04">CE04</option>
+                          <option value="CE03">CE03</option>
+                          <option value="CE02">CE02</option>
+                          <option value="CE01">CE01</option>
+                        </select>
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">ภาคเรียน (Semester)</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.semester || 1}
+                          onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
+                          required
+                        >
+                          <option value={1}>เทอม 1</option>
+                          <option value={2}>เทอม 2</option>
+                        </select>
+                      </div>
+                      <div className="col-md-3">
                         <label className="form-label small">รหัสอาจารย์ (Teacher ID)</label>
                         <input
                           type="number"
@@ -1113,7 +1147,7 @@ export default function AdminDashboardPage() {
 
                   {activeTab === "exam" && (
                     <div className="row g-3">
-                      <div className="col-md-4">
+                      <div className="col-md-3">
                         <label className="form-label small">รหัสวิชา</label>
                         <input
                           type="text"
@@ -1123,7 +1157,7 @@ export default function AdminDashboardPage() {
                           required
                         />
                       </div>
-                      <div className="col-md-8">
+                      <div className="col-md-5">
                         <label className="form-label small">ชื่อวิชา</label>
                         <input
                           type="text"
@@ -1132,6 +1166,32 @@ export default function AdminDashboardPage() {
                           onChange={(e) => setFormData({ ...formData, exam_name: e.target.value })}
                           required
                         />
+                      </div>
+                      <div className="col-md-2">
+                        <label className="form-label small">รุ่น</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.generation || "CE04"}
+                          onChange={(e) => setFormData({ ...formData, generation: e.target.value })}
+                          required
+                        >
+                          <option value="CE04">CE04</option>
+                          <option value="CE03">CE03</option>
+                          <option value="CE02">CE02</option>
+                          <option value="CE01">CE01</option>
+                        </select>
+                      </div>
+                      <div className="col-md-2">
+                        <label className="form-label small">เทอม</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.semester || 1}
+                          onChange={(e) => setFormData({ ...formData, semester: Number(e.target.value) })}
+                          required
+                        >
+                          <option value={1}>เทอม 1</option>
+                          <option value={2}>เทอม 2</option>
+                        </select>
                       </div>
                       <div className="col-md-3">
                         <label className="form-label small">ประเภทการสอบ</label>

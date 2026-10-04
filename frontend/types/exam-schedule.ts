@@ -7,5 +7,7 @@ export type ExamSchedules = {
   exam_start: string;
   exam_end: string;
   exam_room: string;
+  generation?: string;
+  semester?: number;
   created_at: string;
 };
