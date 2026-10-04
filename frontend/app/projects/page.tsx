@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Projects } from "@/types/project";
 import Image from "next/image";
+import { FileText } from "lucide-react";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Projects[]>([]);
@@ -84,7 +85,7 @@ export default function ProjectsPage() {
                             rel="noopener noreferrer"
                             className="btn btn-primary d-inline-flex align-items-center gap-2"
                           >
-                            <i className="bi bi-file-earmark-pdf"></i>
+                            <FileText size={18} />
                             เปิดดูเอกสารรายงานโครงงาน (PDF)
                           </a>
                         </div>

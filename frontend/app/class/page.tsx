@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { ClassSchedules } from "@/types/class-schedule";
+import { CalendarX } from "lucide-react";
 
 export default function ClassPage() {
   const [classes, setClasses] = useState<ClassSchedules[]>([]);
@@ -131,7 +132,7 @@ export default function ClassPage() {
 
           {filteredClasses.length === 0 ? (
             <div className="text-center py-5 my-5 text-secondary border border-secondary rounded bg-black">
-              <i className="bi bi-calendar-x display-4 text-muted mb-3 d-block"></i>
+              <CalendarX size={48} className="text-muted mb-3 d-block mx-auto" />
               <h5>ไม่พบตารางเรียนสำหรับเงื่อนไขที่เลือก</h5>
               <p className="small mb-0">ลองเลือกเปลี่ยนรุ่นหรือภาคการศึกษาอื่น</p>
             </div>

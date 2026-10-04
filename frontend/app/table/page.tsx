@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Table } from "lucide-react";
 
 export default function TableShowcasePage() {
   const [activeTab, setActiveTab] = useState<"all" | "style1" | "style2" | "style3">("all");
@@ -258,8 +259,8 @@ export default function TableShowcasePage() {
 
           <div className="card bg-black border border-secondary rounded-3 overflow-hidden shadow">
             <div className="card-header bg-dark border-bottom border-secondary py-3 d-flex justify-content-between align-items-center">
-              <span className="fw-bold text-light d-flex align-items-center gap-2">
-                <i className="bi bi-table text-primary"></i> รายการตารางสอบและตารางเรียน
+              <span className="fw-bold text-light d-flex align-items-center">
+                <Table size={18} className="text-primary me-2" /> รายการตารางสอบและตารางเรียน
               </span>
               <span className="badge bg-secondary text-light">5 วิชา</span>
             </div>

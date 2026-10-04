@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ShieldCheck, AlertTriangle, User, KeyRound, LogIn, ArrowLeft } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function AdminLoginPage() {
         <div className="card-body">
           <div className="text-center mb-4">
             <div className="d-inline-flex p-3 rounded-circle bg-primary bg-opacity-25 text-primary mb-3">
-              <i className="bi bi-shield-lock-fill fs-1"></i>
+              <ShieldCheck size={40} />
             </div>
             <h3 className="card-title fw-bold">CE50 Admin Portal</h3>
             <p className="text-secondary small mb-0">เข้าสู่ระบบสำหรับอาจารย์และผู้ดูแลระบบ</p>
@@ -60,7 +61,7 @@ export default function AdminLoginPage() {
 
           {error && (
             <div className="alert alert-danger py-2 small d-flex align-items-center" role="alert">
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>
+              <AlertTriangle size={18} className="me-2 flex-shrink-0" />
               <div>{error}</div>
             </div>
           )}
@@ -70,7 +71,7 @@ export default function AdminLoginPage() {
               <label className="form-label small text-secondary">ชื่อผู้ใช้ (Username)</label>
               <div className="input-group">
                 <span className="input-group-text bg-secondary bg-opacity-25 border-secondary text-white">
-                  <i className="bi bi-person"></i>
+                  <User size={16} />
                 </span>
                 <input
                   type="text"
@@ -88,7 +89,7 @@ export default function AdminLoginPage() {
               <label className="form-label small text-secondary">รหัสผ่าน (Password)</label>
               <div className="input-group">
                 <span className="input-group-text bg-secondary bg-opacity-25 border-secondary text-white">
-                  <i className="bi bi-key"></i>
+                  <KeyRound size={16} />
                 </span>
                 <input
                   type="password"
@@ -113,7 +114,7 @@ export default function AdminLoginPage() {
                 </>
               ) : (
                 <>
-                  <i className="bi bi-box-arrow-in-right"></i>
+                  <LogIn size={18} />
                   เข้าสู่ระบบ (Sign In)
                 </>
               )}
@@ -122,7 +123,7 @@ export default function AdminLoginPage() {
 
           <div className="text-center pt-3 border-top border-secondary border-opacity-50">
             <Link href="/" className="text-secondary text-decoration-none small hover:text-white d-inline-flex align-items-center gap-1">
-              <i className="bi bi-arrow-left"></i> กลับสู่หน้าหลัก
+              <ArrowLeft size={16} /> กลับสู่หน้าหลัก
             </Link>
           </div>
         </div>

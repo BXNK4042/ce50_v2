@@ -2,6 +2,28 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  Sparkles,
+  RotateCcw,
+  Printer,
+  Zap,
+  GraduationCap,
+  GitBranch,
+  Award,
+  ListOrdered,
+  FolderCheck,
+  Building,
+  BookOpen,
+  Compass,
+  AlertTriangle,
+  CheckSquare,
+  Check,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  CheckCheck,
+  Briefcase,
+} from "lucide-react";
 
 interface Option {
   id: number;
@@ -191,7 +213,7 @@ export default function CareerQuizPage() {
         {/* Result Header */}
         <div className="text-center mb-5">
           <span className="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-2">
-            <i className="bi bi-stars me-1"></i> Career Assessment Complete
+            <Sparkles size={16} className="me-1 d-inline" /> Career Assessment Complete
           </span>
           <h1 className="fw-bold display-5 text-gradient mb-2">
             ผลการวิเคราะห์เส้นทางอาชีพไอทีของคุณ
@@ -202,10 +224,10 @@ export default function CareerQuizPage() {
           </p>
           <div className="d-flex justify-content-center gap-3 mt-4">
             <button onClick={handleRetake} className="btn btn-outline-light rounded-pill px-4">
-              <i className="bi bi-arrow-counterclockwise me-2"></i>ทำแบบประเมินใหม่
+              <RotateCcw size={16} className="me-2 d-inline" />ทำแบบประเมินใหม่
             </button>
             <button onClick={() => window.print()} className="btn btn-primary rounded-pill px-4">
-              <i className="bi bi-printer me-2"></i>พิมพ์หรือบันทึกผล
+              <Printer size={16} className="me-2 d-inline" />พิมพ์หรือบันทึกผล
             </button>
           </div>
         </div>
@@ -230,7 +252,7 @@ export default function CareerQuizPage() {
                 <div className="col-lg-8">
                   <div className="d-flex align-items-center gap-3 mb-3">
                     <div className="p-3 rounded-circle bg-warning bg-opacity-20 text-warning fs-2">
-                      <i className={`bi ${topRole.icon || "bi-briefcase"}`}></i>
+                      <Briefcase size={32} />
                     </div>
                     <div>
                       <h2 className="card-title fw-bold text-warning mb-1">{topRole.title}</h2>
@@ -244,7 +266,7 @@ export default function CareerQuizPage() {
                   {/* Key Skills */}
                   <div className="mb-4">
                     <h6 className="text-uppercase text-secondary small fw-bold mb-2">
-                      <i className="bi bi-lightning-charge text-warning me-1"></i> ทักษะสำคัญประจำตำแหน่ง (Core Competencies)
+                      <Zap size={16} className="text-warning me-1 d-inline" /> ทักษะสำคัญประจำตำแหน่ง (Core Competencies)
                     </h6>
                     <div className="d-flex flex-wrap gap-2">
                       {topRole.key_skills?.map((skill, idx) => (
@@ -258,7 +280,7 @@ export default function CareerQuizPage() {
                   {/* Matching CE Courses */}
                   <div className="mb-4">
                     <h6 className="text-uppercase text-secondary small fw-bold mb-2">
-                      <i className="bi bi-mortarboard text-info me-1"></i> รายวิชาวิศวกรรมคอมพิวเตอร์ KMITL ที่เกี่ยวข้อง
+                      <GraduationCap size={16} className="text-info me-1 d-inline" /> รายวิชาวิศวกรรมคอมพิวเตอร์ KMITL ที่เกี่ยวข้อง
                     </h6>
                     <div className="d-flex flex-wrap gap-2">
                       {topRole.matching_ce_courses?.map((course, idx) => (
@@ -272,7 +294,7 @@ export default function CareerQuizPage() {
                   {/* Career Progression */}
                   <div className="p-3 rounded bg-black bg-opacity-40 border border-secondary border-opacity-25">
                     <h6 className="text-warning small fw-bold mb-1">
-                      <i className="bi bi-diagram-3 me-1"></i> เส้นทางการเติบโตในสายงาน (Career Progression)
+                      <GitBranch size={16} className="text-warning me-1 d-inline" /> เส้นทางการเติบโตในสายงาน (Career Progression)
                     </h6>
                     <div className="text-light small">{topRole.career_prospects}</div>
                   </div>
@@ -305,7 +327,7 @@ export default function CareerQuizPage() {
 
         {/* 2nd and 3rd Role Matches Grid */}
         <h3 className="fw-bold mb-4 text-light">
-          <i className="bi bi-award me-2 text-primary"></i>อาชีพแนะนำลำดับถัดไป (Rank #2 & #3)
+          <Award size={22} className="me-2 text-primary d-inline" />อาชีพแนะนำลำดับถัดไป (Rank #2 & #3)
         </h3>
         <div className="row g-4 mb-5">
           {[secondRole, thirdRole].filter(Boolean).map((role, idx) => {
@@ -326,7 +348,7 @@ export default function CareerQuizPage() {
                   <div className="card-body p-4 d-flex flex-column">
                     <div className="d-flex align-items-center gap-3 mb-3">
                       <div className="p-3 rounded-circle bg-secondary bg-opacity-25 text-white fs-3">
-                        <i className={`bi ${role.icon || "bi-briefcase"}`}></i>
+                        <Briefcase size={28} />
                       </div>
                       <div>
                         <h4 className="fw-bold text-white mb-0">{role.title}</h4>
@@ -362,7 +384,7 @@ export default function CareerQuizPage() {
 
                     <div className="mt-auto pt-3 border-top border-secondary border-opacity-25">
                       <h6 className="text-info small fw-bold mb-1">
-                        <i className="bi bi-mortarboard me-1"></i>วิชาที่แนะนำ:
+                        <GraduationCap size={15} className="me-1 d-inline" />วิชาที่แนะนำ:
                       </h6>
                       <div className="text-secondary small">
                         {role.matching_ce_courses?.join(", ")}
@@ -383,12 +405,11 @@ export default function CareerQuizPage() {
             style={{ cursor: "pointer" }}
           >
             <div className="d-flex align-items-center gap-2">
-              <i className="bi bi-list-columns-reverse text-warning fs-5"></i>
+              <ListOrdered size={20} className="text-warning me-1 d-inline" />
               <span className="fw-bold">ดูคะแนนความสอดคล้องทั้ง 20 สาขาอาชีพไอที</span>
             </div>
             <button className="btn btn-sm btn-outline-secondary text-white">
-              {showAllRoles ? "ซ่อนรายละเอียด" : "แสดงทั้งหมด (20 อาชีพ)"}{" "}
-              <i className={`bi ${showAllRoles ? "bi-chevron-up" : "bi-chevron-down"} ms-1`}></i>
+              {showAllRoles ? "ซ่อนรายละเอียด" : "แสดงทั้งหมด (20 อาชีพ)"}
             </button>
           </div>
 
@@ -465,14 +486,14 @@ export default function CareerQuizPage() {
             ศึกษาหลักสูตรรายวิชา โครงงานรุ่นพี่ และโอกาสฝึกงานกับบริษัทชั้นนำได้ที่เว็บไซต์ CE50
           </p>
           <div className="d-flex flex-wrap justify-content-center gap-3">
-            <Link href="/projects" className="btn btn-outline-warning rounded-pill px-4">
-              <i className="bi bi-folder-check me-2"></i>ดูโครงงานที่เกี่ยวข้อง
+            <Link href="/projects" className="btn btn-outline-warning rounded-pill px-4 d-inline-flex align-items-center">
+              <FolderCheck size={18} className="me-2" />ดูโครงงานที่เกี่ยวข้อง
             </Link>
-            <Link href="/company" className="btn btn-outline-info rounded-pill px-4">
-              <i className="bi bi-building me-2"></i>ดูสถานที่ฝึกงาน
+            <Link href="/company" className="btn btn-outline-info rounded-pill px-4 d-inline-flex align-items-center">
+              <Building size={18} className="me-2" />ดูสถานที่ฝึกงาน
             </Link>
-            <Link href="/class" className="btn btn-outline-light rounded-pill px-4">
-              <i className="bi bi-book me-2"></i>ดูตารางเรียน
+            <Link href="/class" className="btn btn-outline-light rounded-pill px-4 d-inline-flex align-items-center">
+              <BookOpen size={18} className="me-2" />ดูตารางเรียน
             </Link>
           </div>
         </div>
@@ -489,8 +510,8 @@ export default function CareerQuizPage() {
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom border-secondary border-opacity-25">
         <div>
           <div className="d-flex align-items-center gap-2 mb-1">
-            <span className="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold">
-              <i className="bi bi-compass me-1"></i> BCS Tech Career Quiz
+            <span className="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold d-inline-flex align-items-center">
+              <Compass size={16} className="me-1" /> BCS Tech Career Quiz
             </span>
             <span className="text-secondary small">• 30 คำถามมาตรฐานสากล</span>
           </div>
@@ -501,18 +522,18 @@ export default function CareerQuizPage() {
         <div className="d-flex gap-2">
           <button
             onClick={handleQuickAutofill}
-            className="btn btn-sm btn-outline-warning rounded-pill px-3"
+            className="btn btn-sm btn-outline-warning rounded-pill px-3 d-inline-flex align-items-center"
             title="สุ่มตอบทุกข้ออัตโนมัติเพื่อทดสอบระบบการให้คะแนนอย่างรวดเร็ว"
           >
-            <i className="bi bi-lightning-charge me-1"></i>ทดสอบสุ่มคำตอบอัตโนมัติ (Demo Fill)
+            <Zap size={14} className="me-1" />ทดสอบสุ่มคำตอบอัตโนมัติ (Demo Fill)
           </button>
         </div>
       </div>
 
       {error && (
         <div className="alert alert-danger d-flex align-items-center justify-content-between mb-4">
-          <div>
-            <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          <div className="d-flex align-items-center">
+            <AlertTriangle size={16} className="me-2" />
             {error}
           </div>
           <button onClick={() => setError(null)} className="btn-close" aria-label="Close"></button>
@@ -587,8 +608,8 @@ export default function CareerQuizPage() {
               <span className="text-secondary small">{currentQ.section_th}</span>
             </div>
             {currentQ.is_multiple && (
-              <span className="badge bg-warning text-dark px-3 py-1 rounded-pill">
-                <i className="bi bi-check2-square me-1"></i>เลือกได้หลายข้อ
+              <span className="badge bg-warning text-dark px-3 py-1 rounded-pill d-inline-flex align-items-center">
+                <CheckSquare size={14} className="me-1" />เลือกได้หลายข้อ
               </span>
             )}
           </div>
@@ -633,7 +654,7 @@ export default function CareerQuizPage() {
                           style={{ width: "28px", height: "28px", flexShrink: 0 }}
                         >
                           {isSelected ? (
-                            <i className="bi bi-check-lg fw-bold"></i>
+                            <Check size={16} className="fw-bold" />
                           ) : (
                             <span className="small">{opt.id + 1}</span>
                           )}
@@ -641,7 +662,7 @@ export default function CareerQuizPage() {
                         <span className="fw-semibold fs-6">{opt.text}</span>
                       </div>
                       {isSelected && (
-                        <i className="bi bi-check-circle-fill text-warning fs-5"></i>
+                        <CheckCircle2 size={20} className="text-warning" />
                       )}
                     </div>
                   </div>
@@ -655,24 +676,24 @@ export default function CareerQuizPage() {
             <button
               onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
               disabled={currentIndex === 0}
-              className="btn btn-outline-secondary text-white rounded-pill px-4"
+              className="btn btn-outline-secondary text-white rounded-pill px-4 d-inline-flex align-items-center"
             >
-              <i className="bi bi-chevron-left me-1"></i> ย้อนกลับ
+              <ChevronLeft size={16} className="me-1" /> ย้อนกลับ
             </button>
 
             <div className="d-flex gap-2">
               {!isLastQuestion ? (
                 <button
                   onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-                  className="btn btn-primary rounded-pill px-4"
+                  className="btn btn-primary rounded-pill px-4 d-inline-flex align-items-center"
                 >
-                  ถัดไป <i className="bi bi-chevron-right ms-1"></i>
+                  ถัดไป <ChevronRight size={16} className="ms-1" />
                 </button>
               ) : (
                 <button
                   onClick={handleSubmitEvaluation}
                   disabled={evaluating}
-                  className="btn btn-success rounded-pill px-4 fw-bold"
+                  className="btn btn-success rounded-pill px-4 fw-bold d-inline-flex align-items-center"
                 >
                   {evaluating ? (
                     <>
@@ -681,7 +702,7 @@ export default function CareerQuizPage() {
                     </>
                   ) : (
                     <>
-                      <i className="bi bi-check-circle-fill me-2"></i>
+                      <CheckCircle2 size={16} className="me-2" />
                       ส่งคำตอบและดูผลลัพธ์
                     </>
                   )}
@@ -696,7 +717,7 @@ export default function CareerQuizPage() {
       {answeredCount >= 20 && !result && (
         <div className="p-3 rounded-4 bg-gradient bg-dark border border-warning border-opacity-50 shadow d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
           <div className="d-flex align-items-center gap-2">
-            <i className="bi bi-check-all text-warning fs-4"></i>
+            <CheckCheck size={24} className="text-warning" />
             <div>
               <div className="fw-bold text-white">ตอบคำถามแล้ว {answeredCount} / {questions.length} ข้อ</div>
               <div className="text-secondary small">คุณสามารถกดส่งคำตอบได้ทันทีเพื่อดู 3 เส้นทางอาชีพที่เหมาะสมที่สุด</div>

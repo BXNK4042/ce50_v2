@@ -3,6 +3,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  ExternalLink,
+  LogOut,
+  UserCheck,
+  Users,
+  Newspaper,
+  Laptop,
+  Building,
+  Briefcase,
+  Calendar,
+  FileText,
+  DoorOpen,
+  PlusCircle,
+  Mail,
+  CheckCircle,
+} from "lucide-react";
 
 interface AdminUser {
   user_id: number;
@@ -246,10 +262,10 @@ export default function AdminDashboardPage() {
             </div>
           )}
           <Link href="/" className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
-            <i className="bi bi-box-arrow-up-right"></i> หน้าเว็บหลัก
+            <ExternalLink size={14} /> หน้าเว็บหลัก
           </Link>
           <button onClick={handleLogout} className="btn btn-danger btn-sm d-flex align-items-center gap-1">
-            <i className="bi bi-box-arrow-right"></i> ออกจากระบบ
+            <LogOut size={14} /> ออกจากระบบ
           </button>
         </div>
       </div>
@@ -266,66 +282,66 @@ export default function AdminDashboardPage() {
       <div className="d-flex flex-wrap gap-2 mb-4 border-bottom border-secondary pb-3">
         <button
           type="button"
-          className={`btn ${activeTab === "teachers" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "teachers" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("teachers")}
         >
-          <i className="bi bi-person-badge me-1"></i> อาจารย์ (Teachers)
+          <UserCheck size={16} /> อาจารย์ (Teachers)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "students" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "students" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("students")}
         >
-          <i className="bi bi-people me-1"></i> นักศึกษา (Students)
+          <Users size={16} /> นักศึกษา (Students)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "news" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "news" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("news")}
         >
-          <i className="bi bi-newspaper me-1"></i> ข่าวสาร (News)
+          <Newspaper size={16} /> ข่าวสาร (News)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "projects" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "projects" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("projects")}
         >
-          <i className="bi bi-laptop me-1"></i> โครงงาน (Projects)
+          <Laptop size={16} /> โครงงาน (Projects)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "companies" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "companies" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("companies")}
         >
-          <i className="bi bi-building me-1"></i> บริษัท (Companies)
+          <Building size={16} /> บริษัท (Companies)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "internships" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "internships" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("internships")}
         >
-          <i className="bi bi-briefcase me-1"></i> ฝึกงาน (Internships)
+          <Briefcase size={16} /> ฝึกงาน (Internships)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "class" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "class" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("class")}
         >
-          <i className="bi bi-calendar3 me-1"></i> ตารางเรียน (Class)
+          <Calendar size={16} /> ตารางเรียน (Class)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "exam" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "exam" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("exam")}
         >
-          <i className="bi bi-file-earmark-text me-1"></i> ตารางสอบ (Exam)
+          <FileText size={16} /> ตารางสอบ (Exam)
         </button>
         <button
           type="button"
-          className={`btn ${activeTab === "rooms" ? "btn-primary" : "btn-dark"}`}
+          className={`btn ${activeTab === "rooms" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
           onClick={() => setActiveTab("rooms")}
         >
-          <i className="bi bi-door-open me-1"></i> ห้องปฏิบัติการ (Rooms)
+          <DoorOpen size={16} /> ห้องปฏิบัติการ (Rooms)
         </button>
       </div>
 
@@ -344,7 +360,7 @@ export default function AdminDashboardPage() {
           } รายการ)
         </h4>
         <button className="btn btn-success d-flex align-items-center gap-1" onClick={openAddModal}>
-          <i className="bi bi-plus-circle"></i> + เพิ่มข้อมูลใหม่ (Add New)
+          <PlusCircle size={16} /> เพิ่มข้อมูลใหม่ (Add New)
         </button>
       </div>
 
@@ -416,7 +432,7 @@ export default function AdminDashboardPage() {
                     <td className="fw-bold text-primary">{s.student_id}</td>
                     <td>{s.student_firstname} {s.student_lastname}</td>
                     <td><span className="badge bg-info text-dark">T{s.student_lineage}</span></td>
-                    <td><i className="bi bi-envelope me-1 text-secondary"></i>{s.student_email || s.student_contact || "-"}</td>
+                    <td><Mail size={14} className="me-1 text-secondary" />{s.student_email || s.student_contact || "-"}</td>
                     <td>{s.student_instagram ? `@${s.student_instagram}` : "-"}</td>
                     <td>
                       {s.student_image ? (
@@ -500,7 +516,7 @@ export default function AdminDashboardPage() {
                           rel="noopener noreferrer"
                           className="badge bg-danger text-decoration-none"
                         >
-                          <i className="bi bi-file-earmark-pdf me-1"></i>PDF
+                          <FileText size={12} className="me-1" />PDF
                         </a>
                       ) : (
                         "-"
@@ -960,7 +976,7 @@ export default function AdminDashboardPage() {
                         {uploadingFile && <span className="small text-warning">กำลังอัปโหลดเอกสาร PDF...</span>}
                         {formData.project_pdf && (
                           <span className="small text-danger d-block mt-1">
-                            <i className="bi bi-file-earmark-pdf me-1"></i>ไฟล์ PDF ปัจจุบัน: {formData.project_pdf}
+                            <FileText size={14} className="me-1" />ไฟล์ PDF ปัจจุบัน: {formData.project_pdf}
                           </span>
                         )}
                       </div>
@@ -1279,7 +1295,7 @@ export default function AdminDashboardPage() {
                     ยกเลิก (Cancel)
                   </button>
                   <button type="submit" className="btn btn-primary d-flex align-items-center gap-1" disabled={loading}>
-                    <i className="bi bi-check-circle"></i> บันทึกข้อมูล (Save)
+                    <CheckCircle size={16} /> บันทึกข้อมูล (Save)
                   </button>
                 </div>
               </form>
