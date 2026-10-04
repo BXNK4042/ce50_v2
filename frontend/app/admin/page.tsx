@@ -249,7 +249,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="template-container py-4 text-white">
       {/* Top Header Bar */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div>
           <h2 className="fw-bold mb-1">CE50 Admin Management Portal</h2>
           <p className="text-secondary small mb-0">ระบบจัดการฐานข้อมูลหลังบ้าน (SQLite Backend CRUD Engine)</p>
@@ -279,7 +279,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Tab Navigation */}
-      <div className="d-flex flex-wrap gap-2 mb-4 border-bottom border-secondary pb-3">
+      <div className="p-2 rounded-3 bg-secondary bg-opacity-15 d-flex flex-wrap gap-2 mb-4">
         <button
           type="button"
           className={`btn ${activeTab === "teachers" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
