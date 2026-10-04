@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getStudentGeneration } from "@/utils/generation";
 
 export default function InternshipPage() {
   const { id } = useParams();
@@ -95,7 +96,11 @@ export default function InternshipPage() {
             <div className="col" key={student.student_id}>
               <div className="card bg-black ">
                 <Image
-                  src={`/uploads/students/ce_04/${student.student_id}.png`}
+                  src={
+                    student.student_image
+                      ? (student.student_image.startsWith("/") ? student.student_image : `/uploads/students/${student.student_image}`)
+                      : `/uploads/students/${getStudentGeneration(student.student_id).toLowerCase().replace("ce", "ce_")}/${student.student_id}.png`
+                  }
                   alt={student.student_firstname}
                   width={500}
                   height={500}
@@ -103,6 +108,9 @@ export default function InternshipPage() {
                   className="card-img-top hover:opacity-70 duration-150"
                   data-bs-toggle="modal"
                   data-bs-target={`#${modalId}`}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = "/404.png";
+                  }}
                 />
               </div>
               <div
