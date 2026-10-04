@@ -143,6 +143,16 @@ export default function AdminDashboardPage() {
     setIsModalOpen(true);
   };
 
+  const handleUnauthorized = useCallback(() => {
+    alert("Session expired or unauthorized");
+    localStorage.removeItem("ce50_admin_token");
+    localStorage.removeItem("ce50_admin_user");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("ce50_auth_change"));
+    }
+    router.replace("/admin/login");
+  }, [router]);
+
   // Handle Image File Upload to /upload
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, module: string, targetField: string) => {
     const file = e.target.files?.[0];
@@ -154,6 +164,12 @@ export default function AdminDashboardPage() {
       return;
     }
 
+    const token = localStorage.getItem("ce50_admin_token");
+    if (!token) {
+      handleUnauthorized();
+      return;
+    }
+
     setUploadingFile(true);
     const body = new FormData();
     body.append("file", file);
@@ -162,8 +178,17 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
         body,
       });
+
+      if (res.status === 401 || res.status === 403) {
+        handleUnauthorized();
+        return;
+      }
+
       const data = await res.json();
       if (!res.ok) {
         alert(data.detail || "อัปโหลดรูปภาพไม่สำเร็จ");
@@ -181,6 +206,13 @@ export default function AdminDashboardPage() {
   // Save form data (Create or Update)
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("ce50_admin_token");
+    if (!token) {
+      handleUnauthorized();
+      return;
+    }
+
     setLoading(true);
 
     let endpoint = "";
@@ -199,9 +231,17 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch(`/api${endpoint}`, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(formData),
       });
+
+      if (res.status === 401 || res.status === 403) {
+        handleUnauthorized();
+        return;
+      }
 
       const resData = await res.json();
       if (!res.ok) {
@@ -226,6 +266,12 @@ export default function AdminDashboardPage() {
       return;
     }
 
+    const token = localStorage.getItem("ce50_admin_token");
+    if (!token) {
+      handleUnauthorized();
+      return;
+    }
+
     setLoading(true);
     let endpoint = "";
     if (activeTab === "teachers") endpoint = `/teachers/${id}`;
@@ -241,7 +287,15 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch(`/api${endpoint}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
       });
+
+      if (res.status === 401 || res.status === 403) {
+        handleUnauthorized();
+        return;
+      }
 
       if (!res.ok) {
         const data = await res.json();

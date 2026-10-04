@@ -1,0 +1,21 @@
+# CE50_v2 Session Summary
+
+- **Branch**: `teacher-page-UI` (50 commits ahead of origin). Working tree clean.
+- **Stack**: Next.js 16 (port 3000), FastAPI (port 8001), SQLite (`backend/ce50.db`), Cloudflare Tunnel (`trycloudflare.com`).
+- **DevOps & Process Management**:
+  - Created `/root/ce50_v2/scripts/start_services.py` using `start_new_session=True` with automated health checks to manage background Uvicorn and Next.js services.
+  - Linked Cloudflare tunnel switcher via `cloudflare-switcher` skill.
+  - Fixed Cloudflare tunnel connectivity: allowed `*.trycloudflare.com` in `frontend/next.config.ts` (`allowedDevOrigins`) and enabled dynamic CORS regex (`allow_origin_regex=r".*"`) in `backend/main.py`.
+- **Backend & Data**:
+  - GNews API integration with caching fallback.
+  - Schedules schema & endpoints: multi-generation (`CE01`-`CE04`) + 2 semesters for class and exam.
+  - Student privacy: contact/IG hidden on public endpoints.
+- **Frontend & UI**:
+  - Lucide icons, Style 1 high-contrast tables across class, exam, admin CRUD.
+  - Navbar auth-aware admin button, left-aligned Career Quiz button.
+  - Thai BCS Career Quiz (`/quiz`) with full scoring logic and responsive layout.
+- **Security Audit Findings (Authentication)**:
+  - Missing authorization checks on backend CRUD & upload endpoints (CWE-862).
+  - Unsigned, predictable token string `ce50-{username}-{timestamp}` without server expiry (CWE-345).
+  - Insecure password storage: unsalted SHA-256 with plaintext fallback (CWE-916 / CWE-208).
+  - Public `/users` endpoint exposed and no login rate-limiting.

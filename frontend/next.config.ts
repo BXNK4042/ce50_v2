@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: [
     "*.ngrok-free.dev",
     "*.ngrok-free.app",
+    "*.trycloudflare.com",
     "chess-panhandle-oxidize.ngrok-free.dev",
     "localhost:3000",
   ],

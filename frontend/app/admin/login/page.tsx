@@ -24,6 +24,10 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ username, password }),
       });
 
+      if (res.status === 429) {
+        throw new Error("พยายามเข้าสู่ระบบบ่อยเกินไป กรุณารอสักครู่");
+      }
+
       const data = await res.json();
 
       if (!res.ok) {

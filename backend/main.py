@@ -6,13 +6,19 @@ import sys
 from pathlib import Path
 from typing import Optional, List, Any
 
+import bcrypt
+import jwt
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Header, status
+from fastapi import FastAPI, Query, HTTPException, UploadFile, File, Form, Header, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 # Absolute paths to ensure backend works from any working directory
 BASE_DIR = Path(__file__).resolve().parent
@@ -25,7 +31,14 @@ UPLOADS_DIR = BASE_DIR / "uploads"
 load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR.parent / ".env")
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="CE50 API", version="1.0.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+JWT_SECRET = os.getenv("JWT_SECRET", "ce50_jwt_super_secret_key_change_in_prod")
+JWT_ALGORITHM = "HS256"
+security_bearer = HTTPBearer(auto_error=True)
 
 # Cache configuration for external GNews API (multi-category / country)
 GNEWS_CACHES = {}
@@ -191,6 +204,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -398,12 +412,58 @@ def gnews_tech(
 # Authentication & Access Control
 # ==========================================
 
+def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(security_bearer)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="โทเค็นหมดอายุ กรุณาเข้าสู่ระบบใหม่",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="โทเค็นไม่ถูกต้องหรือไม่สามารถยืนยันตัวตนได้",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="ข้อมูลผู้ใช้ในโทเค็นไม่ถูกต้อง",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT user_id, user_name, user_email, user_role FROM users WHERE user_id = ?",
+            (user_id,)
+        ).fetchone()
+        if not row:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="ไม่พบผู้ใช้งานนี้ในระบบ",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        user = dict(row)
+        if user.get("user_role") not in ("admin", "superadmin"):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="สิทธิ์การใช้งานไม่เพียงพอ (ต้องการสิทธิ์ admin)",
+            )
+        return user
+
+
 class LoginRequest(BaseModel):
     username: str
     password: str
 
 @app.post("/auth/login")
-def auth_login(req: LoginRequest):
+@limiter.limit("5/minute")
+def auth_login(request: Request, req: LoginRequest):
     with get_db() as conn:
         row = conn.execute(
             "SELECT user_id, user_name, password_hash, user_email, user_role FROM users WHERE user_name = ?",
@@ -412,11 +472,47 @@ def auth_login(req: LoginRequest):
         if not row:
             raise HTTPException(status_code=401, detail="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")
         user = dict(row)
-        input_hash = hashlib.sha256(req.password.encode("utf-8")).hexdigest()
-        if input_hash != user["password_hash"] and req.password != user["password_hash"]:
+        stored_hash = user["password_hash"] or ""
+        password_bytes = req.password.encode("utf-8")
+
+        authenticated = False
+        upgrade_needed = False
+
+        # 1. Try bcrypt check if stored hash is formatted as bcrypt
+        if stored_hash.startswith(("$2a$", "$2b$", "$2y$")):
+            try:
+                if bcrypt.checkpw(password_bytes, stored_hash.encode("utf-8")):
+                    authenticated = True
+            except Exception:
+                authenticated = False
+        else:
+            # 2. Check legacy SHA-256 or plaintext seed
+            sha256_hash = hashlib.sha256(password_bytes).hexdigest()
+            if sha256_hash == stored_hash or req.password == stored_hash:
+                authenticated = True
+                upgrade_needed = True
+
+        if not authenticated:
             raise HTTPException(status_code=401, detail="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง")
-        
-        token = f"ce50-{user['user_name']}-{int(time.time())}"
+
+        # Transparently upgrade stored hash to bcrypt
+        if upgrade_needed:
+            new_bcrypt_hash = bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("utf-8")
+            conn.execute(
+                "UPDATE users SET password_hash = ? WHERE user_id = ?",
+                (new_bcrypt_hash, user["user_id"])
+            )
+            conn.commit()
+
+        exp_time = int(time.time()) + 24 * 3600
+        payload = {
+            "sub": str(user["user_id"]),
+            "username": user["user_name"],
+            "role": user["user_role"],
+            "exp": exp_time,
+        }
+        token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
         return {
             "success": True,
             "token": token,
@@ -429,7 +525,7 @@ def auth_login(req: LoginRequest):
         }
 
 @app.get("/users")
-def get_users():
+def get_users(admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         rows = conn.execute("SELECT user_id, user_name, user_email, user_role, created_at FROM users").fetchall()
         return [dict(r) for r in rows]
@@ -446,7 +542,8 @@ MAX_DOC_FILE_SIZE = 25 * 1024 * 1024    # 25 MB for PDF project documents
 @app.post("/upload")
 async def upload_file(
     file: UploadFile = File(...),
-    module: str = Form("general")
+    module: str = Form("general"),
+    admin: dict = Depends(get_current_admin)
 ):
     ext = Path(file.filename or "").suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
@@ -490,7 +587,7 @@ class TeacherCreate(BaseModel):
     teacher_advise_year: Optional[str] = None
 
 @app.post("/teachers")
-def create_teacher(data: TeacherCreate):
+def create_teacher(data: TeacherCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -503,7 +600,7 @@ def create_teacher(data: TeacherCreate):
         return {"success": True, "teacher_id": cursor.lastrowid}
 
 @app.put("/teachers/{teacher_id}")
-def update_teacher(teacher_id: int, data: TeacherCreate):
+def update_teacher(teacher_id: int, data: TeacherCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             """UPDATE teachers SET 
@@ -516,7 +613,7 @@ def update_teacher(teacher_id: int, data: TeacherCreate):
         return {"success": True, "teacher_id": teacher_id}
 
 @app.delete("/teachers/{teacher_id}")
-def delete_teacher(teacher_id: int):
+def delete_teacher(teacher_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM teachers WHERE teacher_id = ?", (teacher_id,))
         conn.commit()
@@ -539,7 +636,7 @@ class StudentCreate(BaseModel):
     student_image: Optional[str] = None
 
 @app.post("/students")
-def create_student(data: StudentCreate):
+def create_student(data: StudentCreate, admin: dict = Depends(get_current_admin)):
     email = data.student_email or data.student_contact or f"{data.student_id}@kmitl.ac.th"
     with get_db() as conn:
         cursor = conn.cursor()
@@ -561,7 +658,7 @@ def create_student(data: StudentCreate):
         return {"success": True, "student_id": data.student_id or cursor.lastrowid}
 
 @app.put("/students/{student_id}")
-def update_student(student_id: int, data: StudentCreate):
+def update_student(student_id: int, data: StudentCreate, admin: dict = Depends(get_current_admin)):
     new_student_id = data.student_id if data.student_id else student_id
     email = data.student_email or data.student_contact or f"{new_student_id}@kmitl.ac.th"
     with get_db() as conn:
@@ -592,7 +689,7 @@ def update_student(student_id: int, data: StudentCreate):
         return {"success": True, "student_id": new_student_id}
 
 @app.delete("/students/{student_id}")
-def delete_student(student_id: int):
+def delete_student(student_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("PRAGMA foreign_keys = OFF;")
         conn.execute("DELETE FROM student_projects WHERE student_id = ?", (str(student_id),))
@@ -614,7 +711,7 @@ class NewsCreate(BaseModel):
     news_image: Optional[str] = None
 
 @app.post("/news")
-def create_news(data: NewsCreate):
+def create_news(data: NewsCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -625,7 +722,7 @@ def create_news(data: NewsCreate):
         return {"success": True, "news_id": cursor.lastrowid}
 
 @app.put("/news/{news_id}")
-def update_news(news_id: int, data: NewsCreate):
+def update_news(news_id: int, data: NewsCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             "UPDATE news_item SET news_title = ?, news_description = ?, news_category = ?, news_image = ? WHERE news_id = ?",
@@ -635,7 +732,7 @@ def update_news(news_id: int, data: NewsCreate):
         return {"success": True, "news_id": news_id}
 
 @app.delete("/news/{news_id}")
-def delete_news(news_id: int):
+def delete_news(news_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM news_item WHERE news_id = ?", (news_id,))
         conn.commit()
@@ -654,7 +751,7 @@ class ProjectCreate(BaseModel):
     student_id: Optional[str] = None
 
 @app.post("/projects")
-def create_project(data: ProjectCreate):
+def create_project(data: ProjectCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -671,7 +768,7 @@ def create_project(data: ProjectCreate):
         return {"success": True, "project_id": pid}
 
 @app.put("/projects/{project_id}")
-def update_project(project_id: int, data: ProjectCreate):
+def update_project(project_id: int, data: ProjectCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             "UPDATE projects SET project_name = ?, project_description = ?, project_image = ?, project_pdf = ? WHERE project_id = ?",
@@ -684,7 +781,7 @@ def update_project(project_id: int, data: ProjectCreate):
         return {"success": True, "project_id": project_id}
 
 @app.delete("/projects/{project_id}")
-def delete_project(project_id: int):
+def delete_project(project_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM student_projects WHERE project_id = ?", (project_id,))
         conn.execute("DELETE FROM projects WHERE project_id = ?", (project_id,))
@@ -701,7 +798,7 @@ class CompanyCreate(BaseModel):
     company_image: Optional[str] = None
 
 @app.post("/companys")
-def create_company(data: CompanyCreate):
+def create_company(data: CompanyCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -712,7 +809,7 @@ def create_company(data: CompanyCreate):
         return {"success": True, "company_id": cursor.lastrowid}
 
 @app.put("/companys/{company_id}")
-def update_company(company_id: int, data: CompanyCreate):
+def update_company(company_id: int, data: CompanyCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             "UPDATE companys SET company_name = ?, company_image = ? WHERE company_id = ?",
@@ -722,7 +819,7 @@ def update_company(company_id: int, data: CompanyCreate):
         return {"success": True, "company_id": company_id}
 
 @app.delete("/companys/{company_id}")
-def delete_company(company_id: int):
+def delete_company(company_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM companys WHERE company_id = ?", (company_id,))
         conn.commit()
@@ -735,7 +832,7 @@ class InternshipCreate(BaseModel):
     internship_description: str
 
 @app.post("/internship")
-def create_internship(data: InternshipCreate):
+def create_internship(data: InternshipCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -746,7 +843,7 @@ def create_internship(data: InternshipCreate):
         return {"success": True, "internship_id": cursor.lastrowid}
 
 @app.put("/internship/{internship_id}")
-def update_internship(internship_id: int, data: InternshipCreate):
+def update_internship(internship_id: int, data: InternshipCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             "UPDATE internships SET student_id = ?, internship_title = ?, company_id = ?, internship_description = ? WHERE internship_id = ?",
@@ -756,7 +853,7 @@ def update_internship(internship_id: int, data: InternshipCreate):
         return {"success": True, "internship_id": internship_id}
 
 @app.delete("/internship/{internship_id}")
-def delete_internship(internship_id: int):
+def delete_internship(internship_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM internships WHERE internship_id = ?", (internship_id,))
         conn.commit()
@@ -779,7 +876,7 @@ class ClassScheduleCreate(BaseModel):
     semester: int = 1
 
 @app.post("/class")
-def create_class_schedule(data: ClassScheduleCreate):
+def create_class_schedule(data: ClassScheduleCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -792,7 +889,7 @@ def create_class_schedule(data: ClassScheduleCreate):
         return {"success": True, "class_id": cursor.lastrowid}
 
 @app.put("/class/{class_id}")
-def update_class_schedule(class_id: int, data: ClassScheduleCreate):
+def update_class_schedule(class_id: int, data: ClassScheduleCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             """UPDATE class_schedules SET 
@@ -805,7 +902,7 @@ def update_class_schedule(class_id: int, data: ClassScheduleCreate):
         return {"success": True, "class_id": class_id}
 
 @app.delete("/class/{class_id}")
-def delete_class_schedule(class_id: int):
+def delete_class_schedule(class_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM class_schedules WHERE class_id = ?", (class_id,))
         conn.commit()
@@ -823,7 +920,7 @@ class ExamScheduleCreate(BaseModel):
     semester: int = 1
 
 @app.post("/exam")
-def create_exam_schedule(data: ExamScheduleCreate):
+def create_exam_schedule(data: ExamScheduleCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -836,7 +933,7 @@ def create_exam_schedule(data: ExamScheduleCreate):
         return {"success": True, "exam_id": cursor.lastrowid}
 
 @app.put("/exam/{exam_id}")
-def update_exam_schedule(exam_id: int, data: ExamScheduleCreate):
+def update_exam_schedule(exam_id: int, data: ExamScheduleCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             """UPDATE exam_schedules SET 
@@ -849,7 +946,7 @@ def update_exam_schedule(exam_id: int, data: ExamScheduleCreate):
         return {"success": True, "exam_id": exam_id}
 
 @app.delete("/exam/{exam_id}")
-def delete_exam_schedule(exam_id: int):
+def delete_exam_schedule(exam_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM exam_schedules WHERE exam_id = ?", (exam_id,))
         conn.commit()
@@ -866,7 +963,7 @@ class RoomCreate(BaseModel):
     room_image: Optional[str] = None
 
 @app.post("/rooms")
-def create_room(data: RoomCreate):
+def create_room(data: RoomCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -877,7 +974,7 @@ def create_room(data: RoomCreate):
         return {"success": True, "room_id": cursor.lastrowid}
 
 @app.put("/rooms/{room_id}")
-def update_room(room_id: int, data: RoomCreate):
+def update_room(room_id: int, data: RoomCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
             "UPDATE rooms SET room_name = ?, room_description = ?, room_image = ? WHERE room_id = ?",
@@ -887,7 +984,7 @@ def update_room(room_id: int, data: RoomCreate):
         return {"success": True, "room_id": room_id}
 
 @app.delete("/rooms/{room_id}")
-def delete_room(room_id: int):
+def delete_room(room_id: int, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute("DELETE FROM rooms WHERE room_id = ?", (room_id,))
         conn.commit()

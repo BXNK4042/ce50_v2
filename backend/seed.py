@@ -1,7 +1,12 @@
+import bcrypt
 import sqlite3
 from pathlib import Path
 
 DB_PATH = Path(__file__).with_name("ce50.db")
+
+
+def hash_password(password: str) -> str:
+  return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def insertMany(query, data):
@@ -73,10 +78,10 @@ def seedStudents():
 
 def seedUsers():
   users_data = [
-    ("superadmin", "hash_password(super_pw)", "superadmin@ce.ac.th", "superadmin"),
-    ("admin_y1", "hash_password(admin_pw)", "admin_y1@ce.ac.th", "admin"),
-    ("writer_y1", "hash_password(writer_pw)", "writer_y1@ce.ac.th", "writer"),
-    ("adminFah", "0bfd52e76bd1395e11b9b0d4b354ccf02f1718143f1229bb43c2bc1eddea7a9b", "fah@ce.ac.th", "superadmin")
+    ("superadmin", hash_password("super_pw"), "superadmin@ce.ac.th", "superadmin"),
+    ("admin_y1", hash_password("admin_pw"), "admin_y1@ce.ac.th", "admin"),
+    ("writer_y1", hash_password("writer_pw"), "writer_y1@ce.ac.th", "writer"),
+    ("adminFah", hash_password("123456"), "fah@ce.ac.th", "superadmin")
   ]
 
   insertMany(
