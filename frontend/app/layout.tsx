@@ -21,6 +21,8 @@ const footerRoutes = [
   { href: "/class", label: "Class" },
   { href: "/rooms", label: "Rooms" },
   { href: "/company", label: "Company" },
+  { href: "/quiz", label: "Career Quiz" },
+  { href: "/admin/login", label: "Admin" },
 ];
 
 const currentYear = new Date().getFullYear();
@@ -113,6 +115,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <li className="nav-item">
             <Link href="/company" className="nav nav-link text-light">
               Internship
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link href="/quiz" className="nav nav-link text-warning fw-semibold">
+              <i className="bi bi-stars me-1"></i>Quiz
             </Link>
           </li>
         </ul>

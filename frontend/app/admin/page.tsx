@@ -1,0 +1,1242 @@
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+interface AdminUser {
+  user_id: number;
+  user_name: string;
+  user_email: string;
+  user_role: string;
+}
+
+export default function AdminDashboardPage() {
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
+  const [activeTab, setActiveTab] = useState<"teachers" | "students" | "news" | "projects" | "companies" | "internships" | "class" | "exam" | "rooms">("teachers");
+  
+  // Data states
+  const [teachers, setTeachers] = useState<Record<string, any>[]>([]);
+  const [students, setStudents] = useState<Record<string, any>[]>([]);
+  const [news, setNews] = useState<Record<string, any>[]>([]);
+  const [projects, setProjects] = useState<Record<string, any>[]>([]);
+  const [companies, setCompanies] = useState<Record<string, any>[]>([]);
+  const [internships, setInternships] = useState<Record<string, any>[]>([]);
+  const [classSchedules, setClassSchedules] = useState<Record<string, any>[]>([]);
+  const [examSchedules, setExamSchedules] = useState<Record<string, any>[]>([]);
+  const [rooms, setRooms] = useState<Record<string, any>[]>([]);
+
+  // Loading & Alert
+  const [loading, setLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<{ type: "success" | "danger"; text: string } | null>(null);
+
+  // Modal / Form state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | number | null>(null);
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [uploadingFile, setUploadingFile] = useState(false);
+
+  // Check auth
+  useEffect(() => {
+    const token = localStorage.getItem("ce50_admin_token");
+    const userStr = localStorage.getItem("ce50_admin_user");
+    if (!token || !userStr) {
+      router.push("/admin/login");
+    } else {
+      try {
+        setCurrentUser(JSON.parse(userStr));
+      } catch {
+        router.push("/admin/login");
+      }
+    }
+  }, [router]);
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      if (activeTab === "teachers") {
+        const res = await fetch("/api/teachers");
+        setTeachers(await res.json());
+      } else if (activeTab === "students") {
+        const res = await fetch("/api/students");
+        setStudents(await res.json());
+      } else if (activeTab === "news") {
+        const res = await fetch("/api/news");
+        setNews(await res.json());
+      } else if (activeTab === "projects") {
+        const res = await fetch("/api/projects");
+        setProjects(await res.json());
+      } else if (activeTab === "companies") {
+        const res = await fetch("/api/companys");
+        setCompanies(await res.json());
+      } else if (activeTab === "internships") {
+        const res = await fetch("/api/internship");
+        setInternships(await res.json());
+      } else if (activeTab === "class") {
+        const res = await fetch("/api/class");
+        setClassSchedules(await res.json());
+      } else if (activeTab === "exam") {
+        const res = await fetch("/api/exam");
+        setExamSchedules(await res.json());
+      } else if (activeTab === "rooms") {
+        const res = await fetch("/api/rooms");
+        setRooms(await res.json());
+      }
+    } catch {
+      setStatusMsg({ type: "danger", text: "ไม่สามารถดึงข้อมูลจากเซิร์ฟเวอร์ได้" });
+    } finally {
+      setLoading(false);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("ce50_admin_token");
+    localStorage.removeItem("ce50_admin_user");
+    router.push("/admin/login");
+  };
+
+  // Open Form for Adding New Record
+  const openAddModal = () => {
+    setEditingId(null);
+    setFormData({});
+    setIsModalOpen(true);
+  };
+
+  // Open Form for Editing Existing Record
+  const openEditModal = (item: Record<string, any>, idKey: string) => {
+    setEditingId(item[idKey]);
+    setFormData({ ...item });
+    setIsModalOpen(true);
+  };
+
+  // Handle Image File Upload to /upload
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, module: string, targetField: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (5MB per TC_TCH_004)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("ขนาดไฟล์ภาพต้องไม่เกิน 5MB (TC_TCH_004)");
+      return;
+    }
+
+    setUploadingFile(true);
+    const body = new FormData();
+    body.append("file", file);
+    body.append("module", module);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.detail || "อัปโหลดรูปภาพไม่สำเร็จ");
+      } else {
+        setFormData((prev) => ({ ...prev, [targetField]: data.filename }));
+        setStatusMsg({ type: "success", text: `อัปโหลดไฟล์รูปภาพ ${data.filename} สำเร็จแล้ว` });
+      }
+    } catch {
+      alert("เกิดข้อผิดพลาดในการอัปโหลดไฟล์");
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  // Save form data (Create or Update)
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    let endpoint = "";
+    if (activeTab === "teachers") endpoint = editingId ? `/teachers/${editingId}` : "/teachers";
+    else if (activeTab === "students") endpoint = editingId ? `/students/${editingId}` : "/students";
+    else if (activeTab === "news") endpoint = editingId ? `/news/${editingId}` : "/news";
+    else if (activeTab === "projects") endpoint = editingId ? `/projects/${editingId}` : "/projects";
+    else if (activeTab === "companies") endpoint = editingId ? `/companys/${editingId}` : "/companys";
+    else if (activeTab === "internships") endpoint = editingId ? `/internship/${editingId}` : "/internship";
+    else if (activeTab === "class") endpoint = editingId ? `/class/${editingId}` : "/class";
+    else if (activeTab === "exam") endpoint = editingId ? `/exam/${editingId}` : "/exam";
+    else if (activeTab === "rooms") endpoint = editingId ? `/rooms/${editingId}` : "/rooms";
+
+    const method = editingId ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const resData = await res.json();
+      if (!res.ok) {
+        throw new Error(resData.detail || "การบันทึกข้อมูลล้มเหลว");
+      }
+
+      setStatusMsg({ type: "success", text: `บันทึกข้อมูลเรียบร้อยแล้ว (อัปเดตลง Database)` });
+      setIsModalOpen(false);
+      loadData();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setStatusMsg({ type: "danger", text: err.message });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete Record
+  const handleDelete = async (id: number | string, entityName: string) => {
+    if (!confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบ ${entityName} (ID: ${id}) ออกจากฐานข้อมูล?`)) {
+      return;
+    }
+
+    setLoading(true);
+    let endpoint = "";
+    if (activeTab === "teachers") endpoint = `/teachers/${id}`;
+    else if (activeTab === "students") endpoint = `/students/${id}`;
+    else if (activeTab === "news") endpoint = `/news/${id}`;
+    else if (activeTab === "projects") endpoint = `/projects/${id}`;
+    else if (activeTab === "companies") endpoint = `/companys/${id}`;
+    else if (activeTab === "internships") endpoint = `/internship/${id}`;
+    else if (activeTab === "class") endpoint = `/class/${id}`;
+    else if (activeTab === "exam") endpoint = `/exam/${id}`;
+    else if (activeTab === "rooms") endpoint = `/rooms/${id}`;
+
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || "ลบข้อมูลไม่สำเร็จ");
+      }
+
+      setStatusMsg({ type: "success", text: `ลบข้อมูล ID ${id} ออกจากฐานข้อมูลเรียบร้อยแล้ว` });
+      loadData();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setStatusMsg({ type: "danger", text: err.message });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="template-container py-4 text-white">
+      {/* Top Header Bar */}
+      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+        <div>
+          <h2 className="fw-bold mb-1 d-flex align-items-center gap-2">
+            <i className="bi bi-gear-fill text-primary"></i>
+            CE50 Admin Management Portal
+          </h2>
+          <p className="text-secondary small mb-0">ระบบจัดการฐานข้อมูลหลังบ้าน (SQLite Backend CRUD Engine)</p>
+        </div>
+        <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
+          {currentUser && (
+            <div className="text-end small">
+              <span className="badge bg-primary text-uppercase me-2">{currentUser.user_role}</span>
+              <span className="text-light fw-semibold">{currentUser.user_name}</span>
+            </div>
+          )}
+          <Link href="/" className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+            <i className="bi bi-box-arrow-up-right"></i> หน้าเว็บหลัก
+          </Link>
+          <button onClick={handleLogout} className="btn btn-danger btn-sm d-flex align-items-center gap-1">
+            <i className="bi bi-box-arrow-right"></i> ออกจากระบบ
+          </button>
+        </div>
+      </div>
+
+      {/* Alert Notification */}
+      {statusMsg && (
+        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show py-2 small`} role="alert">
+          {statusMsg.text}
+          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)} aria-label="Close"></button>
+        </div>
+      )}
+
+      {/* Tab Navigation */}
+      <ul className="nav nav-pills mb-4 flex-wrap gap-2 border-bottom border-secondary pb-3">
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "teachers" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("teachers")}
+          >
+            <i className="bi bi-person-badge me-1"></i> อาจารย์ (Teachers)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "students" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("students")}
+          >
+            <i className="bi bi-people me-1"></i> นักศึกษา (Students)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "news" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("news")}
+          >
+            <i className="bi bi-newspaper me-1"></i> ข่าวสาร (News)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "projects" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("projects")}
+          >
+            <i className="bi bi-laptop me-1"></i> โครงงาน (Projects)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "companies" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("companies")}
+          >
+            <i className="bi bi-building me-1"></i> บริษัท (Companies)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "internships" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("internships")}
+          >
+            <i className="bi bi-briefcase me-1"></i> ฝึกงาน (Internships)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "class" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("class")}
+          >
+            <i className="bi bi-calendar3 me-1"></i> ตารางเรียน (Class)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "exam" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("exam")}
+          >
+            <i className="bi bi-file-earmark-text me-1"></i> ตารางสอบ (Exam)
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link ${activeTab === "rooms" ? "active bg-primary" : "text-white bg-dark border border-secondary"}`}
+            onClick={() => setActiveTab("rooms")}
+          >
+            <i className="bi bi-door-open me-1"></i> ห้องปฏิบัติการ (Rooms)
+          </button>
+        </li>
+      </ul>
+
+      {/* Action Header for Selected Tab */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4 className="fw-bold mb-0 text-capitalize">
+          รายการตาราง {activeTab} ({
+            activeTab === "teachers" ? teachers.length :
+            activeTab === "students" ? students.length :
+            activeTab === "news" ? news.length :
+            activeTab === "projects" ? projects.length :
+            activeTab === "companies" ? companies.length :
+            activeTab === "internships" ? internships.length :
+            activeTab === "class" ? classSchedules.length :
+            activeTab === "exam" ? examSchedules.length : rooms.length
+          } รายการ)
+        </h4>
+        <button className="btn btn-success d-flex align-items-center gap-1" onClick={openAddModal}>
+          <i className="bi bi-plus-circle"></i> + เพิ่มข้อมูลใหม่ (Add New)
+        </button>
+      </div>
+
+      {/* Main Data Table */}
+      {loading ? (
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status"></div>
+          <p className="mt-2 text-secondary small">กำลังดึงข้อมูลจาก Database...</p>
+        </div>
+      ) : (
+        <div className="table-responsive bg-dark rounded border border-secondary">
+          {activeTab === "teachers" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ชื่อ-นามสกุล</th>
+                  <th>ชื่ออังกฤษ</th>
+                  <th>อีเมล / ติดต่อ</th>
+                  <th>รูปภาพ</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {teachers.map((t) => (
+                  <tr key={t.teacher_id}>
+                    <td>{t.teacher_id}</td>
+                    <td className="fw-semibold">{t.teacher_firstname} {t.teacher_lastname}</td>
+                    <td className="text-secondary">{t.teacher_name_en || "-"}</td>
+                    <td>{t.teacher_contact}</td>
+                    <td>
+                      {t.teacher_image ? (
+                        <span className="badge bg-secondary">{t.teacher_image}</span>
+                      ) : "-"}
+                    </td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(t, "teacher_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(t.teacher_id, "อาจารย์")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "students" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th>รหัสนักศึกษา</th>
+                  <th>ชื่อ-นามสกุล</th>
+                  <th>สายรหัส</th>
+                  <th>อีเมล (Email)</th>
+                  <th>Instagram</th>
+                  <th>รูปภาพ</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((s) => (
+                  <tr key={s.student_id}>
+                    <td className="fw-bold text-primary">{s.student_id}</td>
+                    <td>{s.student_firstname} {s.student_lastname}</td>
+                    <td><span className="badge bg-info text-dark">T{s.student_lineage}</span></td>
+                    <td><i className="bi bi-envelope me-1 text-secondary"></i>{s.student_email || s.student_contact || "-"}</td>
+                    <td>{s.student_instagram ? `@${s.student_instagram}` : "-"}</td>
+                    <td>
+                      {s.student_image ? (
+                        <span className="badge bg-secondary text-truncate" style={{ maxWidth: "120px" }}>{s.student_image}</span>
+                      ) : "-"}
+                    </td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(s, "student_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(s.student_id, "นักศึกษา")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "news" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>หัวข้อข่าว</th>
+                  <th>หมวดหมู่</th>
+                  <th>รายละเอียด</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {news.map((n) => (
+                  <tr key={n.news_id}>
+                    <td>{n.news_id}</td>
+                    <td className="fw-semibold text-primary">{n.news_title}</td>
+                    <td><span className="badge bg-secondary">{n.news_category}</span></td>
+                    <td className="text-truncate" style={{ maxWidth: "300px" }}>{n.news_description}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(n, "news_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(n.news_id, "ข่าวสาร")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "projects" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ชื่อโครงงาน</th>
+                  <th>คำอธิบายโครงงาน</th>
+                  <th>รูปภาพ</th>
+                  <th>เล่ม PDF</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects.map((p) => (
+                  <tr key={p.project_id}>
+                    <td>{p.project_id}</td>
+                    <td className="fw-semibold text-primary">{p.project_name}</td>
+                    <td className="text-truncate" style={{ maxWidth: "300px" }}>{p.project_description}</td>
+                    <td>{p.project_image || "-"}</td>
+                    <td>
+                      {p.project_pdf ? (
+                        <a
+                          href={`/api/uploads/projects/${p.project_pdf}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="badge bg-danger text-decoration-none"
+                        >
+                          <i className="bi bi-file-earmark-pdf me-1"></i>PDF
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(p, "project_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(p.project_id, "โครงงาน")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "companies" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ชื่อบริษัท</th>
+                  <th>โลโก้ / รูปภาพ</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {companies.map((c) => (
+                  <tr key={c.company_id}>
+                    <td>{c.company_id}</td>
+                    <td className="fw-semibold">{c.company_name}</td>
+                    <td>{c.company_image || "-"}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(c, "company_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(c.company_id, "บริษัท")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "internships" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ตำแหน่งฝึกงาน</th>
+                  <th>รหัสนักศึกษา</th>
+                  <th>รหัสบริษัท</th>
+                  <th>รายละเอียด</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {internships.map((i) => (
+                  <tr key={i.internship_id}>
+                    <td>{i.internship_id}</td>
+                    <td className="fw-semibold text-primary">{i.internship_title}</td>
+                    <td>{i.student_id}</td>
+                    <td>Company #{i.company_id}</td>
+                    <td className="text-truncate" style={{ maxWidth: "300px" }}>{i.internship_description}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(i, "internship_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(i.internship_id, "ฝึกงาน")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "class" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ชื่อวิชา</th>
+                  <th>วัน</th>
+                  <th>เวลา</th>
+                  <th>ห้องเรียน</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {classSchedules.map((cs) => (
+                  <tr key={cs.class_id}>
+                    <td>{cs.class_id}</td>
+                    <td className="fw-semibold">{cs.class_name}</td>
+                    <td><span className="badge bg-secondary text-uppercase">{cs.class_day}</span></td>
+                    <td>{cs.class_start} - {cs.class_end}</td>
+                    <td>Room #{cs.room_id}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(cs, "class_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(cs.class_id, "ตารางเรียน")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "exam" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>รหัสวิชา</th>
+                  <th>ชื่อวิชา</th>
+                  <th>ประเภท</th>
+                  <th>วันที่สอบ</th>
+                  <th>เวลา</th>
+                  <th>ห้องสอบ</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {examSchedules.map((es) => (
+                  <tr key={es.exam_id}>
+                    <td>{es.exam_id}</td>
+                    <td className="fw-bold">{es.exam_code}</td>
+                    <td>{es.exam_name}</td>
+                    <td>
+                      <span className={`badge ${es.exam_final === 1 ? "bg-danger" : "bg-warning text-dark"}`}>
+                        {es.exam_final === 1 ? "FINAL" : "MIDTERM"}
+                      </span>
+                    </td>
+                    <td>{es.exam_date}</td>
+                    <td>{es.exam_start} - {es.exam_end}</td>
+                    <td>{es.exam_room}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(es, "exam_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(es.exam_id, "ตารางสอบ")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "rooms" && (
+            <table className="table table-dark table-striped table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>ชื่อห้อง</th>
+                  <th>คำอธิบายห้อง</th>
+                  <th>รูปภาพ</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rooms.map((r) => (
+                  <tr key={r.room_id}>
+                    <td>{r.room_id}</td>
+                    <td className="fw-bold text-primary">{r.room_name}</td>
+                    <td>{r.room_description}</td>
+                    <td>{r.room_image || "-"}</td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(r, "room_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(r.room_id, "ห้องปฏิบัติการ")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+
+      {/* Modal Dialog Form for Add & Edit */}
+      {isModalOpen && (
+        <div className="modal show d-block" tabIndex={-1} style={{ backgroundColor: "rgba(0,0,0,0.75)" }}>
+          <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-content bg-dark border-secondary text-white">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title fw-bold">
+                  {editingId ? `แก้ไขข้อมูล (${activeTab}) ID: ${editingId}` : `เพิ่มข้อมูลใหม่ (${activeTab})`}
+                </h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setIsModalOpen(false)}></button>
+              </div>
+              <form onSubmit={handleSave}>
+                <div className="modal-body">
+                  {activeTab === "teachers" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อจริง (ไทย)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.teacher_firstname || ""}
+                          onChange={(e) => setFormData({ ...formData, teacher_firstname: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">นามสกุล (ไทย)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.teacher_lastname || ""}
+                          onChange={(e) => setFormData({ ...formData, teacher_lastname: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อภาษาอังกฤษ</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.teacher_name_en || ""}
+                          onChange={(e) => setFormData({ ...formData, teacher_name_en: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อีเมล / ช่องทางติดต่อ</label>
+                        <input
+                          type="email"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.teacher_contact || ""}
+                          onChange={(e) => setFormData({ ...formData, teacher_contact: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">อัปโหลดรูปภาพอาจารย์</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "teachers", "teacher_image")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
+                        {formData.teacher_image && <span className="small text-success d-block mt-1">ไฟล์ปัจจุบัน: {formData.teacher_image}</span>}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "students" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">รหัสนักศึกษา (Student ID)</label>
+                        <input
+                          type="number"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_id || ""}
+                          onChange={(e) => setFormData({ ...formData, student_id: Number(e.target.value) })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">สายรหัส (เช่น 006, 800)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_lineage || ""}
+                          onChange={(e) => setFormData({ ...formData, student_lineage: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อจริง</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_firstname || ""}
+                          onChange={(e) => setFormData({ ...formData, student_firstname: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">นามสกุล</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_lastname || ""}
+                          onChange={(e) => setFormData({ ...formData, student_lastname: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small text-info fw-bold">อีเมลนักศึกษา (Email)</label>
+                        <input
+                          type="email"
+                          className="form-control bg-black border-secondary text-white"
+                          placeholder="เช่น 67200412@kmitl.ac.th"
+                          value={formData.student_email || formData.student_contact || ""}
+                          onChange={(e) => setFormData({ ...formData, student_email: e.target.value, student_contact: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">Instagram (ไม่ต้องใส่ @)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_instagram || ""}
+                          onChange={(e) => setFormData({ ...formData, student_instagram: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">อัปโหลดรูปภาพนักศึกษา (Student Image)</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "students", "student_image")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
+                        {formData.student_image && (
+                          <span className="small text-success d-block mt-1">ไฟล์ปัจจุบัน: {formData.student_image}</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "news" && (
+                    <div className="row g-3">
+                      <div className="col-12">
+                        <label className="form-label small">หัวข้อข่าว</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.news_title || ""}
+                          onChange={(e) => setFormData({ ...formData, news_title: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">หมวดหมู่ข่าว</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.news_category || ""}
+                          onChange={(e) => setFormData({ ...formData, news_category: e.target.value })}
+                          placeholder="เช่น กิจกรรม, งานแข่งขัน, สัมมนา"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อัปโหลดรูปภาพข่าว</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "news", "news_image")}
+                        />
+                        {formData.news_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.news_image}</span>}
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">เนื้อหาข่าว / คำอธิบาย</label>
+                        <textarea
+                          rows={4}
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.news_description || ""}
+                          onChange={(e) => setFormData({ ...formData, news_description: e.target.value })}
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "projects" && (
+                    <div className="row g-3">
+                      <div className="col-12">
+                        <label className="form-label small">ชื่อโครงงาน (Project Name)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.project_name || ""}
+                          onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">รหัสนักศึกษาเจ้าของโปรเจกต์</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          placeholder="เช่น 67200099"
+                          value={formData.student_id || ""}
+                          onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อัปโหลดรูปภาพโปรเจกต์</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "projects", "project_image")}
+                        />
+                        {formData.project_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.project_image}</span>}
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">คำอธิบายโครงงาน</label>
+                        <textarea
+                          rows={3}
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.project_description || ""}
+                          onChange={(e) => setFormData({ ...formData, project_description: e.target.value })}
+                          required
+                        ></textarea>
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">อัปโหลดไฟล์เล่มโครงงาน (PDF Document)</label>
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "projects", "project_pdf")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดเอกสาร PDF...</span>}
+                        {formData.project_pdf && (
+                          <span className="small text-danger d-block mt-1">
+                            <i className="bi bi-file-earmark-pdf me-1"></i>ไฟล์ PDF ปัจจุบัน: {formData.project_pdf}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "companies" && (
+                    <div className="row g-3">
+                      <div className="col-md-8">
+                        <label className="form-label small">ชื่อบริษัท</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.company_name || ""}
+                          onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label small">อัปโหลดโลโก้บริษัท</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "companys", "company_image")}
+                        />
+                        {formData.company_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.company_image}</span>}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "internships" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">ตำแหน่งฝึกงาน</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.internship_title || ""}
+                          onChange={(e) => setFormData({ ...formData, internship_title: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">รหัสนักศึกษา</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.student_id || ""}
+                          onChange={(e) => setFormData({ ...formData, student_id: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">รหัสบริษัท (Company ID)</label>
+                        <input
+                          type="number"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.company_id || ""}
+                          onChange={(e) => setFormData({ ...formData, company_id: Number(e.target.value) })}
+                          required
+                        />
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">รายละเอียดประสบการณ์ฝึกงาน</label>
+                        <textarea
+                          rows={3}
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.internship_description || ""}
+                          onChange={(e) => setFormData({ ...formData, internship_description: e.target.value })}
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "class" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อวิชา</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.class_name || ""}
+                          onChange={(e) => setFormData({ ...formData, class_name: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">รหัสอาจารย์ (Teacher ID)</label>
+                        <input
+                          type="number"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.teacher_id || ""}
+                          onChange={(e) => setFormData({ ...formData, teacher_id: Number(e.target.value) })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">รหัสห้อง (Room ID)</label>
+                        <input
+                          type="number"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.room_id || ""}
+                          onChange={(e) => setFormData({ ...formData, room_id: Number(e.target.value) })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label small">วัน</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.class_day || "monday"}
+                          onChange={(e) => setFormData({ ...formData, class_day: e.target.value })}
+                          required
+                        >
+                          <option value="monday">Monday (จันทร์)</option>
+                          <option value="tuesday">Tuesday (อังคาร)</option>
+                          <option value="wednesday">Wednesday (พุธ)</option>
+                          <option value="thursday">Thursday (พฤหัสบดี)</option>
+                          <option value="friday">Friday (ศุกร์)</option>
+                          <option value="saturday">Saturday (เสาร์)</option>
+                          <option value="sunday">Sunday (อาทิตย์)</option>
+                        </select>
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label small">เวลาเริ่ม (เช่น 10:00)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.class_start || ""}
+                          onChange={(e) => setFormData({ ...formData, class_start: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-4">
+                        <label className="form-label small">เวลาสิ้นสุด (เช่น 12:00)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.class_end || ""}
+                          onChange={(e) => setFormData({ ...formData, class_end: e.target.value })}
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "exam" && (
+                    <div className="row g-3">
+                      <div className="col-md-4">
+                        <label className="form-label small">รหัสวิชา</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_code || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_code: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-8">
+                        <label className="form-label small">ชื่อวิชา</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_name || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_name: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">ประเภทการสอบ</label>
+                        <select
+                          className="form-select bg-black border-secondary text-white"
+                          value={formData.exam_final ?? 0}
+                          onChange={(e) => setFormData({ ...formData, exam_final: Number(e.target.value) })}
+                          required
+                        >
+                          <option value={0}>กลางภาค (MIDTERM)</option>
+                          <option value={1}>ปลายภาค (FINAL)</option>
+                        </select>
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">วันที่สอบ (YYYY-MM-DD)</label>
+                        <input
+                          type="date"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_date || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_date: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">เวลาเริ่ม (เช่น 13:30)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_start || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_start: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-3">
+                        <label className="form-label small">เวลาสิ้นสุด (เช่น 16:30)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_end || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_end: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">ห้องสอบ (เช่น E113)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.exam_room || ""}
+                          onChange={(e) => setFormData({ ...formData, exam_room: e.target.value })}
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "rooms" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อห้อง (เช่น E107)</label>
+                        <input
+                          type="text"
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.room_name || ""}
+                          onChange={(e) => setFormData({ ...formData, room_name: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อัปโหลดรูปภาพห้อง</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control bg-black border-secondary text-white"
+                          onChange={(e) => handleFileUpload(e, "rooms", "room_image")}
+                        />
+                        {formData.room_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.room_image}</span>}
+                      </div>
+                      <div className="col-12">
+                        <label className="form-label small">คำอธิบายห้องปฏิบัติการ / อุปกรณ์</label>
+                        <textarea
+                          rows={3}
+                          className="form-control bg-black border-secondary text-white"
+                          value={formData.room_description || ""}
+                          onChange={(e) => setFormData({ ...formData, room_description: e.target.value })}
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="modal-footer border-secondary">
+                  <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+                    ยกเลิก (Cancel)
+                  </button>
+                  <button type="submit" className="btn btn-primary d-flex align-items-center gap-1" disabled={loading}>
+                    <i className="bi bi-check-circle"></i> บันทึกข้อมูล (Save)
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

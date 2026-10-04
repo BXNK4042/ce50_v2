@@ -76,6 +76,19 @@ export default function ProjectsPage() {
                     </div>
                     <div className="modal-body">
                       <p>{project.project_description}</p>
+                      {project.project_pdf && (
+                        <div className="mt-3 pt-3 border-top">
+                          <a
+                            href={`/uploads/projects/${project.project_pdf}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary d-inline-flex align-items-center gap-2"
+                          >
+                            <i className="bi bi-file-earmark-pdf"></i>
+                            เปิดดูเอกสารรายงานโครงงาน (PDF)
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div className="modal-footer">
                       <button
