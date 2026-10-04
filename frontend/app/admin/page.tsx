@@ -235,10 +235,7 @@ export default function AdminDashboardPage() {
       {/* Top Header Bar */}
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
         <div>
-          <h2 className="fw-bold mb-1 d-flex align-items-center gap-2">
-            <i className="bi bi-gear-fill text-primary"></i>
-            CE50 Admin Management Portal
-          </h2>
+          <h2 className="fw-bold mb-1">CE50 Admin Management Portal</h2>
           <p className="text-secondary small mb-0">ระบบจัดการฐานข้อมูลหลังบ้าน (SQLite Backend CRUD Engine)</p>
         </div>
         <div className="d-flex align-items-center gap-3 mt-3 mt-md-0">
