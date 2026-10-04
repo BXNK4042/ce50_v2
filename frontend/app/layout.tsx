@@ -29,17 +29,42 @@ const currentYear = new Date().getFullYear();
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   const [mounted, setMounted] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [adminUser, setAdminUser] = useState<{ user_name: string; user_role: string } | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    const checkAuth = () => {
+      const token = localStorage.getItem("ce50_admin_token");
+      const userStr = localStorage.getItem("ce50_admin_user");
+      if (token && userStr) {
+        try {
+          setIsAdminLoggedIn(true);
+          setAdminUser(JSON.parse(userStr));
+        } catch {
+          setIsAdminLoggedIn(false);
+          setAdminUser(null);
+        }
+      } else {
+        setIsAdminLoggedIn(false);
+        setAdminUser(null);
+      }
+    };
+
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+
     // @ts-expect-error Bootstrap bundle has no TypeScript declarations.
     void import("bootstrap/dist/js/bootstrap.bundle.min.js");
+
+    return () => window.removeEventListener("storage", checkAuth);
   }, []);
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={outfit.className} suppressHydrationWarning>
-        <ul className="nav justify-content-center bg-black align-items-center">
+        <div className="bg-black position-relative border-bottom border-secondary border-opacity-25">
+          <ul className="nav justify-content-center align-items-center py-2">
           <li className="nav-item dropdown">
             <a
               className="nav-link dropdown-toggle text-light"
@@ -123,6 +148,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
           </li>
         </ul>
+
+        {mounted && isAdminLoggedIn && (
+          <div className="position-absolute top-50 end-0 translate-middle-y me-3 d-flex align-items-center gap-2">
+            <Link
+              href="/admin"
+              className="btn btn-sm btn-outline-warning d-flex align-items-center gap-1 shadow-sm rounded-pill px-3"
+            >
+              <i className="bi bi-shield-lock-fill"></i>
+              <span>Admin</span>
+              {adminUser?.user_role && (
+                <span
+                  className="badge bg-warning text-dark ms-1"
+                  style={{ fontSize: "0.65rem" }}
+                >
+                  {adminUser.user_role}
+                </span>
+              )}
+            </Link>
+          </div>
+        )}
+      </div>
         {children}
         <footer className="template-container text-white">
           <div className="row">
