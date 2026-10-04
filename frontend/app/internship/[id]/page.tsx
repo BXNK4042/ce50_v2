@@ -87,7 +87,7 @@ export default function InternshipPage() {
           </tbody>
         </table>
       */}
-      <div className="row rows-cols-1 row-cols-md-6 g-4 mb-5">
+      <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-3 g-md-4 mb-5">
         {studentFiltered.map((student) => {
           const modalId = `student-${student.student_id}-modal`;
 
@@ -118,7 +118,7 @@ export default function InternshipPage() {
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
               >
-                <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                   <div className="modal-content">
                     <div className="modal-header">
                       <p className="modal-title fs-5" id="exampleModalLabel">

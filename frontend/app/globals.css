@@ -18,9 +18,21 @@ img {
 .template-container {
   width: 100%;
   margin-inline: auto;
-  padding-inline: 5rem;
+  padding-inline: 1rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .template-container {
+    padding-inline: 2.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .template-container {
+    padding-inline: 5rem;
+  }
 }
 
 /* World Vision Template: Image Hover Zoom & Opacity Effect */
