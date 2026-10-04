@@ -279,7 +279,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Tab Navigation */}
-      <div className="p-2 rounded-3 bg-secondary bg-opacity-15 d-flex flex-wrap gap-2 mb-4">
+      <div className="p-2 rounded-3 bg-black border border-secondary border-opacity-25 d-flex flex-wrap gap-2 mb-4">
         <button
           type="button"
           className={`btn ${activeTab === "teachers" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
