@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import ce_logo from "../public/ce_logo.webp";
 import { Outfit } from "next/font/google";
+import { Compass } from "lucide-react";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -63,6 +64,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" suppressHydrationWarning>
       <body className={outfit.className} suppressHydrationWarning>
         <div className="bg-black position-relative border-bottom border-secondary border-opacity-25">
+          {/* Left: Career Quiz Button */}
+          <div className="position-absolute top-50 start-0 translate-middle-y ms-4">
+            <Link
+              href="/quiz"
+              className="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold text-primary"
+            >
+              <Compass size={16} />
+              <span>Career Quiz</span>
+            </Link>
+          </div>
+
           <ul className="nav justify-content-center align-items-center py-2">
           <li className="nav-item dropdown">
             <a
@@ -139,11 +151,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <li className="nav-item">
             <Link href="/company" className="nav nav-link text-light">
               Internship
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link href="/quiz" className="nav nav-link text-light">
-              Quiz
             </Link>
           </li>
         </ul>
