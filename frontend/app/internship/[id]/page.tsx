@@ -43,7 +43,12 @@ export default function InternshipPage() {
 
   return (
     <div className="template-container">
-      <div className="mb-4 pt-2">
+      <div className="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-5 gap-3">
+        <div>
+          <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
+          <h1 className="text-primary">นักศึกษาฝึกงาน</h1>
+          <div className="bg-blue-500 w-20 h-1"></div>
+        </div>
         <Link
           href="/company"
           className="btn btn-primary d-inline-flex align-items-center gap-2"
@@ -51,12 +56,6 @@ export default function InternshipPage() {
           <ArrowLeft size={18} />
           <span>Back to Company</span>
         </Link>
-      </div>
-
-      <div className="mt-3 mb-5">
-        <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
-        <h1 className="text-primary">นักศึกษาฝึกงาน</h1>
-        <div className="bg-blue-500 w-20 h-1"></div>
       </div>
       {/*
         <table className="table table-striped">
@@ -88,7 +87,7 @@ export default function InternshipPage() {
           </tbody>
         </table>
       */}
-      <div className="row rows-cols-1 row-cols-md-6 g-4">
+      <div className="row rows-cols-1 row-cols-md-6 g-4 mb-5">
         {studentFiltered.map((student) => {
           const modalId = `student-${student.student_id}-modal`;
 
