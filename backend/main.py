@@ -1,4 +1,6 @@
 import hashlib
+import json
+import logging
 import os
 import sqlite3
 import time
@@ -227,6 +229,57 @@ def get_db():
     return conn
 
 
+def init_db():
+    with get_db() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS quiz_logs (
+                log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ip_address TEXT,
+                user_agent TEXT,
+                os TEXT,
+                browser TEXT,
+                device TEXT,
+                top_career TEXT,
+                top_career_th TEXT,
+                top_matches_json TEXT,
+                answers_json TEXT,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS hero_banners (
+                banner_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                generation TEXT NOT NULL UNIQUE,
+                banner_image TEXT NOT NULL,
+                title TEXT,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        banner_count = conn.execute("SELECT COUNT(*) AS count FROM hero_banners").fetchone()["count"]
+        if banner_count == 0:
+            conn.execute(
+                """
+                INSERT INTO hero_banners (generation, banner_image, title)
+                VALUES 
+                    ('All', '/ce_all_banner.png', 'All Generations Banner'),
+                    ('CE04', '/ce_04_cropped.webp', 'CE04 Banner')
+                """
+            )
+        # Ensure company_location and company_email exist in companys table
+        company_cols = [r["name"] for r in conn.execute("PRAGMA table_info(companys)").fetchall()]
+        if "company_location" not in company_cols:
+            conn.execute("ALTER TABLE companys ADD COLUMN company_location TEXT")
+        if "company_email" not in company_cols:
+            conn.execute("ALTER TABLE companys ADD COLUMN company_email TEXT")
+        conn.commit()
+
+init_db()
+
+
 @app.get("/", response_class=HTMLResponse)
 def home():
     return "<h1>CE50 API Server</h1>"
@@ -279,7 +332,7 @@ def internships():
 @app.get("/companys")
 def companys():
     with get_db() as conn:
-        rows = conn.execute("SELECT company_id, company_name, company_image FROM companys").fetchall()
+        rows = conn.execute("SELECT company_id, company_name, company_image, company_location, company_email FROM companys").fetchall()
         return [dict(row) for row in rows]
 
 
@@ -796,14 +849,16 @@ def delete_project(project_id: int, admin: dict = Depends(get_current_admin)):
 class CompanyCreate(BaseModel):
     company_name: str
     company_image: Optional[str] = None
+    company_location: Optional[str] = None
+    company_email: Optional[str] = None
 
 @app.post("/companys")
 def create_company(data: CompanyCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO companys (company_name, company_image) VALUES (?, ?)",
-            (data.company_name, data.company_image)
+            "INSERT INTO companys (company_name, company_image, company_location, company_email) VALUES (?, ?, ?, ?)",
+            (data.company_name, data.company_image, data.company_location, data.company_email)
         )
         conn.commit()
         return {"success": True, "company_id": cursor.lastrowid}
@@ -812,8 +867,8 @@ def create_company(data: CompanyCreate, admin: dict = Depends(get_current_admin)
 def update_company(company_id: int, data: CompanyCreate, admin: dict = Depends(get_current_admin)):
     with get_db() as conn:
         conn.execute(
-            "UPDATE companys SET company_name = ?, company_image = ? WHERE company_id = ?",
-            (data.company_name, data.company_image, company_id)
+            "UPDATE companys SET company_name = ?, company_image = ?, company_location = ?, company_email = ? WHERE company_id = ?",
+            (data.company_name, data.company_image, data.company_location, data.company_email, company_id)
         )
         conn.commit()
         return {"success": True, "company_id": company_id}
@@ -992,10 +1047,136 @@ def delete_room(room_id: int, admin: dict = Depends(get_current_admin)):
 
 
 # ==========================================
+# Hero Banners CRUD
+# ==========================================
+
+class HeroBannerCreate(BaseModel):
+    generation: str
+    banner_image: str
+    title: Optional[str] = None
+
+@app.get("/hero-banners")
+def get_hero_banners():
+    with get_db() as conn:
+        rows = conn.execute("SELECT banner_id, generation, banner_image, title, created_at FROM hero_banners").fetchall()
+        return [dict(row) for row in rows]
+
+@app.post("/hero-banners")
+def create_hero_banner(data: HeroBannerCreate, admin: dict = Depends(get_current_admin)):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO hero_banners (generation, banner_image, title) VALUES (?, ?, ?)",
+                (data.generation, data.banner_image, data.title)
+            )
+            conn.commit()
+            return {"success": True, "banner_id": cursor.lastrowid}
+        except sqlite3.IntegrityError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Banner for generation '{data.generation}' already exists"
+            )
+
+@app.put("/hero-banners/{banner_id}")
+def update_hero_banner(banner_id: int, data: HeroBannerCreate, admin: dict = Depends(get_current_admin)):
+    with get_db() as conn:
+        # Check if banner exists
+        existing = conn.execute("SELECT banner_id FROM hero_banners WHERE banner_id = ?", (banner_id,)).fetchone()
+        if not existing:
+            raise HTTPException(status_code=404, detail="Hero banner not found")
+        try:
+            conn.execute(
+                "UPDATE hero_banners SET generation = ?, banner_image = ?, title = ? WHERE banner_id = ?",
+                (data.generation, data.banner_image, data.title, banner_id)
+            )
+            conn.commit()
+            return {"success": True, "banner_id": banner_id}
+        except sqlite3.IntegrityError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Banner for generation '{data.generation}' already exists"
+            )
+
+@app.delete("/hero-banners/{banner_id}")
+def delete_hero_banner(banner_id: int, admin: dict = Depends(get_current_admin)):
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM hero_banners WHERE banner_id = ?", (banner_id,))
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Hero banner not found")
+        conn.commit()
+        return {"success": True, "deleted_id": banner_id}
+
+
+# ==========================================
 # BCS Tech Career Quiz Endpoints
 # ==========================================
 
 from quiz_data import get_public_questions, evaluate_quiz, ROLES_METADATA
+
+
+def parse_client_info(request: Request) -> dict:
+    # 1. Client IP
+    cf_ip = request.headers.get("cf-connecting-ip")
+    xf_ip = request.headers.get("x-forwarded-for")
+    if cf_ip:
+        client_ip = cf_ip.strip()
+    elif xf_ip:
+        client_ip = xf_ip.split(",")[0].strip()
+    elif request.client and request.client.host:
+        client_ip = request.client.host
+    else:
+        client_ip = "unknown"
+
+    # 2. User-Agent
+    user_agent = request.headers.get("user-agent", "")
+    ua_lower = user_agent.lower()
+
+    # 3. Device: Mobile, Tablet, Desktop
+    if any(k in ua_lower for k in ["ipad", "tablet"]) or ("android" in ua_lower and "mobile" not in ua_lower):
+        device = "Tablet"
+    elif any(k in ua_lower for k in ["mobile", "iphone", "ipod", "android", "blackberry", "windows phone"]):
+        device = "Mobile"
+    else:
+        device = "Desktop"
+
+    # 4. OS: Windows, macOS, Linux, Android, iOS, or Other
+    if "android" in ua_lower:
+        os_name = "Android"
+    elif any(k in ua_lower for k in ["iphone", "ipad", "ipod"]) or ("macintosh" in ua_lower and "mobile" in ua_lower):
+        os_name = "iOS"
+    elif "windows" in ua_lower:
+        os_name = "Windows"
+    elif any(k in ua_lower for k in ["macintosh", "mac os x", "macos"]):
+        os_name = "macOS"
+    elif "linux" in ua_lower:
+        os_name = "Linux"
+    else:
+        os_name = "Other"
+
+    # 5. Browser: Chrome, Safari, Firefox, Edge, Opera, or Other
+    if "edg/" in ua_lower or "edge/" in ua_lower:
+        browser = "Edge"
+    elif "opr/" in ua_lower or "opera" in ua_lower:
+        browser = "Opera"
+    elif "firefox" in ua_lower or "fxios" in ua_lower:
+        browser = "Firefox"
+    elif "chrome" in ua_lower or "crios" in ua_lower:
+        browser = "Chrome"
+    elif "safari" in ua_lower:
+        browser = "Safari"
+    else:
+        browser = "Other"
+
+    return {
+        "ip_address": client_ip,
+        "user_agent": user_agent,
+        "os": os_name,
+        "browser": browser,
+        "device": device,
+    }
+
 
 class QuizEvaluateRequest(BaseModel):
     answers: dict[str, Any]
@@ -1011,12 +1192,44 @@ def get_quiz_roles_endpoint():
     return {"roles": list(ROLES_METADATA.values())}
 
 @app.post("/quiz/evaluate")
-def evaluate_quiz_endpoint(req: QuizEvaluateRequest):
+def evaluate_quiz_endpoint(req: QuizEvaluateRequest, request: Request):
     """Evaluates student quiz answers and returns ranked career matches"""
     try:
         result = evaluate_quiz(req.answers)
-        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to evaluate quiz: {str(e)}")
+
+    try:
+        client_info = parse_client_info(request)
+        top_roles = result.get("top_roles", [])
+        top_career = top_roles[0].get("title") if top_roles else None
+        top_career_th = top_roles[0].get("title_th") if top_roles else None
+        top_matches_json = json.dumps(top_roles[:3], ensure_ascii=False)
+        answers_json = json.dumps(req.answers, ensure_ascii=False)
+
+        with get_db() as conn:
+            conn.execute(
+                """
+                INSERT INTO quiz_logs 
+                (ip_address, user_agent, os, browser, device, top_career, top_career_th, top_matches_json, answers_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    client_info["ip_address"],
+                    client_info["user_agent"],
+                    client_info["os"],
+                    client_info["browser"],
+                    client_info["device"],
+                    top_career,
+                    top_career_th,
+                    top_matches_json,
+                    answers_json,
+                )
+            )
+            conn.commit()
+    except Exception as log_err:
+        logging.error(f"Error logging quiz evaluation: {log_err}", exc_info=True)
+
+    return result
 
 

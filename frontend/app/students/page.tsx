@@ -5,8 +5,16 @@ import { Students } from "@/types/student";
 import { getStudentGeneration } from "@/utils/generation";
 import Image from "next/image";
 
+interface HeroBanner {
+  banner_id: number;
+  generation: string;
+  banner_image: string;
+  title?: string | null;
+}
+
 export default function Home() {
   const [students, setStudents] = useState<Students[]>([]);
+  const [heroBanners, setHeroBanners] = useState<HeroBanner[]>([]);
   const [selectedGen, setSelectedGen] = useState<string>("All");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,10 +24,18 @@ export default function Home() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch("/api/students");
-        if (!response.ok) throw new Error("Failed to fetch students");
-        const result = await response.json();
-        setStudents(result);
+        const [studentsRes, bannersRes] = await Promise.all([
+          fetch("/api/students"),
+          fetch("/api/hero-banners"),
+        ]);
+        if (!studentsRes.ok) throw new Error("Failed to fetch students");
+        const studentsData = await studentsRes.json();
+        setStudents(studentsData);
+
+        if (bannersRes.ok) {
+          const bannersData = await bannersRes.json();
+          setHeroBanners(bannersData);
+        }
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Error fetching students");
       } finally {
@@ -48,6 +64,31 @@ export default function Home() {
     );
   }, [students, selectedGen]);
 
+  const getHeroBanner = (gen: string) => {
+    const matched = heroBanners.find(
+      (b) => b.generation && b.generation.toUpperCase() === gen.toUpperCase()
+    );
+    if (matched) {
+      if (matched.banner_image.startsWith("/") || matched.banner_image.startsWith("http")) {
+        return matched.banner_image;
+      }
+      return `/uploads/banners/${matched.banner_image}`;
+    }
+
+    const fallbackAll = heroBanners.find(
+      (b) => b.generation && b.generation.toUpperCase() === "ALL"
+    );
+    if (fallbackAll) {
+      if (fallbackAll.banner_image.startsWith("/") || fallbackAll.banner_image.startsWith("http")) {
+        return fallbackAll.banner_image;
+      }
+      return `/uploads/banners/${fallbackAll.banner_image}`;
+    }
+
+    if (gen === "All") return "/ce_all_banner.png";
+    return "/404.png";
+  };
+
   const getStudentImage = (student: Students) => {
     if (student.student_image) {
       return student.student_image.startsWith("/")
@@ -60,14 +101,22 @@ export default function Home() {
 
   return (
     <div className="template-container">
-      <div className="bg-gradient">
+      <div
+        className="w-100 overflow-hidden rounded-3 position-relative mb-4"
+        style={{ height: "600px" }}
+      >
         <Image
-          src="/ce_04_cropped.webp"
+          key={selectedGen}
+          src={getHeroBanner(selectedGen)}
           alt="ce_banner"
           width={2000}
-          height={2000}
-          className="opacity-25"
+          height={800}
+          className="w-100 h-100 opacity-25"
+          style={{ objectFit: "cover", objectPosition: "center" }}
           draggable="false"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).src = "/404.png";
+          }}
         />
       </div>
       <div className="mt-5 mb-4">

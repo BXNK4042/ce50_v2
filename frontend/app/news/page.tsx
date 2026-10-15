@@ -7,8 +7,9 @@ import Image from "next/image";
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [latestTech, setLatestTech] = useState<GNewsArticle[]>([]);
-  const [worldTech, setWorldTech] = useState<GNewsArticle[]>([]);
+  const [headlinesTech, setHeadlinesTech] = useState<GNewsArticle[]>([]);
+  const [usTech, setUsTech] = useState<GNewsArticle[]>([]);
+  const [thTech, setThTech] = useState<GNewsArticle[]>([]);
   const [loadingGNews, setLoadingGNews] = useState(true);
 
   useEffect(() => {
@@ -26,17 +27,22 @@ export default function NewsPage() {
     async function getGNews() {
       try {
         setLoadingGNews(true);
-        const [latestRes, worldRes] = await Promise.all([
-          fetch("/api/gnews?country=th&max=5"),
-          fetch("/api/gnews?country=us&max=4"),
+        const [headlinesRes, usRes, thRes] = await Promise.all([
+          fetch("/api/gnews?category=technology&max=2"),
+          fetch("/api/gnews?country=us&max=2"),
+          fetch("/api/gnews?country=th&max=2"),
         ]);
-        if (latestRes.ok) {
-          const data = await latestRes.json();
-          if (Array.isArray(data.articles)) setLatestTech(data.articles);
+        if (headlinesRes.ok) {
+          const data = await headlinesRes.json();
+          if (Array.isArray(data.articles)) setHeadlinesTech(data.articles);
         }
-        if (worldRes.ok) {
-          const data = await worldRes.json();
-          if (Array.isArray(data.articles)) setWorldTech(data.articles);
+        if (usRes.ok) {
+          const data = await usRes.json();
+          if (Array.isArray(data.articles)) setUsTech(data.articles);
+        }
+        if (thRes.ok) {
+          const data = await thRes.json();
+          if (Array.isArray(data.articles)) setThTech(data.articles);
         }
       } catch (err) {
         console.error("Failed to load external news", err);
@@ -49,8 +55,9 @@ export default function NewsPage() {
     getGNews();
   }, []);
 
-  const featured = latestTech[0];
-  const sideArticles = latestTech.slice(1, 5);
+  const spotlight = headlinesTech[0];
+  const internationalArticles = usTech.slice(0, 2);
+  const thaiArticles = thTech.slice(0, 2);
 
   return (
     <div className="template-container">
@@ -61,7 +68,7 @@ export default function NewsPage() {
       </div>
 
       {news.length > 0 && (
-        <div id="carouselExample" className="carousel slide">
+        <div id="carouselExample" className="carousel slide mb-5">
           <div className="carousel-inner">
             {news.map((item, index) => (
               <div
@@ -112,241 +119,192 @@ export default function NewsPage() {
         </div>
       )}
 
-      {/* ข่าวสารล่าสุด: Template 1 ใหญ่ซ้าย + 4 เล็กขวา */}
-      <div className="editors-news text-light">
-        <div className="row">
-          <div className="col-lg-3">
-            <div className="position-relative float-left">
-              <div className="mt-5 mb-5">
-                <h1 className="text-primary">ข่าวสารล่าสุด</h1>
-                <div className="bg-blue-500 w-100 h-1"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Main News Section */}
+      <div className="main-news-section text-light mb-5">
         {loadingGNews ? (
           <div className="row placeholder-glow">
-            <div className="col-lg-6 mb-5 mb-sm-2">
+            {/* Left Column Skeleton */}
+            <div className="col-lg-6 mb-5">
+              <div className="mb-4">
+                <span className="placeholder col-6 bg-primary d-block py-2 mb-2"></span>
+                <div className="bg-blue-500 w-20 h-1"></div>
+              </div>
               <span
-                className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
-                style={{ height: "440px" }}
+                className="placeholder col-12 bg-secondary bg-opacity-25 d-block rounded-2"
+                style={{ height: "400px" }}
               ></span>
-              <span className="placeholder col-8 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
+              <span className="placeholder col-9 bg-secondary bg-opacity-50 mt-3 d-block py-2"></span>
               <span className="placeholder col-12 bg-secondary bg-opacity-25 mt-2 d-block py-1"></span>
+              <span className="placeholder col-10 bg-secondary bg-opacity-25 mt-1 d-block py-1"></span>
             </div>
-            <div className="col-lg-6 mb-5 mb-sm-2">
-              <div className="row">
-                {[0, 1].map((idx) => (
-                  <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
-                    <span
-                      className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
-                      style={{ height: "200px" }}
-                    ></span>
-                    <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
-                  </div>
-                ))}
-              </div>
-              <div className="row mt-3">
-                {[2, 3].map((idx) => (
-                  <div
-                    className={
-                      idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
-                    }
-                    key={idx}
-                  >
-                    <span
-                      className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
-                      style={{ height: "200px" }}
-                    ></span>
-                    <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="row">
-          <div className="col-lg-6 mb-5 mb-sm-2">
-            <a
-              href={featured?.url || "#"}
-              target={featured?.url ? "_blank" : undefined}
-              rel="noopener noreferrer"
-              className="text-white text-decoration-none d-block"
-            >
-              <div className="position-relative image-hover">
-                <Image
-                  src={featured?.image || "/404.png"}
-                  className="img-fluid w-100"
-                  style={{ width: "100%", height: "440px", objectFit: "cover" }}
-                  alt={featured?.title || "ce50-news"}
-                  width={1200}
-                  height={800}
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/404.png";
-                  }}
-                />
-              </div>
-              <h1 className="font-weight-600 mt-3">
-                {featured?.title ||
-                  "Melania Trump speaks about courage at State Department"}
-              </h1>
-            </a>
-          </div>
-          <div className="col-lg-6 mb-5 mb-sm-2">
-            <div className="row">
-              {[0, 1].map((idx) => {
-                const art = sideArticles[idx];
-                return (
-                  <div className="col-sm-6 mb-5 mb-sm-2" key={idx}>
-                    <a
-                      href={art?.url || "#"}
-                      target={art?.url ? "_blank" : undefined}
-                      rel="noopener noreferrer"
-                      className="text-white text-decoration-none d-block"
-                    >
-                      <div className="position-relative image-hover">
-                        <Image
-                          src={art?.image || "/404.png"}
-                          className="img-fluid w-100"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                          alt={art?.title || "ce50-news"}
-                          width={700}
-                          height={500}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = "/404.png";
-                          }}
-                        />
-                      </div>
-                      <h5 className="font-weight-600 mt-3">
-                        {art?.title ||
-                          (idx === 0
-                            ? "A look at California's eerie plane graveyards"
-                            : "The world's most beautiful racecourses")}
-                      </h5>
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="row mt-3">
-              {[2, 3].map((idx) => {
-                const art = sideArticles[idx];
-                return (
-                  <div
-                    className={
-                      idx === 2 ? "col-sm-6 mb-5 mb-sm-2" : "col-sm-6"
-                    }
-                    key={idx}
-                  >
-                    <a
-                      href={art?.url || "#"}
-                      target={art?.url ? "_blank" : undefined}
-                      rel="noopener noreferrer"
-                      className="text-white text-decoration-none d-block"
-                    >
-                      <div className="position-relative image-hover">
-                        <Image
-                          src={art?.image || "/404.png"}
-                          className="img-fluid w-100"
-                          style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                          alt={art?.title || "ce50-news"}
-                          width={700}
-                          height={500}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = "/404.png";
-                          }}
-                        />
-                      </div>
-                      <h5 className="font-weight-600 mt-3">
-                        {art?.title ||
-                          (idx === 2
-                            ? "Japan cancels cherry blossom festivals over virus fears"
-                            : "Classic cars reborn as electric vehicles")}
-                      </h5>
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        )}
-      </div>
 
-      {/* ข่าวสารต่างประเทศ: Template 4 คอลัมน์ด้านล่าง */}
-      <div className="world-news text-light">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="d-flex position-relative float-left">
-              <div className="mt-5 mb-5">
-                <h1 className="text-primary">ข่าวสารต่างประเทศ</h1>
-                <div className="bg-blue-500 w-100 h-1"></div>
+            {/* Right Column Skeleton */}
+            <div className="col-lg-6 mb-5">
+              {/* International Skeleton */}
+              <div className="mb-4">
+                <div className="mb-3">
+                  <span className="placeholder col-4 bg-primary d-block py-2 mb-2"></span>
+                  <div className="bg-blue-500 w-20 h-1"></div>
+                </div>
+                <div className="row">
+                  {[0, 1].map((idx) => (
+                    <div className="col-6" key={idx}>
+                      <span
+                        className="placeholder col-12 bg-secondary bg-opacity-25 d-block rounded-2"
+                        style={{ height: "150px" }}
+                      ></span>
+                      <span className="placeholder col-11 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
+                      <span className="placeholder col-8 bg-secondary bg-opacity-25 mt-1 d-block py-1"></span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Thai Skeleton */}
+              <div className="mt-4">
+                <div className="mb-3">
+                  <span className="placeholder col-3 bg-primary d-block py-2 mb-2"></span>
+                  <div className="bg-blue-500 w-20 h-1"></div>
+                </div>
+                <div className="row">
+                  {[0, 1].map((idx) => (
+                    <div className="col-6" key={idx}>
+                      <span
+                        className="placeholder col-12 bg-secondary bg-opacity-25 d-block rounded-2"
+                        style={{ height: "150px" }}
+                      ></span>
+                      <span className="placeholder col-11 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
+                      <span className="placeholder col-8 bg-secondary bg-opacity-25 mt-1 d-block py-1"></span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        {loadingGNews ? (
-          <div className="row placeholder-glow">
-            {[0, 1, 2, 3].map((idx) => (
-              <div
-                className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2"
-                key={idx}
-              >
-                <span
-                  className="placeholder col-12 bg-secondary bg-opacity-25 d-block"
-                  style={{ height: "240px" }}
-                ></span>
-                <span className="placeholder col-10 bg-secondary bg-opacity-50 mt-3 d-block py-1"></span>
-                <span className="placeholder col-12 bg-secondary bg-opacity-25 mt-2 d-block py-1"></span>
-              </div>
-            ))}
-          </div>
         ) : (
           <div className="row">
-          {[0, 1, 2, 3].map((idx) => {
-            const art = worldTech[idx];
-            const defaultTitles = [
-              "Refugees flood Turkey's border with Greece",
-              "South Korea’s Moon Jae-in sworn in vowing address",
-              "These puppies are training to assist in avalanche rescue",
-              "'Love Is Blind' couple opens up about their first year",
-            ];
-            return (
-              <div
-                className="col-lg-3 col-sm-6 grid-margin mb-5 mb-sm-2"
-                key={idx}
-              >
-                <a
-                  href={art?.url || "#"}
-                  target={art?.url ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  className="text-white text-decoration-none d-block"
-                >
-                  <div className="position-relative image-hover">
-                    <Image
-                      src={art?.image || "/404.png"}
-                      className="img-fluid w-100"
-                      style={{ width: "100%", height: "240px", objectFit: "cover" }}
-                      alt={art?.title || "ce50-news"}
-                      width={700}
-                      height={500}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "/404.png";
-                      }}
-                    />
-                  </div>
-                  <h5 className="font-weight-bold mt-3">
-                    {art?.title || defaultTitles[idx]}
-                  </h5>
-                  <p className="fs-15 font-weight-normal text-secondary">
-                    {art?.description ||
-                      "Lorem Ipsum has been the industry's standard dummy text"}
-                  </p>
-                </a>
+            {/* Left Column: หัวข้อข่าวเทคโนโลยี (Tech News Headlines) */}
+            <div className="col-lg-6 mb-5">
+              <div className="mb-4">
+                <h2 className="text-primary font-weight-bold">หัวข้อข่าวเทคโนโลยี</h2>
+                <div className="bg-blue-500 w-20 h-1"></div>
               </div>
-            );
-          })}
-        </div>
+
+              <a
+                href={spotlight?.url || "#"}
+                target={spotlight?.url ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className="text-white text-decoration-none d-block group"
+              >
+                <div className="position-relative image-hover overflow-hidden rounded-2">
+                  <Image
+                    src={spotlight?.image || "/404.png"}
+                    className="img-fluid w-100"
+                    style={{ width: "100%", height: "400px", objectFit: "cover" }}
+                    alt={spotlight?.title || "Tech News Headlines"}
+                    width={1200}
+                    height={800}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/404.png";
+                    }}
+                  />
+                </div>
+                <h3 className="font-weight-600 mt-3 text-white lh-base">
+                  {spotlight?.title || "หัวข้อข่าวเทคโนโลยี"}
+                </h3>
+                {spotlight?.description && (
+                  <p className="fs-15 text-secondary mt-2 line-clamp-3">
+                    {spotlight.description}
+                  </p>
+                )}
+              </a>
+            </div>
+
+            {/* Right Column: ข่าวเทคโนโลยีต่างประเทศ (Top) & ข่าวเทคโนโลยีไทย (Bottom) */}
+            <div className="col-lg-6 mb-5">
+              {/* ข่าวเทคโนโลยีต่างประเทศ (International Tech News) */}
+              <div className="mb-4">
+                <div className="mb-4">
+                  <h2 className="text-primary font-weight-bold">ข่าวเทคโนโลยีต่างประเทศ</h2>
+                  <div className="bg-blue-500 w-20 h-1"></div>
+                </div>
+
+                <div className="row">
+                  {[0, 1].map((idx) => {
+                    const art = internationalArticles[idx];
+                    return (
+                      <div className="col-6 mb-3" key={idx}>
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none d-block"
+                        >
+                          <div className="position-relative image-hover overflow-hidden rounded-2">
+                            <Image
+                              src={art?.image || "/404.png"}
+                              className="img-fluid w-100"
+                              style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                              alt={art?.title || "International Tech News"}
+                              width={700}
+                              height={500}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                          </div>
+                          <h6 className="font-weight-600 mt-2 text-white lh-base">
+                            {art?.title || (idx === 0 ? "ข่าวเทคโนโลยีต่างประเทศ 1" : "ข่าวเทคโนโลยีต่างประเทศ 2")}
+                          </h6>
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* ข่าวเทคโนโลยีไทย (Thai Tech News) */}
+              <div className="mt-4">
+                <div className="mb-4">
+                  <h2 className="text-primary font-weight-bold">ข่าวเทคโนโลยีไทย</h2>
+                  <div className="bg-blue-500 w-20 h-1"></div>
+                </div>
+
+                <div className="row">
+                  {[0, 1].map((idx) => {
+                    const art = thaiArticles[idx];
+                    return (
+                      <div className="col-6 mb-3" key={idx}>
+                        <a
+                          href={art?.url || "#"}
+                          target={art?.url ? "_blank" : undefined}
+                          rel="noopener noreferrer"
+                          className="text-white text-decoration-none d-block"
+                        >
+                          <div className="position-relative image-hover overflow-hidden rounded-2">
+                            <Image
+                              src={art?.image || "/404.png"}
+                              className="img-fluid w-100"
+                              style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                              alt={art?.title || "Thai Tech News"}
+                              width={700}
+                              height={500}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                          </div>
+                          <h6 className="font-weight-600 mt-2 text-white lh-base">
+                            {art?.title || (idx === 0 ? "ข่าวเทคโนโลยีไทย 1" : "ข่าวเทคโนโลยีไทย 2")}
+                          </h6>
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

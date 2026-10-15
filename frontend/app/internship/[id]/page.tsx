@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { Internships } from "@/types/internship";
 import { Students } from "@/types/student";
+import { Companys } from "@/types/companys";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Building } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getStudentGeneration } from "@/utils/generation";
@@ -12,6 +13,12 @@ export default function InternshipPage() {
   const { id } = useParams();
   const [internships, setInternships] = useState<Internships[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
+  const [companys, setCompanys] = useState<Companys[]>([]);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [id]);
 
   useEffect(() => {
     async function getInternship() {
@@ -30,6 +37,19 @@ export default function InternshipPage() {
 
     getStudent();
   }, []);
+
+  useEffect(() => {
+    async function getCompanys() {
+      const response = await fetch("/api/companys");
+      setCompanys(await response.json());
+    }
+
+    getCompanys();
+  }, []);
+
+  const currentCompany = companys.find(
+    (company) => company.company_id === Number(id),
+  );
 
   const internFiltered = internships.filter(
     (internship) => internship.company_id === Number(id),
@@ -56,6 +76,62 @@ export default function InternshipPage() {
           <ArrowLeft size={18} />
           <span>Back to Company</span>
         </Link>
+      </div>
+
+      {/* Style 2 Horizontal Card */}
+      <div className="card text-bg-dark mb-4 border">
+        <div className="row g-0">
+          <div className="col-md-2 d-flex align-items-center justify-content-center bg-secondary bg-opacity-10 border-end border-secondary border-opacity-25 p-3 text-center">
+            {currentCompany?.company_image && !imageError ? (
+              <Image
+                src={`/uploads/companys/${currentCompany.company_image}.jpg`}
+                alt={currentCompany.company_name || "Company"}
+                width={120}
+                height={120}
+                className="img-fluid rounded object-fit-contain"
+                style={{ maxHeight: "100px", width: "auto" }}
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <Building size={48} className="text-secondary" />
+            )}
+          </div>
+          <div className="col-md-10">
+            <div className="card-body">
+              <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
+                <h3 className="card-title mb-0">
+                  {currentCompany?.company_name || "Company"}
+                </h3>
+                <span className="badge text-bg-primary">
+                  CE Internship Partner
+                </span>
+              </div>
+              <div className="row g-2 pt-2 border-top border-secondary border-opacity-25">
+                <div className="col-12 col-md-6">
+                  <small className="text-secondary d-block">Location</small>
+                  <span className="fw-semibold">
+                    {currentCompany?.company_location || "-"}
+                  </span>
+                </div>
+                <div className="col-12 col-md-6">
+                  <small className="text-secondary d-block">Email</small>
+                  <span className="fw-semibold">
+                    {currentCompany?.company_email ? (
+                      <a
+                        href={`mailto:${currentCompany.company_email}`}
+                        className="text-primary text-decoration-none"
+                      >
+                        {currentCompany.company_email}
+                      </a>
+                    ) : (
+                      "-"
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       {/*
         <table className="table table-striped">

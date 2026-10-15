@@ -114,12 +114,12 @@ def seedStudentProjects():
 
 def seedCompanys():
   companys_data = [
-    (1, "SCG", "scg"),
-    (3, "armstrong", "armstrong"),
+    (1, "SCG", "scg", "1 ถนนปูนซิเมนต์ไทย แขวงบางซื่อ เขตบางซื่อ กรุงเทพมหานคร 10800", "career@scg.com"),
+    (3, "armstrong", "armstrong", "399/113 ถนนเทพรักษ์ แขวงท่าแร้ง เขตบางเขน กรุงเทพมหานคร 10220", "contact@armstrong.com"),
   ]
 
   insertMany(
-    "INSERT INTO companys (company_id, company_name, company_image) VALUES (?, ?, ?)",
+    "INSERT INTO companys (company_id, company_name, company_image, company_location, company_email) VALUES (?, ?, ?, ?, ?)",
     companys_data,
   )
 

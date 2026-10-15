@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { ExamSchedules } from "@/types/exam-schedule";
 import { CalendarX } from "lucide-react";
+import ScheduleFilter from "@/components/ScheduleFilter";
 
 export default function ExamPage() {
   const [exams, setExams] = useState<ExamSchedules[]>([]);
@@ -71,64 +72,15 @@ export default function ExamPage() {
 
       {!loading && !error && (
         <>
-          {/* Dual Filter: Generation + Semester Selector (Matching Style 1 Clean Light) */}
-          <div className="card shadow-sm border-0 rounded-3 mb-4 bg-white text-dark p-3">
-            <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 border-bottom">
-              <div className="d-flex flex-wrap align-items-center gap-2">
-                <span className="text-secondary small fw-bold text-uppercase me-1">เลือกรุ่น:</span>
-                <div className="btn-group btn-group-sm" role="group">
-                  {availableGens.map((gen) => (
-                    <button
-                      key={gen}
-                      type="button"
-                      className={`btn ${
-                        selectedGen === gen
-                          ? "btn-primary text-white fw-semibold"
-                          : "btn-outline-secondary"
-                      }`}
-                      onClick={() => setSelectedGen(gen)}
-                    >
-                      {gen === "All" ? "ทุกรุ่น (All)" : `รุ่น ${gen}`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="d-flex flex-wrap align-items-center gap-2">
-                <span className="text-secondary small fw-bold text-uppercase me-1">ภาคเรียน:</span>
-                <div className="btn-group btn-group-sm" role="group">
-                  {[1, 2, "All"].map((sem) => (
-                    <button
-                      key={sem}
-                      type="button"
-                      className={`btn ${
-                        selectedSemester === sem
-                          ? "btn-primary text-white fw-semibold"
-                          : "btn-outline-secondary"
-                      }`}
-                      onClick={() => setSelectedSemester(sem as number | "All")}
-                    >
-                      {sem === "All" ? "ทุกเทอม" : `เทอม ${sem}`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="d-flex justify-content-between align-items-center text-muted small pt-2">
-              <span>
-                กำลังแสดง: <strong className="text-dark">{selectedGen === "All" ? "ทุกรุ่น" : selectedGen}</strong> |{" "}
-                <strong className="text-dark">
-                  {selectedSemester === "All"
-                    ? "ทุกภาคการศึกษา"
-                    : `ภาคการศึกษาที่ ${selectedSemester}`}
-                </strong>
-              </span>
-              <span className="badge bg-light text-dark border">
-                พบ {filteredExams.length} รายการ
-              </span>
-            </div>
-          </div>
+          <ScheduleFilter
+            availableGens={availableGens}
+            selectedGen={selectedGen}
+            onSelectGen={setSelectedGen}
+            selectedSemester={selectedSemester}
+            onSelectSemester={setSelectedSemester}
+            totalItems={filteredExams.length}
+            itemTypeLabel="ตารางสอบ"
+          />
 
           {filteredExams.length === 0 ? (
             <div className="text-center py-5 my-5 text-secondary border border-secondary rounded bg-black">

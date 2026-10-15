@@ -18,6 +18,7 @@ import {
   PlusCircle,
   Mail,
   CheckCircle,
+  Image as ImageIcon,
 } from "lucide-react";
 
 interface AdminUser {
@@ -31,7 +32,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<"teachers" | "students" | "news" | "projects" | "companies" | "internships" | "class" | "exam" | "rooms">("teachers");
+  const [activeTab, setActiveTab] = useState<"teachers" | "students" | "news" | "projects" | "companies" | "internships" | "class" | "exam" | "rooms" | "banners">("teachers");
   
   // Data states
   const [teachers, setTeachers] = useState<Record<string, any>[]>([]);
@@ -43,6 +44,7 @@ export default function AdminDashboardPage() {
   const [classSchedules, setClassSchedules] = useState<Record<string, any>[]>([]);
   const [examSchedules, setExamSchedules] = useState<Record<string, any>[]>([]);
   const [rooms, setRooms] = useState<Record<string, any>[]>([]);
+  const [banners, setBanners] = useState<Record<string, any>[]>([]);
 
   // Loading & Alert
   const [loading, setLoading] = useState(false);
@@ -106,13 +108,16 @@ export default function AdminDashboardPage() {
       } else if (activeTab === "rooms") {
         const res = await fetch("/api/rooms");
         setRooms(await res.json());
+      } else if (activeTab === "banners") {
+        const res = await fetch("/api/hero-banners");
+        setBanners(await res.json());
       }
     } catch {
       setStatusMsg({ type: "danger", text: "ไม่สามารถดึงข้อมูลจากเซิร์ฟเวอร์ได้" });
     } finally {
       setLoading(false);
     }
-  }, [activeTab]);
+  }, [activeTab, isAuthorized]);
 
   useEffect(() => {
     if (isAuthorized) {
@@ -225,6 +230,7 @@ export default function AdminDashboardPage() {
     else if (activeTab === "class") endpoint = editingId ? `/class/${editingId}` : "/class";
     else if (activeTab === "exam") endpoint = editingId ? `/exam/${editingId}` : "/exam";
     else if (activeTab === "rooms") endpoint = editingId ? `/rooms/${editingId}` : "/rooms";
+    else if (activeTab === "banners") endpoint = editingId ? `/hero-banners/${editingId}` : "/hero-banners";
 
     const method = editingId ? "PUT" : "POST";
 
@@ -283,6 +289,7 @@ export default function AdminDashboardPage() {
     else if (activeTab === "class") endpoint = `/class/${id}`;
     else if (activeTab === "exam") endpoint = `/exam/${id}`;
     else if (activeTab === "rooms") endpoint = `/rooms/${id}`;
+    else if (activeTab === "banners") endpoint = `/hero-banners/${id}`;
 
     try {
       const res = await fetch(`/api${endpoint}`, {
@@ -424,6 +431,13 @@ export default function AdminDashboardPage() {
         >
           <DoorOpen size={16} /> ห้องปฏิบัติการ (Rooms)
         </button>
+        <button
+          type="button"
+          className={`btn ${activeTab === "banners" ? "btn-primary" : "btn-dark"} d-inline-flex align-items-center gap-1`}
+          onClick={() => setActiveTab("banners")}
+        >
+          <ImageIcon size={16} /> แบนเนอร์ (Banners)
+        </button>
       </div>
 
       {/* Action Header for Selected Tab */}
@@ -437,7 +451,8 @@ export default function AdminDashboardPage() {
             activeTab === "companies" ? companies.length :
             activeTab === "internships" ? internships.length :
             activeTab === "class" ? classSchedules.length :
-            activeTab === "exam" ? examSchedules.length : rooms.length
+            activeTab === "exam" ? examSchedules.length :
+            activeTab === "rooms" ? rooms.length : banners.length
           } รายการ)
         </h4>
         <button className="btn btn-success d-flex align-items-center gap-1" onClick={openAddModal}>
@@ -799,6 +814,52 @@ export default function AdminDashboardPage() {
                           แก้ไข
                         </button>
                         <button className="btn btn-danger" onClick={() => handleDelete(r.room_id, "ห้องปฏิบัติการ")}>
+                          ลบ
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          {activeTab === "banners" && (
+            <table className="table table-hover table-striped mb-0 align-middle">
+              <thead className="table-light border-bottom">
+                <tr>
+                  <th style={{ width: "60px" }}>ID</th>
+                  <th>รุ่น (Generation)</th>
+                  <th>หัวข้อ (Title)</th>
+                  <th>รูปภาพ (Image)</th>
+                  <th style={{ width: "160px" }}>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {banners.map((b) => (
+                  <tr key={b.banner_id}>
+                    <td>{b.banner_id}</td>
+                    <td>
+                      <span className="badge bg-primary text-uppercase">{b.generation}</span>
+                    </td>
+                    <td className="fw-semibold">{b.title || "-"}</td>
+                    <td>
+                      {b.banner_image ? (
+                        <div className="d-flex align-items-center gap-2">
+                          <span className="badge bg-secondary text-truncate" style={{ maxWidth: "200px" }}>
+                            {b.banner_image}
+                          </span>
+                        </div>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td>
+                      <div className="btn-group btn-group-sm">
+                        <button className="btn btn-warning" onClick={() => openEditModal(b, "banner_id")}>
+                          แก้ไข
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(b.banner_id, "แบนเนอร์")}>
                           ลบ
                         </button>
                       </div>
@@ -1378,6 +1439,58 @@ export default function AdminDashboardPage() {
                           onChange={(e) => setFormData({ ...formData, room_description: e.target.value })}
                           required
                         ></textarea>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "banners" && (
+                    <div className="row g-3">
+                      <div className="col-md-6">
+                        <label className="form-label small">รุ่น (Generation เช่น All, CE04, CE03, CE02, CE01)</label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          placeholder="เช่น All หรือ CE04"
+                          value={formData.generation || ""}
+                          onChange={(e) => setFormData({ ...formData, generation: e.target.value })}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">หัวข้อ (Title)</label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          placeholder="เช่น วิศวกรรมคอมพิวเตอร์ รุ่น 4"
+                          value={formData.title || ""}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อัปโหลดรูปภาพแบนเนอร์ (Hero Banner File)</label>
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          className="form-control py-2"
+                          onChange={(e) => handleFileUpload(e, "banners", "banner_image")}
+                        />
+                        {uploadingFile && <span className="small text-warning">กำลังอัปโหลดรูปภาพ...</span>}
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">ชื่อไฟล์หรือ URL รูปภาพแบนเนอร์ (banner_image)</label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          placeholder="เช่น /ce_all_banner.png หรือชื่อไฟล์ที่อัปโหลด"
+                          value={formData.banner_image || ""}
+                          onChange={(e) => setFormData({ ...formData, banner_image: e.target.value })}
+                          required
+                        />
+                        {formData.banner_image && (
+                          <span className="small text-success d-block mt-1">
+                            ไฟล์ปัจจุบัน: {formData.banner_image}
+                          </span>
+                        )}
                       </div>
                     </div>
                   )}
