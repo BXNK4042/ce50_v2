@@ -640,6 +640,8 @@ export default function AdminDashboardPage() {
                 <tr>
                   <th style={{ width: "60px" }}>ID</th>
                   <th>ชื่อบริษัท</th>
+                  <th>ที่ตั้ง (Location)</th>
+                  <th>อีเมล (Email)</th>
                   <th>โลโก้ / รูปภาพ</th>
                   <th style={{ width: "160px" }}>จัดการ</th>
                 </tr>
@@ -649,6 +651,8 @@ export default function AdminDashboardPage() {
                   <tr key={c.company_id}>
                     <td>{c.company_id}</td>
                     <td className="fw-semibold">{c.company_name}</td>
+                    <td className="text-secondary">{c.company_location || "-"}</td>
+                    <td>{c.company_email ? <><Mail size={14} className="me-1 text-secondary" />{c.company_email}</> : "-"}</td>
                     <td>{c.company_image || "-"}</td>
                     <td>
                       <div className="btn-group btn-group-sm">
@@ -1158,6 +1162,26 @@ export default function AdminDashboardPage() {
                           onChange={(e) => handleFileUpload(e, "companys", "company_image")}
                         />
                         {formData.company_image && <span className="small text-success d-block mt-1">ไฟล์: {formData.company_image}</span>}
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">ที่ตั้งบริษัท (Location)</label>
+                        <input
+                          type="text"
+                          className="form-control py-2"
+                          placeholder="เช่น 123 อาคารสาทร กรุงเทพฯ"
+                          value={formData.company_location || ""}
+                          onChange={(e) => setFormData({ ...formData, company_location: e.target.value })}
+                        />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label small">อีเมลติดต่อบริษัท (Email)</label>
+                        <input
+                          type="email"
+                          className="form-control py-2"
+                          placeholder="เช่น hr@company.com"
+                          value={formData.company_email || ""}
+                          onChange={(e) => setFormData({ ...formData, company_email: e.target.value })}
+                        />
                       </div>
                     </div>
                   )}

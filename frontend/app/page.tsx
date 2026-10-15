@@ -121,7 +121,7 @@ export default function Home() {
                       <div className="col-6" key={idx}>
                         <span
                           className="placeholder col-12 bg-secondary bg-opacity-25 d-block rounded-2"
-                          style={{ height: "150px" }}
+                          style={{ height: "220px" }}
                         ></span>
                         <span className="placeholder col-11 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
                         <span className="placeholder col-8 bg-secondary bg-opacity-25 mt-1 d-block py-1"></span>
@@ -141,7 +141,7 @@ export default function Home() {
                       <div className="col-6" key={idx}>
                         <span
                           className="placeholder col-12 bg-secondary bg-opacity-25 d-block rounded-2"
-                          style={{ height: "150px" }}
+                          style={{ height: "220px" }}
                         ></span>
                         <span className="placeholder col-11 bg-secondary bg-opacity-50 mt-2 d-block py-1"></span>
                         <span className="placeholder col-8 bg-secondary bg-opacity-25 mt-1 d-block py-1"></span>
@@ -214,7 +214,7 @@ export default function Home() {
                               <Image
                                 src={art?.image || "/404.png"}
                                 className="img-fluid w-100"
-                                style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                                style={{ width: "100%", height: "220px", objectFit: "cover" }}
                                 alt={art?.title || "International Tech News"}
                                 width={700}
                                 height={500}
@@ -255,7 +255,7 @@ export default function Home() {
                               <Image
                                 src={art?.image || "/404.png"}
                                 className="img-fluid w-100"
-                                style={{ width: "100%", height: "150px", objectFit: "cover" }}
+                                style={{ width: "100%", height: "220px", objectFit: "cover" }}
                                 alt={art?.title || "Thai Tech News"}
                                 width={700}
                                 height={500}
