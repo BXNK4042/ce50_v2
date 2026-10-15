@@ -34,11 +34,29 @@ load_dotenv(BASE_DIR / ".env")
 load_dotenv(BASE_DIR.parent / ".env")
 
 limiter = Limiter(key_func=get_remote_address)
-app = FastAPI(title="CE50 API", version="1.0.0")
+
+fastapi_kwargs = {
+    "title": "CE50 API",
+    "version": "1.0.0",
+}
+if os.getenv("ENVIRONMENT") == "production":
+    fastapi_kwargs.update({
+        "docs_url": None,
+        "redoc_url": None,
+        "openapi_url": None,
+    })
+
+app = FastAPI(**fastapi_kwargs)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 JWT_SECRET = os.getenv("JWT_SECRET", "ce50_jwt_super_secret_key_change_in_prod")
+if os.getenv("ENVIRONMENT") == "production" and (not JWT_SECRET or JWT_SECRET == "ce50_jwt_super_secret_key_change_in_prod"):
+    raise RuntimeError("JWT_SECRET must be set to a secure secret in production")
+elif not JWT_SECRET or JWT_SECRET == "ce50_jwt_super_secret_key_change_in_prod":
+    JWT_SECRET = "ce50_jwt_super_secret_key_change_in_prod"
+    logging.warning("Using default JWT_SECRET in development. Set JWT_SECRET in .env for production.")
+
 JWT_ALGORITHM = "HS256"
 security_bearer = HTTPBearer(auto_error=True)
 
@@ -203,10 +221,17 @@ origins = [
     "http://127.0.0.1:8000"
 ]
 
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS")
+if allowed_origins_env:
+    for origin in allowed_origins_env.split(","):
+        cleaned = origin.strip()
+        if cleaned and cleaned not in origins:
+            origins.append(cleaned)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r".*",
+    allow_origin_regex=r"^https?://([a-zA-Z0-9-]+\.)*(trycloudflare\.com|ce\.kmitl\.ac\.th)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -539,9 +564,9 @@ def auth_login(request: Request, req: LoginRequest):
             except Exception:
                 authenticated = False
         else:
-            # 2. Check legacy SHA-256 or plaintext seed
+            # 2. Check legacy SHA-256
             sha256_hash = hashlib.sha256(password_bytes).hexdigest()
-            if sha256_hash == stored_hash or req.password == stored_hash:
+            if sha256_hash == stored_hash:
                 authenticated = True
                 upgrade_needed = True
 
@@ -589,6 +614,7 @@ def get_users(admin: dict = Depends(get_current_admin)):
 # ==========================================
 
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".pdf"}
+ALLOWED_MODULES = {"general", "teachers", "students", "news", "projects", "companys", "rooms", "banners"}
 MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024   # 5 MB for images (TC_TCH_004)
 MAX_DOC_FILE_SIZE = 25 * 1024 * 1024    # 25 MB for PDF project documents
 
@@ -598,6 +624,20 @@ async def upload_file(
     module: str = Form("general"),
     admin: dict = Depends(get_current_admin)
 ):
+    if module not in ALLOWED_MODULES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"โมดูลไม่อยู่ในรายการที่อนุญาต ({', '.join(sorted(ALLOWED_MODULES))})"
+        )
+
+    target_dir = (UPLOADS_DIR / module).resolve()
+    uploads_dir_resolved = UPLOADS_DIR.resolve()
+    if not target_dir.is_relative_to(uploads_dir_resolved) or target_dir == uploads_dir_resolved:
+        raise HTTPException(
+            status_code=400,
+            detail="ตำแหน่งปลายทางการอัปโหลดไม่ถูกต้อง"
+        )
+
     ext = Path(file.filename or "").suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
@@ -1192,6 +1232,7 @@ def get_quiz_roles_endpoint():
     return {"roles": list(ROLES_METADATA.values())}
 
 @app.post("/quiz/evaluate")
+@limiter.limit("30/minute")
 def evaluate_quiz_endpoint(req: QuizEvaluateRequest, request: Request):
     """Evaluates student quiz answers and returns ranked career matches"""
     try:

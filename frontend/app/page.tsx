@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { GNewsArticle } from "@/types/gnews";
 import { Teachers } from "@/types/teacher";
+import { safeExternalUrl } from "@/utils/security";
 
 export default function Home() {
   const [headlinesTech, setHeadlinesTech] = useState<GNewsArticle[]>([]);
@@ -161,7 +162,7 @@ export default function Home() {
                 </div>
 
                 <a
-                  href={spotlight?.url || "#"}
+                  href={safeExternalUrl(spotlight?.url)}
                   target={spotlight?.url ? "_blank" : undefined}
                   rel="noopener noreferrer"
                   className="text-white text-decoration-none d-block group"
@@ -205,7 +206,7 @@ export default function Home() {
                       return (
                         <div className="col-6 mb-3" key={idx}>
                           <a
-                            href={art?.url || "#"}
+                            href={safeExternalUrl(art?.url)}
                             target={art?.url ? "_blank" : undefined}
                             rel="noopener noreferrer"
                             className="text-white text-decoration-none d-block"
@@ -246,7 +247,7 @@ export default function Home() {
                       return (
                         <div className="col-6 mb-3" key={idx}>
                           <a
-                            href={art?.url || "#"}
+                            href={safeExternalUrl(art?.url)}
                             target={art?.url ? "_blank" : undefined}
                             rel="noopener noreferrer"
                             className="text-white text-decoration-none d-block"

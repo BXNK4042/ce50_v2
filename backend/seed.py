@@ -81,7 +81,7 @@ def seedUsers():
     ("superadmin", hash_password("super_pw"), "superadmin@ce.ac.th", "superadmin"),
     ("admin_y1", hash_password("admin_pw"), "admin_y1@ce.ac.th", "admin"),
     ("writer_y1", hash_password("writer_pw"), "writer_y1@ce.ac.th", "writer"),
-    ("adminFah", hash_password("123456"), "fah@ce.ac.th", "superadmin")
+    ("adminFah", hash_password("SecureFah2026!"), "fah@ce.ac.th", "superadmin")
   ]
 
   insertMany(

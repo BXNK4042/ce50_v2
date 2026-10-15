@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { NewsItem } from "@/types/news-item";
 import { GNewsArticle } from "@/types/gnews";
 import Image from "next/image";
+import { safeExternalUrl } from "@/utils/security";
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -191,7 +192,7 @@ export default function NewsPage() {
               </div>
 
               <a
-                href={spotlight?.url || "#"}
+                href={safeExternalUrl(spotlight?.url)}
                 target={spotlight?.url ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 className="text-white text-decoration-none d-block group"
@@ -235,7 +236,7 @@ export default function NewsPage() {
                     return (
                       <div className="col-6 mb-3" key={idx}>
                         <a
-                          href={art?.url || "#"}
+                          href={safeExternalUrl(art?.url)}
                           target={art?.url ? "_blank" : undefined}
                           rel="noopener noreferrer"
                           className="text-white text-decoration-none d-block"
@@ -276,7 +277,7 @@ export default function NewsPage() {
                     return (
                       <div className="col-6 mb-3" key={idx}>
                         <a
-                          href={art?.url || "#"}
+                          href={safeExternalUrl(art?.url)}
                           target={art?.url ? "_blank" : undefined}
                           rel="noopener noreferrer"
                           className="text-white text-decoration-none d-block"
