@@ -77,10 +77,20 @@ export default function NewsPage() {
                 key={item.news_id}
               >
                 <Image
-                  src={`/uploads/news/${item.news_image}`}
+                  src={
+                    item.news_image
+                      ? `/uploads/news/${item.news_image}`
+                      : "/404.png"
+                  }
                   alt={item.news_title}
                   width={2000}
                   height={2000}
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    if (!target.src.endsWith("/404.png")) {
+                      target.src = "/404.png";
+                    }
+                  }}
                 />
                 <div className="carousel-caption d-none d-md-block text-black bg-white opacity-80">
                   <h3>{item.news_title}</h3>
@@ -206,7 +216,10 @@ export default function NewsPage() {
                     width={1200}
                     height={800}
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/404.png";
+                      const target = e.currentTarget as HTMLImageElement;
+                      if (!target.src.endsWith("/404.png")) {
+                        target.src = "/404.png";
+                      }
                     }}
                   />
                 </div>
@@ -250,7 +263,10 @@ export default function NewsPage() {
                               width={700}
                               height={500}
                               onError={(e) => {
-                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                                const target = e.currentTarget as HTMLImageElement;
+                                if (!target.src.endsWith("/404.png")) {
+                                  target.src = "/404.png";
+                                }
                               }}
                             />
                           </div>
@@ -291,7 +307,10 @@ export default function NewsPage() {
                               width={700}
                               height={500}
                               onError={(e) => {
-                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                                const target = e.currentTarget as HTMLImageElement;
+                                if (!target.src.endsWith("/404.png")) {
+                                  target.src = "/404.png";
+                                }
                               }}
                             />
                           </div>

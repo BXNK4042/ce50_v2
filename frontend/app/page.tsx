@@ -176,7 +176,10 @@ export default function Home() {
                       width={1200}
                       height={800}
                       onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = "/404.png";
+                        const target = e.currentTarget as HTMLImageElement;
+                        if (!target.src.endsWith("/404.png")) {
+                          target.src = "/404.png";
+                        }
                       }}
                     />
                   </div>
@@ -220,7 +223,10 @@ export default function Home() {
                                 width={700}
                                 height={500}
                                 onError={(e) => {
-                                  (e.currentTarget as HTMLImageElement).src = "/404.png";
+                                  const target = e.currentTarget as HTMLImageElement;
+                                  if (!target.src.endsWith("/404.png")) {
+                                    target.src = "/404.png";
+                                  }
                                 }}
                               />
                             </div>
@@ -261,7 +267,10 @@ export default function Home() {
                                 width={700}
                                 height={500}
                                 onError={(e) => {
-                                  (e.currentTarget as HTMLImageElement).src = "/404.png";
+                                  const target = e.currentTarget as HTMLImageElement;
+                                  if (!target.src.endsWith("/404.png")) {
+                                    target.src = "/404.png";
+                                  }
                                 }}
                               />
                             </div>
