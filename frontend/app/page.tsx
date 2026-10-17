@@ -3,76 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SlidersHorizontal, Minimize2, Scale, Maximize2 } from "lucide-react";
 import { Teachers } from "@/types/teacher";
-import TechNewsSection, { TechNewsSpacing } from "@/components/TechNewsSection";
-
-type SpacingStyle = "compact" | "balanced" | "spacious";
-
-interface SpacingConfig {
-  id: SpacingStyle;
-  name: string;
-  subtitle: string;
-  badge: string;
-  description: string;
-  sectionMargin: string;
-  sectionStyle?: React.CSSProperties;
-  headerMargin: string;
-  carouselGutter: string;
-  cardBodyClass: string;
-  switcherMargin: string;
-}
-
-const SPACING_CONFIGS: Record<SpacingStyle, SpacingConfig> = {
-  compact: {
-    id: "compact",
-    name: "Style 1: Compact",
-    subtitle: "Tight margins, dense flow",
-    badge: "Dense Flow",
-    description: "Tight vertical margins, reduced gutters, and compact spacing for high information density",
-    sectionMargin: "my-2 py-2",
-    headerMargin: "mb-2",
-    carouselGutter: "row-cols-1 row-cols-md-4 g-2 g-md-3",
-    cardBodyClass: "card-body text-center p-2",
-    switcherMargin: "mb-3",
-  },
-  balanced: {
-    id: "balanced",
-    name: "Style 2: Balanced",
-    subtitle: "Standard modern web margins",
-    badge: "Modern Standard",
-    description: "Standard modern web spacing with balanced component separation and familiar rhythm",
-    sectionMargin: "my-5 py-4",
-    headerMargin: "mb-4",
-    carouselGutter: "row-cols-1 row-cols-md-4 g-4",
-    cardBodyClass: "card-body text-center",
-    switcherMargin: "mb-4",
-  },
-  spacious: {
-    id: "spacious",
-    name: "Style 3: Spacious",
-    subtitle: "Generous editorial breathing room",
-    badge: "Editorial Breathing Room",
-    description: "Generous editorial spacing, relaxed section margins, and expansive breathing room",
-    sectionMargin: "py-5",
-    sectionStyle: {
-      marginTop: "4.5rem",
-      marginBottom: "4.5rem",
-      paddingTop: "2.5rem",
-      paddingBottom: "2.5rem",
-    },
-    headerMargin: "mb-5",
-    carouselGutter: "row-cols-1 row-cols-md-4 g-4 g-lg-5",
-    cardBodyClass: "card-body text-center p-4",
-    switcherMargin: "mb-5",
-  },
-};
+import TechNewsSection from "@/components/TechNewsSection";
 
 export default function Home() {
   const [teachers, setTeachers] = useState<Teachers[]>([]);
-  const [spacingStyle, setSpacingStyle] = useState<SpacingStyle>("balanced");
-
-  const currentSpacing = SPACING_CONFIGS[spacingStyle];
 
   useEffect(() => {
     async function loadData() {
@@ -115,86 +50,9 @@ export default function Home() {
       </div>
 
       <div className="template-container">
-        {/* Interactive Spacing Switcher Bar */}
-        <div
-          className={`card bg-black border border-secondary border-opacity-25 rounded-3 p-3 shadow-sm ${currentSpacing.switcherMargin}`}
-        >
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-            <div className="d-flex align-items-center gap-2">
-              <SlidersHorizontal size={20} className="text-primary flex-shrink-0" />
-              <div>
-                <div className="d-flex align-items-center gap-2">
-                  <span className="fw-semibold text-white">Spacing Style:</span>
-                  <span className="text-info fw-medium">{currentSpacing.name}</span>
-                  <span className="badge bg-secondary bg-opacity-50 text-light fw-normal">
-                    {currentSpacing.badge}
-                  </span>
-                </div>
-                <small className="text-secondary d-none d-sm-inline">
-                  {currentSpacing.subtitle} &mdash; {currentSpacing.description}
-                </small>
-              </div>
-            </div>
-
-            <div
-              className="btn-group"
-              role="group"
-              aria-label="Vertical spacing switcher"
-            >
-              <button
-                type="button"
-                className={`btn btn-sm ${
-                  spacingStyle === "compact"
-                    ? "btn-primary"
-                    : "btn-dark border-secondary border-opacity-25"
-                }`}
-                onClick={() => setSpacingStyle("compact")}
-              >
-                <span className="d-inline-flex align-items-center gap-1">
-                  <Minimize2 size={14} />
-                  <span>Style 1: Compact</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                className={`btn btn-sm ${
-                  spacingStyle === "balanced"
-                    ? "btn-primary"
-                    : "btn-dark border-secondary border-opacity-25"
-                }`}
-                onClick={() => setSpacingStyle("balanced")}
-              >
-                <span className="d-inline-flex align-items-center gap-1">
-                  <Scale size={14} />
-                  <span>Style 2: Balanced</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                className={`btn btn-sm ${
-                  spacingStyle === "spacious"
-                    ? "btn-primary"
-                    : "btn-dark border-secondary border-opacity-25"
-                }`}
-                onClick={() => setSpacingStyle("spacious")}
-              >
-                <span className="d-inline-flex align-items-center gap-1">
-                  <Maximize2 size={14} />
-                  <span>Style 3: Spacious</span>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* Section 2: ข่าวสารล่าสุด (Latest News จากหน้า News) */}
-        <div
-          className={`editors-news text-light ${currentSpacing.sectionMargin}`}
-          style={currentSpacing.sectionStyle}
-        >
-          <div
-            className={`d-flex justify-content-between align-items-center ${currentSpacing.headerMargin}`}
-          >
+        <div className="editors-news text-light my-5 py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
               {/*<h1 className="text-primary">ข่าวสารล่าสุด</h1>*/}
@@ -205,17 +63,12 @@ export default function Home() {
             </Link>
           </div>
 
-          <TechNewsSection spacing={spacingStyle as TechNewsSpacing} />
+          <TechNewsSection spacing="balanced" />
         </div>
 
         {/* Section 3: คณาจารย์ (Teacher Card Carousel) */}
-        <div
-          className={`teachers-section text-light ${currentSpacing.sectionMargin}`}
-          style={currentSpacing.sectionStyle}
-        >
-          <div
-            className={`d-flex justify-content-between align-items-center ${currentSpacing.headerMargin}`}
-          >
+        <div className="teachers-section text-light my-5 py-4">
+          <div className="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h1 className="text-white">วิศวกรรมคอมพิวเตอร์</h1>
               <h1 className="text-primary">คณาจารย์</h1>
@@ -238,7 +91,7 @@ export default function Home() {
                     className={`carousel-item ${slideIdx === 0 ? "active" : ""}`}
                     key={slideIdx}
                   >
-                    <div className={`row ${currentSpacing.carouselGutter}`}>
+                    <div className="row row-cols-1 row-cols-md-4 g-4">
                       {slide.map((teacher) => (
                         <div className="col" key={teacher.teacher_id}>
                           <Link
@@ -257,7 +110,7 @@ export default function Home() {
                                 height={1000}
                                 draggable="false"
                               />
-                              <div className={currentSpacing.cardBodyClass}>
+                              <div className="card-body text-center">
                                 <h5 className="card-title">
                                   {teacher.teacher_firstname}{" "}
                                   {teacher.teacher_lastname}
