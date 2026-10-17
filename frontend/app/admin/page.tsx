@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -45,6 +45,16 @@ export default function AdminDashboardPage() {
   const [examSchedules, setExamSchedules] = useState<Record<string, any>[]>([]);
   const [rooms, setRooms] = useState<Record<string, any>[]>([]);
   const [banners, setBanners] = useState<Record<string, any>[]>([]);
+
+  // Refs for checking current values without triggering loadData re-renders
+  const studentsRef = useRef(students);
+  studentsRef.current = students;
+  const companiesRef = useRef(companies);
+  companiesRef.current = companies;
+  const roomsRef = useRef(rooms);
+  roomsRef.current = rooms;
+  const teachersRef = useRef(teachers);
+  teachersRef.current = teachers;
 
   // Loading & Alert
   const [loading, setLoading] = useState(false);
@@ -102,11 +112,35 @@ export default function AdminDashboardPage() {
         const res = await fetch(`/api/companys${t}`, fetchOptions);
         setCompanies(await res.json());
       } else if (activeTab === "internships") {
-        const res = await fetch(`/api/internship${t}`, fetchOptions);
-        setInternships(await res.json());
+        const fetchTasks: Promise<any>[] = [fetch(`/api/internship${t}`, fetchOptions).then((r) => r.json())];
+        const needStudents = studentsRef.current.length === 0;
+        const needCompanies = companiesRef.current.length === 0;
+        if (needStudents) {
+          fetchTasks.push(fetch(`/api/students${t}`, fetchOptions).then((r) => r.json()).catch(() => []));
+        }
+        if (needCompanies) {
+          fetchTasks.push(fetch(`/api/companys${t}`, fetchOptions).then((r) => r.json()).catch(() => []));
+        }
+        const [internshipData, ...rest] = await Promise.all(fetchTasks);
+        setInternships(internshipData);
+        let idx = 0;
+        if (needStudents) setStudents(rest[idx++]);
+        if (needCompanies) setCompanies(rest[idx++]);
       } else if (activeTab === "class") {
-        const res = await fetch(`/api/class${t}`, fetchOptions);
-        setClassSchedules(await res.json());
+        const fetchTasks: Promise<any>[] = [fetch(`/api/class${t}`, fetchOptions).then((r) => r.json())];
+        const needRooms = roomsRef.current.length === 0;
+        const needTeachers = teachersRef.current.length === 0;
+        if (needRooms) {
+          fetchTasks.push(fetch(`/api/rooms${t}`, fetchOptions).then((r) => r.json()).catch(() => []));
+        }
+        if (needTeachers) {
+          fetchTasks.push(fetch(`/api/teachers${t}`, fetchOptions).then((r) => r.json()).catch(() => []));
+        }
+        const [classData, ...rest] = await Promise.all(fetchTasks);
+        setClassSchedules(classData);
+        let idx = 0;
+        if (needRooms) setRooms(rest[idx++]);
+        if (needTeachers) setTeachers(rest[idx++]);
       } else if (activeTab === "exam") {
         const res = await fetch(`/api/exam${t}`, fetchOptions);
         setExamSchedules(await res.json());
@@ -748,11 +782,50 @@ export default function AdminDashboardPage() {
                     <td>{p.project_id}</td>
                     <td className="fw-semibold text-primary">{p.project_name}</td>
                     <td className="text-truncate" style={{ maxWidth: "300px" }}>{p.project_description}</td>
-                    <td>{p.project_image || "-"}</td>
+                    <td>
+                      {(() => {
+                        const imgSrc = p.project_image
+                          ? p.project_image.startsWith("http://") ||
+                            p.project_image.startsWith("https://") ||
+                            p.project_image.startsWith("/")
+                            ? p.project_image
+                            : `/uploads/projects/${p.project_image}`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${p.project_name || "Project"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {p.project_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={p.project_image}
+                              >
+                                {p.project_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       {p.project_pdf ? (
                         <a
-                          href={`/api/uploads/projects/${p.project_pdf}`}
+                          href={
+                            p.project_pdf.startsWith("http://") ||
+                            p.project_pdf.startsWith("https://") ||
+                            p.project_pdf.startsWith("/")
+                              ? p.project_pdf
+                              : `/uploads/projects/${p.project_pdf}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="badge bg-danger text-decoration-none"
@@ -798,7 +871,40 @@ export default function AdminDashboardPage() {
                     <td className="fw-semibold">{c.company_name}</td>
                     <td className="text-secondary">{c.company_location || "-"}</td>
                     <td>{c.company_email ? <><Mail size={14} className="me-1 text-secondary" />{c.company_email}</> : "-"}</td>
-                    <td>{c.company_image || "-"}</td>
+                    <td>
+                      {(() => {
+                        const imgSrc = c.company_image
+                          ? c.company_image.startsWith("http://") ||
+                            c.company_image.startsWith("https://") ||
+                            c.company_image.startsWith("/")
+                            ? c.company_image
+                            : `/uploads/companys/${c.company_image}`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${c.company_name || "Company"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {c.company_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={c.company_image}
+                              >
+                                {c.company_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(c, "company_id")}>
@@ -832,8 +938,33 @@ export default function AdminDashboardPage() {
                   <tr key={i.internship_id}>
                     <td>{i.internship_id}</td>
                     <td className="fw-semibold text-primary">{i.internship_title}</td>
-                    <td>{i.student_id}</td>
-                    <td>Company #{i.company_id}</td>
+                    <td>
+                      <div>
+                        <span className="fw-semibold">{i.student_id}</span>
+                        {(() => {
+                          const st = students.find((s) => String(s.student_id) === String(i.student_id));
+                          if (st) {
+                            return (
+                              <div className="small text-secondary">
+                                {st.student_firstname} {st.student_lastname}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </div>
+                    </td>
+                    <td>
+                      {(() => {
+                        const comp = companies.find((c) => String(c.company_id) === String(i.company_id));
+                        return (
+                          <div>
+                            <span className="badge bg-secondary me-1">#{i.company_id}</span>
+                            <span className="fw-semibold">{comp ? comp.company_name : `Company #${i.company_id}`}</span>
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td className="text-truncate" style={{ maxWidth: "300px" }}>{i.internship_description}</td>
                     <td>
                       <div className="btn-group btn-group-sm">
@@ -874,7 +1005,22 @@ export default function AdminDashboardPage() {
                     <td className="fw-semibold">{cs.class_name}</td>
                     <td><span className="badge bg-secondary text-uppercase">{cs.class_day}</span></td>
                     <td>{cs.class_start} - {cs.class_end}</td>
-                    <td>Room #{cs.room_id}</td>
+                    <td>
+                      {(() => {
+                        const rm = rooms.find((r) => String(r.room_id) === String(cs.room_id));
+                        return (
+                          <div>
+                            <span className="fw-semibold text-primary">{rm ? rm.room_name : `Room #${cs.room_id}`}</span>
+                            {cs.teacher_id && (() => {
+                              const tch = teachers.find((t) => String(t.teacher_id) === String(cs.teacher_id));
+                              return tch ? (
+                                <div className="small text-secondary">{tch.teacher_firstname} {tch.teacher_lastname}</div>
+                              ) : null;
+                            })()}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(cs, "class_id")}>
@@ -956,7 +1102,40 @@ export default function AdminDashboardPage() {
                     <td>{r.room_id}</td>
                     <td className="fw-bold text-primary">{r.room_name}</td>
                     <td>{r.room_description}</td>
-                    <td>{r.room_image || "-"}</td>
+                    <td>
+                      {(() => {
+                        const imgSrc = r.room_image
+                          ? r.room_image.startsWith("http://") ||
+                            r.room_image.startsWith("https://") ||
+                            r.room_image.startsWith("/")
+                            ? r.room_image
+                            : `/uploads/rooms/${r.room_image}`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${r.room_name || "Room"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {r.room_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={r.room_image}
+                              >
+                                {r.room_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(r, "room_id")}>
@@ -993,15 +1172,38 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="fw-semibold">{b.title || "-"}</td>
                     <td>
-                      {b.banner_image ? (
-                        <div className="d-flex align-items-center gap-2">
-                          <span className="badge bg-secondary text-truncate" style={{ maxWidth: "200px" }}>
-                            {b.banner_image}
-                          </span>
-                        </div>
-                      ) : (
-                        "-"
-                      )}
+                      {(() => {
+                        const imgSrc = b.banner_image
+                          ? b.banner_image.startsWith("http://") ||
+                            b.banner_image.startsWith("https://") ||
+                            b.banner_image.startsWith("/")
+                            ? b.banner_image
+                            : `/uploads/banners/${b.banner_image}`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${b.title || "Banner"} preview`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "72px", height: "36px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {b.banner_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "150px" }}
+                                title={b.banner_image}
+                              >
+                                {b.banner_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td>
                       <div className="btn-group btn-group-sm">
