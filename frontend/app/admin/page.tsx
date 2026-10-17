@@ -423,9 +423,9 @@ export default function AdminDashboardPage() {
 
       {/* Alert Notification */}
       {statusMsg && (
-        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show py-2 small`} role="alert">
-          {statusMsg.text}
-          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)} aria-label="Close"></button>
+        <div className={`alert alert-${statusMsg.type} fade show py-2 px-3 small d-flex align-items-center justify-content-between mb-3`} role="alert">
+          <span>{statusMsg.text}</span>
+          <button type="button" className="btn-close ms-2" onClick={() => setStatusMsg(null)} aria-label="Close"></button>
         </div>
       )}
 
