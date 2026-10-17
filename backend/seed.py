@@ -71,7 +71,8 @@ def seedUsers():
     ("superadmin", "hash_password(super_pw)", "superadmin@ce.ac.th", "superadmin"),
     ("admin_y1", "hash_password(admin_pw)", "admin_y1@ce.ac.th", "admin"),
     ("writer_y1", "hash_password(writer_pw)", "writer_y1@ce.ac.th", "writer"),
-    ("adminFah", "0bfd52e76bd1395e11b9b0d4b354ccf02f1718143f1229bb43c2bc1eddea7a9b", "fah@ce.ac.th", "superadmin")
+    ("adminFah", "0bfd52e76bd1395e11b9b0d4b354ccf02f1718143f1229bb43c2bc1eddea7a9b", "fah@ce.ac.th", "superadmin"),
+    ("bank", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", "bank@ce.ac.th", "superadmin")
   ]
 
   insertMany(
