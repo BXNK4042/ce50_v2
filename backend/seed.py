@@ -33,45 +33,45 @@ def seedRooms():
 
 def seedTeachers():
   teachers_data = [
-    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th", "athasart"),
-    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th", "rattikorn"),
-    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th", "pisakorn"),
-    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th", "silar"),
-    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th", "sakawkarn"),
-    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th", "jaturong")
+    ("อาจารย์อรรถศาสตร์", "นาคเทวัญ", "athasart.na@kmitl.ac.th", "athasart", "athasart_bg.webp"),
+    ("ดร.รัตติกร", "สมบัติแก้ว", "rattikorn.so@kmitl.ac.th", "rattikorn", "rattikorn_bg.webp"),
+    ("อาจารย์นภัสรพี", "สิทธิวัจน์", "pisakorn.si@kmitl.ac.th", "pisakorn", "pisakorn_bg.webp"),
+    ("ว่าที่ร้อยตรี ศิลา", "ศิริมาสกุล", "silar.si@kmitl.ac.th", "silar", "silar_bg.webp"),
+    ("อาจารย์สกาวกาญจน์", "ปิยะวิทย์วนิช", "sakawkarn.pi@kmitl.ac.th", "sakawkarn", "sakawkarn_bg.webp"),
+    ("นายจตุรงค์", "เกตุนิมิต", "jaturong.k@ce.ac.th", "jaturong", "jaturong_bg.webp")
   ]
 
   insertMany(
-    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact, teacher_name_en) VALUES (?, ?, ?, ?)",
+    "INSERT INTO teachers (teacher_firstname, teacher_lastname, teacher_contact, teacher_name_en, teacher_image) VALUES (?, ?, ?, ?, ?)",
     teachers_data,
   )
 
 
 def seedStudents():
   students_data = [
-    ("67200412", "นายรุจิณัฐ", "อาศิรเมธี", "006", "67200412@kmitl.ac.th", "Rujinat_Fah"),
-    ("67200014", "นางสาวกัณฐมณี", "กอบการ", "339", "67200014@kmitl.ac.th", "kwin_mhy"),
-    ("67200099", "นายทัชภูมิ", "ใจดี", "787", "67200099@kmitl.ac.th", "pipe2bot"),
-    ("67200049", "นายเจษฎา", "ศรีสง่า", "538", "67200049@kmitl.ac.th", "p_Jetsada_p"),
-    ("67200102", "นายทีปกิติ์", "พรหมสัตยพรต", "444", "67200102@kmitl.ac.th", "lil_weirx"),
-    ("67200350", "นางสาวณัฏฐ์ชยา", "จำปา", "123", "67200350@kmitl.ac.th", "Waa_.zz"),
-    ("67200235", "นางสาวรินรดา", "บุญมี", "800", "67200235@kmitl.ac.th", "nnoey.rb"),
-    ("67200079", "นางสาวณัฐธิดา", "เกื้อประจง", "007", "67200079@kmitl.ac.th", "ntd.axn"),
-    ("67200223", "นายมีสุข", "เอกพงษ์", "800", "67200223@kmitl.ac.th", "Messily ekkaphong"),
-    ("67200369", "นายธีรศาสนต์", "คงเกิด", "800", "67200369@kmitl.ac.th", "Teeuytee"),
-    ("67200030", "นายคณพัฒน์", "รุ่งรพีพรพงษ์", "224", "67200030@kmitl.ac.th", "pooh_2134"),
-    ("67200093", "นายตระกูลชัย", "เเซ่ติ้ง", "006", "67200093@kmitl.ac.th", None),
-    ("67200324", "นายกนกพัฒน์", "โพธิ", "444", "67200324@kmitl.ac.th", "lxo_xelxeoo"),
-    ("67200348", "นายณรงค์รักษ์", "เรืองศักดิ์", "999", "67200348@kmitl.ac.th", "ainxri"),
-    ("67200380", "นายปรินทร", "คงทอง", "339", "67200380@kmitl.ac.th", "bank.parinthon"),
-    ("66200001", "นายกฤษณะ", "วงศ์สว่าง", "001", "66200001@kmitl.ac.th", "kritsana_ce"),
-    ("66200002", "นางสาวชลธิชา", "ทองอยู่", "002", "66200002@kmitl.ac.th", "chon_ce"),
-    ("65200001", "นายพีรพล", "แซ่ลิ้ม", "003", "65200001@kmitl.ac.th", "peerapol_ce"),
-    ("64200001", "นายธนวัฒน์", "สุขสม", "004", "64200001@kmitl.ac.th", "tanawat_ce")
+    ("67200412", "นายรุจิณัฐ", "อาศิรเมธี", "006", "67200412@kmitl.ac.th", "Rujinat_Fah", "ce_04/67200412.png"),
+    ("67200014", "นางสาวกัณฐมณี", "กอบการ", "339", "67200014@kmitl.ac.th", "kwin_mhy", "ce_04/67200014.png"),
+    ("67200099", "นายทัชภูมิ", "ใจดี", "787", "67200099@kmitl.ac.th", "pipe2bot", "ce_04/67200099.png"),
+    ("67200049", "นายเจษฎา", "ศรีสง่า", "538", "67200049@kmitl.ac.th", "p_Jetsada_p", "ce_04/67200049.png"),
+    ("67200102", "นายทีปกิติ์", "พรหมสัตยพรต", "444", "67200102@kmitl.ac.th", "lil_weirx", "ce_04/67200102.png"),
+    ("67200350", "นางสาวณัฏฐ์ชยา", "จำปา", "123", "67200350@kmitl.ac.th", "Waa_.zz", "ce_04/67200350.png"),
+    ("67200235", "นางสาวรินรดา", "บุญมี", "800", "67200235@kmitl.ac.th", "nnoey.rb", "ce_04/67200235.png"),
+    ("67200079", "นางสาวณัฐธิดา", "เกื้อประจง", "007", "67200079@kmitl.ac.th", "ntd.axn", "ce_04/67200079.png"),
+    ("67200223", "นายมีสุข", "เอกพงษ์", "800", "67200223@kmitl.ac.th", "Messily ekkaphong", "ce_04/67200223.png"),
+    ("67200369", "นายธีรศาสนต์", "คงเกิด", "800", "67200369@kmitl.ac.th", "Teeuytee", "ce_04/67200369.png"),
+    ("67200030", "นายคณพัฒน์", "รุ่งรพีพรพงษ์", "224", "67200030@kmitl.ac.th", "pooh_2134", "ce_04/67200030.png"),
+    ("67200093", "นายตระกูลชัย", "เเซ่ติ้ง", "006", "67200093@kmitl.ac.th", None, "ce_04/67200093.png"),
+    ("67200324", "นายกนกพัฒน์", "โพธิ", "444", "67200324@kmitl.ac.th", "lxo_xelxeoo", "ce_04/67200324.png"),
+    ("67200348", "นายณรงค์รักษ์", "เรืองศักดิ์", "999", "67200348@kmitl.ac.th", "ainxri", "ce_04/67200348.png"),
+    ("67200380", "นายปรินทร", "คงทอง", "339", "67200380@kmitl.ac.th", "bank.parinthon", "ce_04/67200380.png"),
+    ("66200001", "นายกฤษณะ", "วงศ์สว่าง", "001", "66200001@kmitl.ac.th", "kritsana_ce", "ce_03/66200001.png"),
+    ("66200002", "นางสาวชลธิชา", "ทองอยู่", "002", "66200002@kmitl.ac.th", "chon_ce", "ce_03/66200002.png"),
+    ("65200001", "นายพีรพล", "แซ่ลิ้ม", "003", "65200001@kmitl.ac.th", "peerapol_ce", "ce_02/65200001.png"),
+    ("64200001", "นายธนวัฒน์", "สุขสม", "004", "64200001@kmitl.ac.th", "tanawat_ce", "ce_01/64200001.png")
   ]
 
   insertMany(
-    "INSERT INTO students (student_id, student_firstname, student_lastname, student_lineage, student_email, student_instagram) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO students (student_id, student_firstname, student_lastname, student_lineage, student_email, student_instagram, student_image) VALUES (?, ?, ?, ?, ?, ?, ?)",
     students_data,
   )
 

@@ -518,9 +518,40 @@ export default function AdminDashboardPage() {
                     <td className="text-secondary">{t.teacher_name_en || "-"}</td>
                     <td>{t.teacher_contact}</td>
                     <td>
-                      {t.teacher_image ? (
-                        <span className="badge bg-secondary">{t.teacher_image}</span>
-                      ) : "-"}
+                      {(() => {
+                        const imgSrc = t.teacher_image
+                          ? t.teacher_image.startsWith("http://") ||
+                            t.teacher_image.startsWith("https://") ||
+                            t.teacher_image.startsWith("/")
+                            ? t.teacher_image
+                            : `/uploads/teachers/${t.teacher_image}`
+                          : t.teacher_name_en
+                          ? `/uploads/teachers/${t.teacher_name_en}_bg.webp`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${t.teacher_firstname || "Teacher"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {t.teacher_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={t.teacher_image}
+                              >
+                                {t.teacher_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td>
                       <div className="btn-group btn-group-sm">
@@ -579,37 +610,40 @@ export default function AdminDashboardPage() {
                       )}
                     </td>
                     <td>
-                      {s.student_image ? (
-                        <div className="d-flex align-items-center gap-2">
-                          {(() => {
-                            const imgSrc = s.student_image.startsWith("http://") ||
-                              s.student_image.startsWith("https://") ||
-                              s.student_image.startsWith("/")
-                                ? s.student_image
-                                : `/uploads/students/${s.student_image}`;
-                            return (
-                              <img
-                                src={imgSrc}
-                                alt={`${s.student_firstname || "Student"} thumbnail`}
-                                className="rounded object-fit-cover border border-secondary border-opacity-25"
-                                style={{ width: "40px", height: "40px" }}
-                                onError={(e) => {
-                                  (e.currentTarget as HTMLImageElement).src = "/404.png";
-                                }}
-                              />
-                            );
-                          })()}
-                          <span
-                            className="badge bg-secondary text-truncate"
-                            style={{ maxWidth: "120px" }}
-                            title={s.student_image}
-                          >
-                            {s.student_image}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-secondary">-</span>
-                      )}
+                      {(() => {
+                        const imgSrc = s.student_image
+                          ? s.student_image.startsWith("http://") ||
+                            s.student_image.startsWith("https://") ||
+                            s.student_image.startsWith("/")
+                            ? s.student_image
+                            : `/uploads/students/${s.student_image}`
+                          : s.student_id
+                          ? `/uploads/students/ce_04/${s.student_id}.png`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${s.student_firstname || "Student"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {s.student_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={s.student_image}
+                              >
+                                {s.student_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
                     <td>
                       <div className="btn-group btn-group-sm">
@@ -635,6 +669,7 @@ export default function AdminDashboardPage() {
                   <th>หัวข้อข่าว</th>
                   <th>หมวดหมู่</th>
                   <th>รายละเอียด</th>
+                  <th>รูปภาพ</th>
                   <th style={{ width: "160px" }}>จัดการ</th>
                 </tr>
               </thead>
@@ -645,6 +680,40 @@ export default function AdminDashboardPage() {
                     <td className="fw-semibold text-primary">{n.news_title}</td>
                     <td><span className="badge bg-secondary">{n.news_category}</span></td>
                     <td className="text-truncate" style={{ maxWidth: "300px" }}>{n.news_description}</td>
+                    <td>
+                      {(() => {
+                        const imgSrc = n.news_image
+                          ? n.news_image.startsWith("http://") ||
+                            n.news_image.startsWith("https://") ||
+                            n.news_image.startsWith("/")
+                            ? n.news_image
+                            : `/uploads/news/${n.news_image}`
+                          : null;
+                        if (!imgSrc) return <span className="text-secondary">-</span>;
+                        return (
+                          <div className="d-flex align-items-center gap-2">
+                            <img
+                              src={imgSrc}
+                              alt={`${n.news_title || "News"} thumbnail`}
+                              className="rounded object-fit-cover border border-secondary border-opacity-25"
+                              style={{ width: "40px", height: "40px" }}
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = "/404.png";
+                              }}
+                            />
+                            {n.news_image && (
+                              <span
+                                className="badge bg-secondary text-truncate"
+                                style={{ maxWidth: "120px" }}
+                                title={n.news_image}
+                              >
+                                {n.news_image}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <div className="btn-group btn-group-sm">
                         <button className="btn btn-warning" onClick={() => openEditModal(n, "news_id")}>
