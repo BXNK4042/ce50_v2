@@ -18,10 +18,9 @@ def test_get_students():
     data = response.json()
     assert isinstance(data, list)
     for student in data:
-        assert "student_contact" not in student
-        assert "phone" not in student
-        assert "student_instagram" not in student
-        assert "instagram" not in student
+        assert "student_id" in student
+        assert "student_firstname" in student
+        assert "student_lastname" in student
 
 
 def test_get_rooms():

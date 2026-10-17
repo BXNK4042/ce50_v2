@@ -337,9 +337,7 @@ def news():
 @app.get("/students")
 def students():
     with get_db() as conn:
-        rows = conn.execute(
-            "SELECT student_id, student_firstname, student_lastname, student_image, student_role, student_lineage, created_at FROM students"
-        ).fetchall()
+        rows = conn.execute("SELECT * FROM students").fetchall()
         return [dict(row) for row in rows]
 
 

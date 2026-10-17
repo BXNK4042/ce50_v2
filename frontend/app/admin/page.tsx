@@ -557,12 +557,59 @@ export default function AdminDashboardPage() {
                     <td className="fw-bold text-primary">{s.student_id}</td>
                     <td>{s.student_firstname} {s.student_lastname}</td>
                     <td><span className="badge bg-info text-dark">T{s.student_lineage}</span></td>
-                    <td><Mail size={14} className="me-1 text-secondary" />{s.student_email || s.student_contact || "-"}</td>
-                    <td>{s.student_instagram ? `@${s.student_instagram}` : "-"}</td>
+                    <td>
+                      {s.student_email || s.student_contact ? (
+                        <div className="d-flex align-items-center">
+                          <Mail size={14} className="me-1 text-secondary flex-shrink-0" />
+                          <span>{s.student_email || s.student_contact}</span>
+                        </div>
+                      ) : (
+                        <span className="text-secondary">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {s.student_instagram ? (
+                        s.student_instagram.startsWith("@") ? (
+                          s.student_instagram
+                        ) : (
+                          `@${s.student_instagram}`
+                        )
+                      ) : (
+                        <span className="text-secondary">-</span>
+                      )}
+                    </td>
                     <td>
                       {s.student_image ? (
-                        <span className="badge bg-secondary text-truncate" style={{ maxWidth: "120px" }}>{s.student_image}</span>
-                      ) : "-"}
+                        <div className="d-flex align-items-center gap-2">
+                          {(() => {
+                            const imgSrc = s.student_image.startsWith("http://") ||
+                              s.student_image.startsWith("https://") ||
+                              s.student_image.startsWith("/")
+                                ? s.student_image
+                                : `/uploads/students/${s.student_image}`;
+                            return (
+                              <img
+                                src={imgSrc}
+                                alt={`${s.student_firstname || "Student"} thumbnail`}
+                                className="rounded object-fit-cover border border-secondary border-opacity-25"
+                                style={{ width: "40px", height: "40px" }}
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLImageElement).src = "/404.png";
+                                }}
+                              />
+                            );
+                          })()}
+                          <span
+                            className="badge bg-secondary text-truncate"
+                            style={{ maxWidth: "120px" }}
+                            title={s.student_image}
+                          >
+                            {s.student_image}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-secondary">-</span>
+                      )}
                     </td>
                     <td>
                       <div className="btn-group btn-group-sm">
