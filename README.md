@@ -1,37 +1,64 @@
 # CE50
 
-Next.js frontend with a FastAPI API and SQLite database.
+Next.js frontend with a FastAPI backend and SQLite database.
 
 ## Requirements
 
 - Python 3.10+
 - Node.js 20.9+ and npm
 - SQLite 3
-- Optional: `tmux` and `opencode` for `scripts/dev.sh`
+- Optional: `tmux` for `scripts/dev.sh`
 
 ## Setup
 
-Run from the project root after cloning:
+Run these commands from the project root after cloning the repository.
+
+### Environment configuration
+
+Create your local environment file from the example:
 
 ```bash
-# Backend environment
+cp .env.example .env
+```
+
+Set your values for `JWT_SECRET` and optional keys like `GNEWS_API_KEY`.
+
+### Backend setup
+
+Create a virtual environment and install dependencies:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install fastapi "uvicorn[standard]"
+pip install -r backend/requirements.txt
+```
 
-# Frontend dependencies
+### Frontend setup
+
+Install dependencies:
+
+```bash
 cd frontend
 npm ci
 cd ..
+```
 
-# Database
+### Database setup
+
+Load the database schema and seed initial data:
+
+```bash
 sqlite3 backend/ce50.db < docs/ce50_schema.txt
 .venv/bin/python backend/seed.py
 ```
 
-> Run the seed script only once per database. To reset it, delete `backend/ce50.db` and repeat the database commands.
+Run the seed script only once per database. To start fresh, delete `backend/ce50.db` and run the two commands above again.
 
-## Run locally
+## Run the application
+
+You can run services separately in different terminals or together with the development script.
+
+### Run services separately
 
 Start the backend:
 
@@ -51,20 +78,37 @@ npm run dev
 - API: <http://localhost:8000>
 - API docs: <http://localhost:8000/docs>
 
-## Development script
+### Run with the development script
 
-After setup, contributors with `tmux` and `opencode` can start both services with:
+If you have `tmux` installed, start the backend and frontend in a shared session:
 
 ```bash
 ./scripts/dev.sh
 ```
 
-The script creates a tmux session named `ce50`. Stop it with `tmux kill-session -t ce50`.
+Stop the session at any time with:
 
-## Checks
+```bash
+tmux kill-session -t ce50
+```
+
+## Testing and checks
+
+### Backend tests
+
+Run backend unit and API tests with pytest:
+
+```bash
+.venv/bin/pytest
+```
+
+### Frontend tests and checks
+
+Run frontend unit tests, linting, and build checks:
 
 ```bash
 cd frontend
+npm test
 npm run lint
 npm run build
 ```
