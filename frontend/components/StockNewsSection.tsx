@@ -116,16 +116,11 @@ export default function StockNewsSection({ className = "" }: StockNewsSectionPro
   return (
     <div className={`my-5 py-3 ${className}`.trim()}>
       {/* Section Header */}
-      <div className="card shadow-sm border border-secondary border-opacity-25 rounded-3 mb-4 bg-dark text-white p-3">
-        <div className="d-flex align-items-center gap-2 mb-1">
-          <TrendingUp size={22} className="text-primary" />
-          <h3 className="h4 text-primary fw-bold mb-0">
-            ข่าวหุ้นและตลาดการเงินเทคโนโลยี
-          </h3>
-        </div>
-        <p className="text-secondary small mb-0">
-          ติดตามความเคลื่อนไหวตลาดหลักทรัพย์ เทคโนโลยีเซมิคอนดักเตอร์ และ Big Tech ระดับโลก
-        </p>
+      <div className="d-flex align-items-center gap-2 mb-4">
+        <TrendingUp size={22} className="text-primary" />
+        <h3 className="h4 text-primary fw-bold mb-0">
+          ข่าวหุ้นและตลาดการเงินเทคโนโลยี
+        </h3>
       </div>
 
       {/* Loading Skeleton Placeholders */}
