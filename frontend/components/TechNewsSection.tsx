@@ -6,7 +6,11 @@ import { Calendar, Globe, ExternalLink } from "lucide-react";
 import { GNewsArticle } from "@/types/gnews";
 import { safeExternalUrl } from "@/utils/security";
 
-export default function TechNewsSection() {
+interface TechNewsSectionProps {
+  className?: string;
+}
+
+export default function TechNewsSection({ className = "" }: TechNewsSectionProps) {
   const [headlinesTech, setHeadlinesTech] = useState<GNewsArticle[]>([]);
   const [usTech, setUsTech] = useState<GNewsArticle[]>([]);
   const [thTech, setThTech] = useState<GNewsArticle[]>([]);
@@ -70,7 +74,7 @@ export default function TechNewsSection() {
 
   if (loadingGNews) {
     return (
-      <div className="row placeholder-glow">
+      <div className={`row placeholder-glow my-5 py-3 ${className}`.trim()}>
         {/* Left Column Skeleton */}
         <div className="col-lg-6 mb-5">
           <div className="mb-4">
@@ -133,7 +137,7 @@ export default function TechNewsSection() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className={`space-y-5 my-5 py-3 ${className}`.trim()}>
       {/* Full-width Featured Spotlight Hero Card */}
       {spotlight && (
         <div className="card shadow-lg border-0 overflow-hidden rounded-3 mb-5 bg-dark text-white position-relative">
