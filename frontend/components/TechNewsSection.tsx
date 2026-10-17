@@ -6,11 +6,17 @@ import { Calendar, Globe, ExternalLink } from "lucide-react";
 import { GNewsArticle } from "@/types/gnews";
 import { safeExternalUrl } from "@/utils/security";
 
+export type TechNewsSpacing = "compact" | "balanced" | "spacious";
+
 interface TechNewsSectionProps {
   className?: string;
+  spacing?: TechNewsSpacing;
 }
 
-export default function TechNewsSection({ className = "" }: TechNewsSectionProps) {
+export default function TechNewsSection({
+  className = "",
+  spacing = "balanced",
+}: TechNewsSectionProps) {
   const [headlinesTech, setHeadlinesTech] = useState<GNewsArticle[]>([]);
   const [usTech, setUsTech] = useState<GNewsArticle[]>([]);
   const [thTech, setThTech] = useState<GNewsArticle[]>([]);
@@ -72,9 +78,42 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
     }
   };
 
+  const spacingConfig = {
+    compact: {
+      wrapper: "space-y-3 my-2 py-1",
+      skeleton: "row placeholder-glow my-2 py-1",
+      spotlightMb: "mb-3",
+      spotlightPadding: "p-3 p-md-4",
+      gridGutter: "g-3",
+      headerMb: "mb-2",
+      subGridGutter: "g-2",
+      cardBodyPadding: "p-2",
+    },
+    balanced: {
+      wrapper: "space-y-5 my-5 py-3",
+      skeleton: "row placeholder-glow my-5 py-3",
+      spotlightMb: "mb-5",
+      spotlightPadding: "p-4 p-md-5",
+      gridGutter: "g-4",
+      headerMb: "mb-4",
+      subGridGutter: "g-3",
+      cardBodyPadding: "p-3",
+    },
+    spacious: {
+      wrapper: "space-y-6 my-6 py-4",
+      skeleton: "row placeholder-glow my-6 py-4",
+      spotlightMb: "mb-5 pb-2",
+      spotlightPadding: "p-4 p-md-5 p-lg-6",
+      gridGutter: "g-4 g-lg-5",
+      headerMb: "mb-4 pb-2",
+      subGridGutter: "g-3 g-lg-4",
+      cardBodyPadding: "p-3 p-lg-4",
+    },
+  }[spacing];
+
   if (loadingGNews) {
     return (
-      <div className={`row placeholder-glow my-5 py-3 ${className}`.trim()}>
+      <div className={`${spacingConfig.skeleton} ${className}`.trim()}>
         {/* Left Column Skeleton */}
         <div className="col-lg-6 mb-5">
           <div className="mb-4">
@@ -137,10 +176,12 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
   }
 
   return (
-    <div className={`space-y-5 my-5 py-3 ${className}`.trim()}>
+    <div className={`${spacingConfig.wrapper} ${className}`.trim()}>
       {/* Full-width Featured Spotlight Hero Card */}
       {spotlight && (
-        <div className="card shadow-lg border-0 overflow-hidden rounded-3 mb-5 bg-dark text-white position-relative">
+        <div
+          className={`card shadow-lg border-0 overflow-hidden rounded-3 ${spacingConfig.spotlightMb} bg-dark text-white position-relative`}
+        >
           <div className="position-relative w-100" style={{ height: "460px" }}>
             <Image
               src={spotlight.image || "/404.png"}
@@ -160,7 +201,9 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
               }}
             />
             {/* Content Overlay */}
-            <div className="position-absolute bottom-0 start-0 p-4 p-md-5 w-100 z-1">
+            <div
+              className={`position-absolute bottom-0 start-0 ${spacingConfig.spotlightPadding} w-100 z-1`}
+            >
               <div className="d-flex flex-wrap align-items-center gap-2 mb-2">
                 <span className="badge bg-primary text-white text-uppercase px-3 py-2 fw-semibold">
                   Featured Spotlight
@@ -207,17 +250,17 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
       )}
 
       {/* Grid for International and Thai Tech News */}
-      <div className="row g-4">
+      <div className={`row ${spacingConfig.gridGutter}`}>
         {/* International Grid */}
         <div className="col-lg-6">
-          <div className="mb-4">
+          <div className={spacingConfig.headerMb}>
             <div className="d-flex align-items-center gap-2 mb-2">
               <Globe size={20} className="text-primary" />
               <h3 className="h4 text-primary font-weight-bold mb-0">ข่าวเทคโนโลยีต่างประเทศ</h3>
             </div>
             <div className="bg-blue-500 w-20 h-1"></div>
           </div>
-          <div className="row g-3">
+          <div className={`row ${spacingConfig.subGridGutter}`}>
             {internationalArticles.map((art, idx) => (
               <div className="col-12 col-md-6" key={idx}>
                 <div className="card h-100 shadow-sm border border-secondary border-opacity-25 bg-dark text-white rounded-3 overflow-hidden d-flex flex-column">
@@ -231,7 +274,9 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
                       onError={handleImageError}
                     />
                   </div>
-                  <div className="card-body p-3 d-flex flex-column justify-content-between">
+                  <div
+                    className={`card-body ${spacingConfig.cardBodyPadding} d-flex flex-column justify-content-between`}
+                  >
                     <div>
                       <div className="d-flex justify-content-between align-items-center gap-2 mb-2">
                         <span className="badge bg-secondary bg-opacity-50 text-white small">
@@ -272,14 +317,14 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
 
         {/* Thai Tech News Grid */}
         <div className="col-lg-6">
-          <div className="mb-4">
+          <div className={spacingConfig.headerMb}>
             <div className="d-flex align-items-center gap-2 mb-2">
               <Globe size={20} className="text-primary" />
               <h3 className="h4 text-primary font-weight-bold mb-0">ข่าวเทคโนโลยีไทย</h3>
             </div>
             <div className="bg-blue-500 w-20 h-1"></div>
           </div>
-          <div className="row g-3">
+          <div className={`row ${spacingConfig.subGridGutter}`}>
             {thaiArticles.map((art, idx) => (
               <div className="col-12 col-md-6" key={idx}>
                 <div className="card h-100 shadow-sm border border-secondary border-opacity-25 bg-dark text-white rounded-3 overflow-hidden d-flex flex-column">
@@ -293,7 +338,9 @@ export default function TechNewsSection({ className = "" }: TechNewsSectionProps
                       onError={handleImageError}
                     />
                   </div>
-                  <div className="card-body p-3 d-flex flex-column justify-content-between">
+                  <div
+                    className={`card-body ${spacingConfig.cardBodyPadding} d-flex flex-column justify-content-between`}
+                  >
                     <div>
                       <div className="d-flex justify-content-between align-items-center gap-2 mb-2">
                         <span className="badge bg-secondary bg-opacity-50 text-white small">
