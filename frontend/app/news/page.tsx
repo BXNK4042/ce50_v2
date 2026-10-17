@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { NewsItem } from "@/types/news-item";
 import Image from "next/image";
 import TechNewsSection from "@/components/TechNewsSection";
+import StockNewsSection from "@/components/StockNewsSection";
 
 export default function NewsPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -96,6 +97,11 @@ export default function NewsPage() {
       {/* Main News Section */}
       <div className="main-news-section text-light mb-5">
         <TechNewsSection />
+      </div>
+
+      {/* Stock & Financial Market News Section */}
+      <div className="stock-news-section text-light mb-5">
+        <StockNewsSection />
       </div>
     </div>
   );
