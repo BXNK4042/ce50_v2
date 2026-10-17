@@ -80,36 +80,41 @@ export default function AdminDashboardPage() {
   const loadData = useCallback(async () => {
     if (!isAuthorized) return;
     setLoading(true);
+    const fetchOptions: RequestInit = {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    };
+    const t = `?_t=${Date.now()}`;
     try {
       if (activeTab === "teachers") {
-        const res = await fetch("/api/teachers");
+        const res = await fetch(`/api/teachers${t}`, fetchOptions);
         setTeachers(await res.json());
       } else if (activeTab === "students") {
-        const res = await fetch("/api/students");
+        const res = await fetch(`/api/students${t}`, fetchOptions);
         setStudents(await res.json());
       } else if (activeTab === "news") {
-        const res = await fetch("/api/news");
+        const res = await fetch(`/api/news${t}`, fetchOptions);
         setNews(await res.json());
       } else if (activeTab === "projects") {
-        const res = await fetch("/api/projects");
+        const res = await fetch(`/api/projects${t}`, fetchOptions);
         setProjects(await res.json());
       } else if (activeTab === "companies") {
-        const res = await fetch("/api/companys");
+        const res = await fetch(`/api/companys${t}`, fetchOptions);
         setCompanies(await res.json());
       } else if (activeTab === "internships") {
-        const res = await fetch("/api/internship");
+        const res = await fetch(`/api/internship${t}`, fetchOptions);
         setInternships(await res.json());
       } else if (activeTab === "class") {
-        const res = await fetch("/api/class");
+        const res = await fetch(`/api/class${t}`, fetchOptions);
         setClassSchedules(await res.json());
       } else if (activeTab === "exam") {
-        const res = await fetch("/api/exam");
+        const res = await fetch(`/api/exam${t}`, fetchOptions);
         setExamSchedules(await res.json());
       } else if (activeTab === "rooms") {
-        const res = await fetch("/api/rooms");
+        const res = await fetch(`/api/rooms${t}`, fetchOptions);
         setRooms(await res.json());
       } else if (activeTab === "banners") {
-        const res = await fetch("/api/hero-banners");
+        const res = await fetch(`/api/hero-banners${t}`, fetchOptions);
         setBanners(await res.json());
       }
     } catch {
@@ -254,9 +259,33 @@ export default function AdminDashboardPage() {
         throw new Error(resData.detail || "การบันทึกข้อมูลล้มเหลว");
       }
 
+      if (editingId) {
+        if (activeTab === "teachers") {
+          setTeachers((prev) => prev.map((item) => (String(item.teacher_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "students") {
+          setStudents((prev) => prev.map((item) => (String(item.student_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "news") {
+          setNews((prev) => prev.map((item) => (String(item.news_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "projects") {
+          setProjects((prev) => prev.map((item) => (String(item.project_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "companies") {
+          setCompanies((prev) => prev.map((item) => (String(item.company_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "internships") {
+          setInternships((prev) => prev.map((item) => (String(item.internship_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "class") {
+          setClassSchedules((prev) => prev.map((item) => (String(item.class_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "exam") {
+          setExamSchedules((prev) => prev.map((item) => (String(item.exam_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "rooms") {
+          setRooms((prev) => prev.map((item) => (String(item.room_id) === String(editingId) ? { ...item, ...formData } : item)));
+        } else if (activeTab === "banners") {
+          setBanners((prev) => prev.map((item) => (String(item.banner_id) === String(editingId) ? { ...item, ...formData } : item)));
+        }
+      }
+
       setStatusMsg({ type: "success", text: `บันทึกข้อมูลเรียบร้อยแล้ว (อัปเดตลง Database)` });
       setIsModalOpen(false);
-      loadData();
+      await loadData();
     } catch (err: unknown) {
       if (err instanceof Error) {
         setStatusMsg({ type: "danger", text: err.message });
@@ -310,7 +339,7 @@ export default function AdminDashboardPage() {
       }
 
       setStatusMsg({ type: "success", text: `ลบข้อมูล ID ${id} ออกจากฐานข้อมูลเรียบร้อยแล้ว` });
-      loadData();
+      await loadData();
     } catch (err: unknown) {
       if (err instanceof Error) {
         setStatusMsg({ type: "danger", text: err.message });
